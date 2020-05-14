@@ -23,6 +23,7 @@ defmodule Neobeam.MixProject do
   defp deps do
     [
       {:tesla, "~> 1.3"},
+      {:hackney, "~> 1.15.2"},
       {:jason, "~> 1.2"}
     ]
   end
