@@ -1,6 +1,6 @@
-defmodule Neobeam do
+defmodule MatrixSDK do
   @moduledoc """
-  Documentation for `Neobeam`.
+  Documentation for `MatrixSDK`.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Neobeam do
 
   ## Examples
 
-      iex> Neobeam.hello()
+      iex> MatrixSDK.hello()
       :world
 
   """

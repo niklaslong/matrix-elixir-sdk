@@ -1,9 +1,9 @@
-defmodule Neobeam.Api do
+defmodule MatrixSDK.Api do
   use Tesla
 
   def spec_versions() do
     get(client(), "/_matrix/client/versions")
-  end 
+  end
 
   # TODO: response headers don't include json => middleware doesn't decode body
   def server_discovery() do
@@ -16,7 +16,7 @@ defmodule Neobeam.Api do
       {Tesla.Middleware.Headers, [{"Accept", "application/json'"}]},
       Tesla.Middleware.JSON
     ]
-    
+
     Tesla.client(middleware)
   end
 end

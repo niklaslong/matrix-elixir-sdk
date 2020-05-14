@@ -1,9 +1,9 @@
-defmodule Neobeam.MixProject do
+defmodule MatrixSDK.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :neobeam,
+      app: :matrix_sdk,
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
@@ -15,7 +15,7 @@ defmodule Neobeam.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Neobeam.Application, []}
+      mod: {MatrixSDK.Application, []}
     ]
   end
 
