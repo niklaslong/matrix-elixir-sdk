@@ -24,7 +24,8 @@ defmodule MatrixSDK.MixProject do
     [
       {:tesla, "~> 1.3"},
       {:hackney, "~> 1.15.2"},
-      {:jason, "~> 1.2"}
+      {:jason, "~> 1.2"},
+      {:mox, "~> 0.5.2", only: :test}
     ]
   end
 end
