@@ -2,6 +2,16 @@
 
 **TODO: Add description**
 
+## Starting a local homeserver
+
+```
+cd synapse
+source env/bin/activate
+synctl start
+
+synctl stop 
+```
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
