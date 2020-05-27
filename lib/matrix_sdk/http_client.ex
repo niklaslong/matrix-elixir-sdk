@@ -3,7 +3,6 @@ defmodule MatrixSDK.HTTPClient do
 
   @callback request(atom, Tesla.Env.client(), Tesla.Env.url()) :: Tesla.Env.result()
 
-  
   def client(base_url \\ "http://localhost:8008") do
     middleware = [
       {Tesla.Middleware.BaseUrl, base_url},
