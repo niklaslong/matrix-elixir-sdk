@@ -1,7 +1,7 @@
 defmodule MatrixSDK.API do
   @http_client Application.get_env(:matrix_sdk, :http_client)
 
-  # API Standards
+  #  API Standards
 
   def spec_versions(client), do: @http_client.request(:get, client, "/_matrix/client/versions")
 
@@ -13,12 +13,12 @@ defmodule MatrixSDK.API do
 
   # User - Login
 
-
   # User - registration
 
   # Rooms
 
-  # TODO: handle chunked responses
+  #  TODO: handle chunked responses
   # REVIEW: this works on matrix.org but not on local?
-  def room_discovery(client), do: @http_client.request(:get, client, "/_matrix/client/r0/publicRooms")
+  def room_discovery(client),
+    do: @http_client.request(:get, client, "/_matrix/client/r0/publicRooms")
 end
