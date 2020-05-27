@@ -27,7 +27,8 @@ defmodule MatrixSDK.MixProject do
   defp deps do
     [
       {:tesla, "~> 1.3"},
-      {:hackney, "~> 1.15.2"},
+      {:mint, "~> 1.0"},
+      {:castore, "~> 0.1.0"},
       {:jason, "~> 1.2"},
       {:mox, "~> 0.5.2", only: :test}
     ]
