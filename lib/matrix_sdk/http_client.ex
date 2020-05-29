@@ -4,10 +4,12 @@ defmodule MatrixSDK.HTTPClient do
   @callback request(atom, Tesla.Env.client(), Tesla.Env.url()) :: Tesla.Env.result()
   @callback request(atom, Tesla.Env.client(), Tesla.Env.url(), term()) :: Tesla.Env.result()
 
-  def client(base_url \\ "http://localhost:8008") do
+  def client(base_url, headers \\ []) do
+    headers = [{"Accept", "application/json'"} | headers]
+
     middleware = [
       {Tesla.Middleware.BaseUrl, base_url},
-      {Tesla.Middleware.Headers, [{"Accept", "application/json'"}]},
+      {Tesla.Middleware.Headers, headers},
       Tesla.Middleware.JSON
     ]
 
