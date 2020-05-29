@@ -18,14 +18,13 @@ defmodule MatrixSDK.API do
   def register_user(client, :guest),
     do: @http_client.request(:post, client, "/_matrix/client/r0/register?kind=guest")
 
-  def register_user(client, :user, username, password) do
-    @http_client.request(:post, client, "/_matrix/client/r0/register", %{
-      auth: %{
-        type: "m.login.dummy"
-      },
-      username: username,
-      password: password
-    })
+  def register_user(client, :user, username, password),
+    do:
+      @http_client.request(:post, client, "/_matrix/client/r0/register", %{
+        auth: %{type: "m.login.dummy"},
+        username: username,
+        password: password
+      })
   end
 
   # Rooms
