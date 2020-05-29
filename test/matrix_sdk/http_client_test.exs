@@ -38,6 +38,25 @@ defmodule MatrixSDK.HTTPClientTest do
     HTTPClient.request(:get, client, path)
   end
 
+  test "request/3: POST with empty body", %{bypass: bypass} do
+    client = HTTPClient.client("http://localhost:#{bypass.port}")
+    path = "/test/post"
+
+    Bypass.expect_once(bypass, "POST", path, fn conn ->
+      assert conn
+             |> Plug.Conn.read_body()
+             |> elem(1)
+             |> Jason.decode!() == %{}
+
+      assert conn.method == "POST"
+      assert conn.request_path == path
+
+      Plug.Conn.resp(conn, 200, "")
+    end)
+
+    HTTPClient.request(:post, client, path)
+  end
+
   test "request/4: POST", %{bypass: bypass} do
     client = HTTPClient.client("http://localhost:#{bypass.port}")
     path = "/test/post"

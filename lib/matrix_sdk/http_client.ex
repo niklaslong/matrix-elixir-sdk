@@ -15,5 +15,5 @@ defmodule MatrixSDK.HTTPClient do
   end
 
   def request(:get, client, path), do: get(client, path)
-  def request(:post, client, path, body), do: post(client, path, body)
+  def request(:post, client, path, body \\ %{}), do: post(client, path, body)
 end
