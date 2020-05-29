@@ -27,15 +27,34 @@ defmodule MatrixSDK.APITest do
     assert {:ok, _} = API.server_discovery(client)
   end
 
-  test "room_discovery/1: returns public rooms on server" do
-    client = HTTPClient.client("some_base_url.yay")
+  # User - login/logout
 
-    expect(HTTPClientMock, :request, fn :get, ^client, "/_matrix/client/r0/publicRooms" ->
+  test "logout/1: invalidates access token" do
+    client = HTTPClient.client("some_base_url.yay", [{"Authorization", "Bearer token"}])
+
+    expect(HTTPClientMock, :request, fn :post, ^client, "/_matrix/client/r0/logout" ->
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.room_discovery(client)
+    assert {:ok, _} = API.logout(client)
   end
+
+  test "logout/2: invalidates access token" do
+    expect(HTTPClientMock, :request, fn :post, client, "/_matrix/client/r0/logout" ->
+      [headers] =
+        Enum.find_value(client.pre, fn {middleware, _, value} ->
+          if middleware == Tesla.Middleware.Headers, do: value
+        end)
+
+      assert Enum.member?(headers, {"Authorization", "Bearer token"})
+
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.logout("some_base_url.yay", "token")
+  end
+
+  #  User - registration
 
   test "register_user/2: registers a new guest user" do
     client = HTTPClient.client("some_base_url.yay")
@@ -61,5 +80,17 @@ defmodule MatrixSDK.APITest do
     end)
 
     assert {:ok, _} = API.register_user(client, :user, "username", "password")
+  end
+
+  # Rooms
+
+  test "room_discovery/1: returns public rooms on server" do
+    client = HTTPClient.client("some_base_url.yay")
+
+    expect(HTTPClientMock, :request, fn :get, ^client, "/_matrix/client/r0/publicRooms" ->
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.room_discovery(client)
   end
 end

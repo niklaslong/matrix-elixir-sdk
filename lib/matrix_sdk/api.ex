@@ -1,4 +1,6 @@
 defmodule MatrixSDK.API do
+  alias MatrixSDK.HTTPClient
+
   @http_client Application.get_env(:matrix_sdk, :http_client)
 
   #  API Standards
@@ -11,7 +13,15 @@ defmodule MatrixSDK.API do
   def server_discovery(client),
     do: @http_client.request(:get, client, "/.well-known/matrix/client")
 
-  # User - Login
+  # User - login/logout
+
+  def logout(client), do: @http_client.request(:post, client, "/_matrix/client/r0/logout")
+
+  def logout(base_url, token) do
+    base_url
+    |> HTTPClient.client([{"Authorization", "Bearer " <> token}])
+    |> logout()
+  end
 
   # User - registration
 
@@ -25,7 +35,6 @@ defmodule MatrixSDK.API do
         username: username,
         password: password
       })
-  end
 
   # Rooms
 
