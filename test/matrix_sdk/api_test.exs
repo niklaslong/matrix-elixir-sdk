@@ -29,6 +29,30 @@ defmodule MatrixSDK.APITest do
 
   # User - login/logout
 
+  test "login/1: returns login flows" do
+    client = HTTPClient.client("some_base_url.yay")
+
+    expect(HTTPClientMock, :request, fn :get, ^client, "/_matrix/client/r0/login" ->
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.login(client)
+  end
+
+  test "login/3: returns login flows" do
+    client = HTTPClient.client("some_base_url.yay")
+
+    expect(HTTPClientMock, :request, fn :post, ^client, "/_matrix/client/r0/login", body ->
+      assert body.type == "m.login.password"
+      assert body.user == "username"
+      assert body.password == "password"
+
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.login(client, "username", "password")
+  end
+
   test "logout/1: invalidates access token" do
     client = HTTPClient.client("some_base_url.yay", [{"Authorization", "Bearer token"}])
 

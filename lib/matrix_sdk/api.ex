@@ -15,6 +15,16 @@ defmodule MatrixSDK.API do
 
   # User - login/logout
 
+  def login(client), do: @http_client.request(:get, client, "/_matrix/client/r0/login")
+
+  def login(client, username, password) do
+    @http_client.request(:post, client, "/_matrix/client/r0/login", %{
+      type: "m.login.password",
+      user: username,
+      password: password
+    })
+  end
+
   def logout(client), do: @http_client.request(:post, client, "/_matrix/client/r0/logout")
 
   def logout(base_url, token) do
