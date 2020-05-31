@@ -14,8 +14,11 @@ defmodule MatrixSDK.API do
   # Server discovery
 
   # NOTE: response headers don't include json => middleware doesn't decode body
-  def server_discovery(client),
-    do: @http_client.request(:get, client, "/.well-known/matrix/client")
+  def server_discovery(base_url) do
+    base_url
+    |> Request.server_discovery()
+    |> @http_client.do_request()
+  end
 
   # User - login/logout
 

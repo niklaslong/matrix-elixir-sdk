@@ -22,13 +22,17 @@ defmodule MatrixSDK.APITest do
   end
 
   test "server_discovery/1: returns discovery information about the domain" do
-    client = HTTPClient.client("some_base_url.yay")
+    base_url = "http://test.url"
 
-    expect(HTTPClientMock, :request, fn :get, ^client, "/.well-known/matrix/client" ->
+    expect(HTTPClientMock, :do_request, fn request ->
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/.well-known/matrix/client"
+
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.server_discovery(client)
+    assert {:ok, _} = API.server_discovery(base_url)
   end
 
   # User - login/logout
