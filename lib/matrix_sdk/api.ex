@@ -1,11 +1,15 @@
 defmodule MatrixSDK.API do
-  alias MatrixSDK.HTTPClient
+  alias MatrixSDK.{Request, HTTPClient}
 
   @http_client Application.get_env(:matrix_sdk, :http_client)
 
   #  API Standards
 
-  def spec_versions(client), do: @http_client.request(:get, client, "/_matrix/client/versions")
+  def spec_versions(base_url) do
+    base_url
+    |> Request.spec_versions()
+    |> @http_client.do_request()
+  end
 
   # Server discovery
 

@@ -2,6 +2,8 @@ defmodule MatrixSDK.HTTPClient do
   use Tesla
   alias MatrixSDK.Request
 
+  @callback do_request(Request.t()) :: Tesla.Env.result()
+
   @callback request(atom, Tesla.Env.client(), Tesla.Env.url()) :: Tesla.Env.result()
   @callback request(atom, Tesla.Env.client(), Tesla.Env.url(), term()) :: Tesla.Env.result()
 

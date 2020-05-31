@@ -2,6 +2,14 @@ defmodule MatrixSDK.Request do
   @enforce_keys [:method, :base_url, :path]
   defstruct([:method, :base_url, :path, headers: [], body: %{}])
 
+  @type t :: %__MODULE__{
+          method: atom,
+          base_url: String.t(),
+          path: String.t(),
+          headers: [{String.t(), String.t()}],
+          body: any
+        }
+
   def spec_versions(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
