@@ -17,13 +17,19 @@ defmodule MatrixSDK.HTTPClient do
     Tesla.client(middleware, Tesla.Adapter.Mint)
   end
 
-  def do_request(%Request{method: :get, path: path, headers: headers}, base_url) do
+  def do_request(%Request{method: :get, base_url: base_url, path: path, headers: headers}) do
     base_url
     |> client(headers)
     |> get(path)
   end
 
-  def do_request(%Request{method: :post, path: path, headers: headers, body: body}, base_url) do
+  def do_request(%Request{
+        method: :post,
+        base_url: base_url,
+        path: path,
+        headers: headers,
+        body: body
+      }) do
     base_url
     |> client(headers)
     |> post(path, body)

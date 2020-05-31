@@ -1,17 +1,20 @@
 defmodule MatrixSDK.Request do
-  @enforce_keys [:method, :path]
-  defstruct([:method, :path, headers: [], body: %{}])
+  @enforce_keys [:method, :base_url, :path]
+  defstruct([:method, :base_url, :path, headers: [], body: %{}])
 
-  def spec_versions(),
-    do: %__MODULE__{method: :get, path: "/_matrix/client/versions"}
+  def spec_versions(base_url),
+    do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
-  def server_discovery(), do: %__MODULE__{method: :get, path: "/.well-known/matrix/client"}
+  def server_discovery(base_url),
+    do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 
-  def login(), do: %__MODULE__{method: :get, path: "/_matrix/client/r0/login"}
+  def login(base_url),
+    do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/login"}
 
-  def login(username, password),
+  def login(base_url, username, password),
     do: %__MODULE__{
       method: :post,
+      base_url: base_url,
       path: "/_matrix/client/r0/login",
       body: %{
         type: "m.login.password",
@@ -20,19 +23,25 @@ defmodule MatrixSDK.Request do
       }
     }
 
-  def logout(token),
+  def logout(base_url, token),
     do: %__MODULE__{
       method: :post,
+      base_url: base_url,
       path: "/_matrix/client/r0/logout",
       headers: [{"Authorization", "Bearer " <> token}]
     }
 
-  def register_user(),
-    do: %__MODULE__{method: :post, path: "/_matrix/client/r0/register?kind=guest"}
-
-  def register_user(username, password),
+  def register_user(base_url),
     do: %__MODULE__{
       method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/register?kind=guest"
+    }
+
+  def register_user(base_url, username, password),
+    do: %__MODULE__{
+      method: :post,
+      base_url: base_url,
       path: "/_matrix/client/r0/register",
       body: %{
         auth: %{type: "m.login.dummy"},
@@ -41,5 +50,6 @@ defmodule MatrixSDK.Request do
       }
     }
 
-  def room_discovery(), do: %__MODULE__{method: :get, path: "/_matrix/client/r0/publicRooms"}
+  def room_discovery(base_url),
+    do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
 end
