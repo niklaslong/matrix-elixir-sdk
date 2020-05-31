@@ -9,19 +9,37 @@ defmodule MatrixSDK.HTTPClientTest do
     {:ok, bypass: bypass}
   end
 
-  test "client/1 returns Tesla client" do
-    url = "http://test.url"
-    client = %Tesla.Client{} = HTTPClient.client(url)
+  describe "client/1: returns Tesla client" do
+    test "with default headers" do
+      url = "http://test.url"
+      client = %Tesla.Client{} = HTTPClient.client(url)
 
-    assert client.adapter == {Tesla.Adapter.Mint, :call, [[]]}
-    assert client.fun == nil
-    assert client.post == []
+      assert client.adapter == {Tesla.Adapter.Mint, :call, [[]]}
+      assert client.fun == nil
+      assert client.post == []
 
-    assert client.pre == [
-             {Tesla.Middleware.BaseUrl, :call, [url]},
-             {Tesla.Middleware.Headers, :call, [[{"Accept", "application/json'"}]]},
-             {Tesla.Middleware.JSON, :call, [[]]}
-           ]
+      assert client.pre == [
+               {Tesla.Middleware.BaseUrl, :call, [url]},
+               {Tesla.Middleware.Headers, :call, [[{"Accept", "application/json'"}]]},
+               {Tesla.Middleware.JSON, :call, [[]]}
+             ]
+    end
+
+    test "with custom headers" do
+      url = "http://test.url"
+      client = %Tesla.Client{} = HTTPClient.client(url, [{"Custom-Header", "value"}])
+
+      assert client.adapter == {Tesla.Adapter.Mint, :call, [[]]}
+      assert client.fun == nil
+      assert client.post == []
+
+      assert client.pre == [
+               {Tesla.Middleware.BaseUrl, :call, [url]},
+               {Tesla.Middleware.Headers, :call,
+                [[{"Accept", "application/json'"}, {"Custom-Header", "value"}]]},
+               {Tesla.Middleware.JSON, :call, [[]]}
+             ]
+    end
   end
 
   test "request/3: GET", %{bypass: bypass} do
