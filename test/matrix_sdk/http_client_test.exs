@@ -1,7 +1,7 @@
 defmodule MatrixSDK.HTTPClientTest do
   use ExUnit.Case
 
-  alias MatrixSDK.HTTPClient
+  alias MatrixSDK.{Request, HTTPClient}
   alias Tesla
 
   setup do
@@ -41,6 +41,55 @@ defmodule MatrixSDK.HTTPClientTest do
              ]
     end
   end
+
+  describe "do_request/1:" do
+    test "GET", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :get,
+        base_url: base_url,
+        path: path
+      }
+
+      Bypass.expect_once(bypass, "GET", path, fn conn ->
+        assert conn.method == "GET"
+        assert conn.request_path == path
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      assert HTTPClient.do_request(request)
+    end
+
+    test "POST", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :post,
+        base_url: base_url,
+        path: path
+      }
+
+      Bypass.expect_once(bypass, "POST", path, fn conn ->
+        assert conn.method == "POST"
+        assert conn.request_path == path
+
+        assert conn
+               |> Plug.Conn.read_body()
+               |> elem(1)
+               |> Jason.decode!() == %{}
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      assert HTTPClient.do_request(request)
+    end
+  end
+
+  # –––––––
 
   test "request/3: GET", %{bypass: bypass} do
     path = "/test/get"
