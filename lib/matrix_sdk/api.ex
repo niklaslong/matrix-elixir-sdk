@@ -56,7 +56,7 @@ defmodule MatrixSDK.API do
 
   # Rooms
 
-  #  TODO: handle chunked responses
+  # TODO: handle chunked responses
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url
