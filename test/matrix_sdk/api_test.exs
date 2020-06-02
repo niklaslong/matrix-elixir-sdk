@@ -88,30 +88,37 @@ defmodule MatrixSDK.APITest do
 
   #  User - registration
 
-  test "register_user/2: registers a new guest user" do
-    client = HTTPClient.client("some_base_url.yay")
+  test "register_user/1: registers a new guest user" do
+    base_url = "http://test.url"
 
-    expect(HTTPClientMock, :request, fn :post,
-                                        ^client,
-                                        "/_matrix/client/r0/register?kind=guest" ->
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register?kind=guest"
+
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.register_user(client, :guest)
+    assert {:ok, _} = API.register_user(base_url)
   end
 
-  test "register_user/4: registers a new user" do
-    client = HTTPClient.client("some_base_url.yay")
+  test "register_user/3: registers a new user" do
+    base_url = "http://test.url"
+    username = "username"
+    password = "password"
 
-    expect(HTTPClientMock, :request, fn :post, ^client, "/_matrix/client/r0/register", body ->
-      assert body.auth == %{type: "m.login.dummy"}
-      assert body.username == "username"
-      assert body.password == "password"
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register"
+      assert request.body.auth.type == "m.login.dummy"
+      assert request.body.username == username
+      assert request.body.password == password
 
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.register_user(client, :user, "username", "password")
+    assert {:ok, _} = API.register_user(base_url, username, password)
   end
 
   # Rooms

@@ -1,5 +1,5 @@
 defmodule MatrixSDK.API do
-  alias MatrixSDK.{Request, HTTPClient}
+  alias MatrixSDK.{Request}
 
   @http_client Application.get_env(:matrix_sdk, :http_client)
 
@@ -42,16 +42,17 @@ defmodule MatrixSDK.API do
 
   # User - registration
 
-  def register_user(client, :guest),
-    do: @http_client.request(:post, client, "/_matrix/client/r0/register?kind=guest")
+  def register_user(base_url) do
+    base_url
+    |> Request.register_user()
+    |> @http_client.do_request()
+  end
 
-  def register_user(client, :user, username, password),
-    do:
-      @http_client.request(:post, client, "/_matrix/client/r0/register", %{
-        auth: %{type: "m.login.dummy"},
-        username: username,
-        password: password
-      })
+  def register_user(base_url, username, password) do
+    base_url
+    |> Request.register_user(username, password)
+    |> @http_client.do_request()
+  end
 
   # Rooms
 
