@@ -36,6 +36,14 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Gets the homeserver's supported login types to authenticate users. 
+
+  ## Examples
+
+      MatrixSDK.API.login("https://matrix.org")
+  """
+  @spec login(Request.base_url()) :: HTTPClient.result()
   def login(base_url) do
     base_url
     |> Request.login()

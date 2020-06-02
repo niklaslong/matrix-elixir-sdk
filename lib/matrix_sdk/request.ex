@@ -58,6 +58,21 @@ defmodule MatrixSDK.Request do
   def server_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 
+  @doc """
+  Returns a `%Request{}` struct used to  get the homeserver's supported login types to authenticate users. 
+
+  ## Examples
+
+      iex> MatrixSDK.Request.login("https://matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/client/r0/login"
+      }
+  """
+  @spec login(base_url()) :: __MODULE__.t()
   def login(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/login"}
 
