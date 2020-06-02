@@ -1,17 +1,27 @@
 defmodule MatrixSDK.API do
-  alias MatrixSDK.{Request}
+  @moduledoc """
+  Provides functions to make HTTP requests to a Matrix homeserver using the
+  `MatrixSDK.Request` and `MatrixSDK.HTTPClient` modules.
+  """
+
+  alias MatrixSDK.{Request, HTTPClient}
 
   @http_client Application.get_env(:matrix_sdk, :http_client)
 
-  #  API Standards
+  @doc """
+  Gets the versions of the Matrix specification supported by the server.  
 
+  ## Examples
+
+      MatrixSDK.API.spec_versions("http://localhost:8008")
+      MatrixSDK.API.spec_versions("https://matrix.org")
+  """
+  @spec spec_versions(Request.base_url()) :: HTTPClient.result()
   def spec_versions(base_url) do
     base_url
     |> Request.spec_versions()
     |> @http_client.do_request()
   end
-
-  # Server discovery
 
   # NOTE: response headers don't include json => middleware doesn't decode body
   def server_discovery(base_url) do
@@ -19,8 +29,6 @@ defmodule MatrixSDK.API do
     |> Request.server_discovery()
     |> @http_client.do_request()
   end
-
-  # User - login/logout
 
   def login(base_url) do
     base_url
@@ -40,8 +48,6 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  # User - registration
-
   def register_user(base_url) do
     base_url
     |> Request.register_user()
@@ -54,9 +60,6 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  # Rooms
-
-  # TODO: handle chunked responses
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url

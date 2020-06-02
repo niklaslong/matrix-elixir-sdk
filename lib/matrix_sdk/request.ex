@@ -1,13 +1,24 @@
 defmodule MatrixSDK.Request do
+  @moduledoc """
+  Provides functions which return a struct containing the data necessary for
+  each HTTP request.
+  """
+
   @enforce_keys [:method, :base_url, :path]
   defstruct([:method, :base_url, :path, headers: [], body: %{}])
 
+  @type method :: atom
+  @type base_url :: binary
+  @type path :: binary
+  @type headers :: [{binary, binary}]
+  @type body :: any
+
   @type t :: %__MODULE__{
-          method: atom,
-          base_url: String.t(),
-          path: String.t(),
-          headers: [{String.t(), String.t()}],
-          body: any
+          method: method(),
+          base_url: base_url(),
+          path: path(),
+          headers: headers(),
+          body: body()
         }
 
   def spec_versions(base_url),

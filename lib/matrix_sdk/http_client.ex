@@ -1,6 +1,12 @@
 defmodule MatrixSDK.HTTPClient do
-  use Tesla
+  @moduledoc """
+  Provides functions to makes HTTP requests using `Tesla`. 
+  """
+
+  use Tesla, docs: false
   alias MatrixSDK.Request
+
+  @type result() :: Tesla.Env.result()
 
   @callback do_request(Request.t()) :: Tesla.Env.result()
 
