@@ -40,6 +40,21 @@ defmodule MatrixSDK.Request do
   def spec_versions(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
+  @doc """
+  Returns a `%Request{}` struct used to  get discovery information about the domain. 
+
+  ## Examples
+
+      iex> MatrixSDK.Request.server_discovery("https://matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/.well-known/matrix/client"
+      }
+  """
+  @spec server_discovery(base_url()) :: __MODULE__.t()
   def server_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 

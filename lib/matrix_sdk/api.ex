@@ -13,7 +13,6 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.spec_versions("http://localhost:8008")
       MatrixSDK.API.spec_versions("https://matrix.org")
   """
   @spec spec_versions(Request.base_url()) :: HTTPClient.result()
@@ -23,7 +22,14 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  # NOTE: response headers don't include json => middleware doesn't decode body
+  @doc """
+  Gets discovery information about the domain. 
+
+  ## Examples
+
+      MatrixSDK.API.server_discovery("https://matrix.org")
+  """
+  @spec server_discovery(Request.base_url()) :: HTTPClient.result()
   def server_discovery(base_url) do
     base_url
     |> Request.server_discovery()
