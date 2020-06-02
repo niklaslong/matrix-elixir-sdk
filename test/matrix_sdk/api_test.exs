@@ -10,7 +10,7 @@ defmodule MatrixSDK.APITest do
   test "spec_versions/1: returns supported matrix spec" do
     base_url = "http://test.url"
 
-    expect(HTTPClientMock, :do_request, fn request ->
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
       assert request.method == :get
       assert request.base_url == base_url
       assert request.path == "/_matrix/client/versions"
@@ -24,7 +24,7 @@ defmodule MatrixSDK.APITest do
   test "server_discovery/1: returns discovery information about the domain" do
     base_url = "http://test.url"
 
-    expect(HTTPClientMock, :do_request, fn request ->
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
       assert request.method == :get
       assert request.base_url == base_url
       assert request.path == "/.well-known/matrix/client"
@@ -38,52 +38,52 @@ defmodule MatrixSDK.APITest do
   # User - login/logout
 
   test "login/1: returns login flows" do
-    client = HTTPClient.client("some_base_url.yay")
+    base_url = "http://test.url"
 
-    expect(HTTPClientMock, :request, fn :get, ^client, "/_matrix/client/r0/login" ->
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.login(client)
+    assert {:ok, _} = API.login(base_url)
   end
 
   test "login/3: returns login flows" do
-    client = HTTPClient.client("some_base_url.yay")
+    base_url = "http://test.url"
+    username = "username"
+    password = "password"
 
-    expect(HTTPClientMock, :request, fn :post, ^client, "/_matrix/client/r0/login", body ->
-      assert body.type == "m.login.password"
-      assert body.user == "username"
-      assert body.password == "password"
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.password"
+      assert request.body.user == "username"
+      assert request.body.password == "password"
 
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.login(client, "username", "password")
-  end
-
-  test "logout/1: invalidates access token" do
-    client = HTTPClient.client("some_base_url.yay", [{"Authorization", "Bearer token"}])
-
-    expect(HTTPClientMock, :request, fn :post, ^client, "/_matrix/client/r0/logout" ->
-      {:ok, %Tesla.Env{}}
-    end)
-
-    assert {:ok, _} = API.logout(client)
+    assert {:ok, _} = API.login(base_url, username, password)
   end
 
   test "logout/2: invalidates access token" do
-    expect(HTTPClientMock, :request, fn :post, client, "/_matrix/client/r0/logout" ->
-      [headers] =
-        Enum.find_value(client.pre, fn {middleware, _, value} ->
-          if middleware == Tesla.Middleware.Headers, do: value
-        end)
+    base_url = "http://test.url"
+    token = "token"
 
-      assert Enum.member?(headers, {"Authorization", "Bearer token"})
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/logout"
+      assert Enum.member?(request.headers, {"Authorization", "Bearer " <> token})
 
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.logout("some_base_url.yay", "token")
+    assert {:ok, _} = API.logout(base_url, token)
   end
 
   #  User - registration

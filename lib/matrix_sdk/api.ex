@@ -22,22 +22,22 @@ defmodule MatrixSDK.API do
 
   # User - login/logout
 
-  def login(client), do: @http_client.request(:get, client, "/_matrix/client/r0/login")
-
-  def login(client, username, password) do
-    @http_client.request(:post, client, "/_matrix/client/r0/login", %{
-      type: "m.login.password",
-      user: username,
-      password: password
-    })
+  def login(base_url) do
+    base_url
+    |> Request.login()
+    |> @http_client.do_request()
   end
 
-  def logout(client), do: @http_client.request(:post, client, "/_matrix/client/r0/logout")
+  def login(base_url, username, password) do
+    base_url
+    |> Request.login(username, password)
+    |> @http_client.do_request()
+  end
 
   def logout(base_url, token) do
     base_url
-    |> HTTPClient.client([{"Authorization", "Bearer " <> token}])
-    |> logout()
+    |> Request.logout(token)
+    |> @http_client.do_request()
   end
 
   # User - registration
