@@ -2,7 +2,7 @@ defmodule MatrixSDK.APITest do
   use ExUnit.Case
   import Mox
 
-  alias MatrixSDK.{API, Request, HTTPClient, HTTPClientMock}
+  alias MatrixSDK.{API, Request, HTTPClientMock}
   alias Tesla
 
   setup :verify_on_exit!
@@ -124,12 +124,16 @@ defmodule MatrixSDK.APITest do
   # Rooms
 
   test "room_discovery/1: returns public rooms on server" do
-    client = HTTPClient.client("some_base_url.yay")
+    base_url = "http://test.url"
 
-    expect(HTTPClientMock, :request, fn :get, ^client, "/_matrix/client/r0/publicRooms" ->
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/publicRooms"
+
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.room_discovery(client)
+    assert {:ok, _} = API.room_discovery(base_url)
   end
 end

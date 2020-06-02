@@ -58,6 +58,9 @@ defmodule MatrixSDK.API do
 
   #  TODO: handle chunked responses
   # REVIEW: this works on matrix.org but not on local?
-  def room_discovery(client),
-    do: @http_client.request(:get, client, "/_matrix/client/r0/publicRooms")
+  def room_discovery(base_url) do
+    base_url
+    |> Request.room_discovery()
+    |> @http_client.do_request()
+  end
 end
