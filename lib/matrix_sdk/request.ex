@@ -21,6 +21,22 @@ defmodule MatrixSDK.Request do
           body: body()
         }
 
+  @doc """
+  Returns a `%Request{}` struct used to get the versions of the Matrix specification
+  supported by the server.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.spec_versions("https://matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/client/versions"
+      }
+  """
+  @spec spec_versions(base_url()) :: __MODULE__.t()
   def spec_versions(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 

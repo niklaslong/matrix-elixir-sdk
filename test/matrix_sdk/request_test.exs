@@ -2,6 +2,8 @@ defmodule MatrixSDK.RequestTest do
   use ExUnit.Case
   alias MatrixSDK.Request
 
+  doctest MatrixSDK.Request
+
   test "spec_versions/1" do
     base_url = "http://test-server.url"
     request = Request.spec_versions(base_url)
