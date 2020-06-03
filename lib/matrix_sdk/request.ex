@@ -43,7 +43,7 @@ defmodule MatrixSDK.Request do
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
   @doc """
-  Returns a `%Request{}` struct used to  get discovery information about the domain. 
+  Returns a `%Request{}` struct used to get discovery information about the domain. 
 
   ## Examples
 
@@ -61,7 +61,7 @@ defmodule MatrixSDK.Request do
     do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 
   @doc """
-  Returns a `%Request{}` struct used to  get the homeserver's supported login types to authenticate users. 
+  Returns a `%Request{}` struct used to get the homeserver's supported login types to authenticate users. 
 
   ## Examples
 
@@ -151,13 +151,49 @@ defmodule MatrixSDK.Request do
       password: password
     }
 
-  def logout(base_url, token),
-    do: %__MODULE__{
+  @doc """
+  Returns a  `%Request{}` struct used to invalidates an existing access token, so that it can no longer be used for authorization.
+  Optionally, all access tokens can be invalidated by passing in `:all` as a third argument.
+
+  ## Examples
+
+  Invalidating a single token:
+
+      iex> MatrixSDK.Request.logout("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/logout"
+      }
+
+  Invalidating all tokens:  
+
+      iex> MatrixSDK.Request.logout("https://matrix.org", "token", :all)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/logout/all"
+      }
+  """
+  @spec logout(base_url(), binary(), atom | nil) :: __MODULE__.t()
+  def logout(base_url, token, opt \\ nil) do
+    path =
+      case opt do
+        :all -> "/_matrix/client/r0/logout/all"
+        _ -> "/_matrix/client/r0/logout"
+      end
+
+    %__MODULE__{
       method: :post,
       base_url: base_url,
-      path: "/_matrix/client/r0/logout",
+      path: path,
       headers: [{"Authorization", "Bearer " <> token}]
     }
+  end
 
   def register_user(base_url),
     do: %__MODULE__{
