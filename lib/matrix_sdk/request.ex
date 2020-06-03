@@ -83,7 +83,10 @@ defmodule MatrixSDK.Request do
       path: "/_matrix/client/r0/login",
       body: %{
         type: "m.login.password",
-        user: username,
+        identifier: %{
+          type: "m.id.user",
+          user: username
+        },
         password: password
       }
     }

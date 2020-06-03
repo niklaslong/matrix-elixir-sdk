@@ -41,7 +41,8 @@ defmodule MatrixSDK.RequestTest do
     assert request.base_url == base_url
     assert request.path == "/_matrix/client/r0/login"
     assert request.body.type == "m.login.password"
-    assert request.body.user == username
+    assert request.body.identifier.type == "m.id.user"
+    assert request.body.identifier.user == username
     assert request.body.password == password
   end
 
