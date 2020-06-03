@@ -47,7 +47,6 @@ defmodule MatrixSDK.RequestTest do
   test "login/2: user and password authentication" do
     base_url = "http://test-server.url"
     auth = %{user: "username", password: "password"}
-
     request = Request.login(base_url, auth)
 
     assert request.method == :post
@@ -63,7 +62,6 @@ defmodule MatrixSDK.RequestTest do
     base_url = "http://test-server.url"
     token = "token"
     opts = %{device_id: "id", initial_device_display_name: "display name"}
-
     request = Request.login(base_url, token, opts)
 
     assert request.method == :post
@@ -79,7 +77,6 @@ defmodule MatrixSDK.RequestTest do
     base_url = "http://test-server.url"
     auth = %{user: "username", password: "password"}
     opts = %{device_id: "id", initial_device_display_name: "display name"}
-
     request = Request.login(base_url, auth, opts)
 
     assert request.method == :post

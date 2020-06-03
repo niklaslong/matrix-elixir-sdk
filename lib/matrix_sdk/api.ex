@@ -80,17 +80,10 @@ defmodule MatrixSDK.API do
 
   @doc """
   Invalidates an existing access token, so that it can no longer be used for authorization.
-  Optionally, all access tokens can be invalidated by passing in `:all` as a third argument.
 
   ## Examples
 
-  Invalidating a single token:
-
       MatrixSDK.API.logout("https://matrix.org", "token")
-
-  Invalidating all tokens:  
-
-      MatrixSDK.API.logout("https://matrix.org", "token", :all)
   """
   @spec logout(Request.base_url(), binary) :: HTTPClient.result()
   def logout(base_url, token) do
