@@ -51,7 +51,7 @@ defmodule MatrixSDK.APITest do
     assert {:ok, _} = API.login(base_url)
   end
 
-  test "login/3: token authentication" do
+  test "login/2: token authentication" do
     base_url = "http://test.url"
     token = "token"
 
@@ -66,6 +66,25 @@ defmodule MatrixSDK.APITest do
     end)
 
     assert {:ok, _} = API.login(base_url, token)
+  end
+
+  test "login/2: user and password authentication" do
+    base_url = "http://test.url"
+    auth = %{user: "username", password: "password"}
+
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.password"
+      assert request.body.identifier.type == "m.id.user"
+      assert request.body.identifier.user == auth.user
+      assert request.body.password == auth.password
+
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.login(base_url, auth)
   end
 
   test "login/3: token authentication with options" do
@@ -86,25 +105,6 @@ defmodule MatrixSDK.APITest do
     end)
 
     assert {:ok, _} = API.login(base_url, token, opts)
-  end
-
-  test "login/3: user and password authentication" do
-    base_url = "http://test.url"
-    auth = %{user: "username", password: "password"}
-
-    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-      assert request.method == :post
-      assert request.base_url == base_url
-      assert request.path == "/_matrix/client/r0/login"
-      assert request.body.type == "m.login.password"
-      assert request.body.identifier.type == "m.id.user"
-      assert request.body.identifier.user == auth.user
-      assert request.body.password == auth.password
-
-      {:ok, %Tesla.Env{}}
-    end)
-
-    assert {:ok, _} = API.login(base_url, auth)
   end
 
   test "login/3: user and password authentication with options" do
@@ -143,6 +143,22 @@ defmodule MatrixSDK.APITest do
     end)
 
     assert {:ok, _} = API.logout(base_url, token)
+  end
+
+  test "logout/3: invalidates all access token" do
+    base_url = "http://test.url"
+    token = "token"
+
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/logout/all"
+      assert Enum.member?(request.headers, {"Authorization", "Bearer " <> token})
+
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.logout(base_url, token, :all)
   end
 
   #  User - registration
