@@ -79,7 +79,7 @@ defmodule MatrixSDK.Request do
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/login"}
 
   @doc """
-  Returns a  `%Request{}` struct used to authenticates the user, and issues an access token
+  Returns a  `%Request{}` struct used to authenticate the user and issues an access token
   they can use to authorize themself in subsequent requests.
 
   ## Args
@@ -152,7 +152,7 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  Returns a  `%Request{}` struct used to invalidates an existing access token, so that it can no longer be used for authorization.
+  Returns a  `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
 
   ## Examples
       iex> MatrixSDK.Request.logout("https://matrix.org", "token")
