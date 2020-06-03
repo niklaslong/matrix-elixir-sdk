@@ -14,11 +14,11 @@ defmodule MatrixSDK.Request do
   @type body :: any
 
   @type t :: %__MODULE__{
-          method: method(),
-          base_url: base_url(),
-          path: path(),
-          headers: headers(),
-          body: body()
+          method: method,
+          base_url: base_url,
+          path: path,
+          headers: headers,
+          body: body
         }
 
   @type auth :: token :: binary | %{user: binary, password: binary}
@@ -38,7 +38,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/versions"
       }
   """
-  @spec spec_versions(base_url()) :: __MODULE__.t()
+  @spec spec_versions(base_url) :: __MODULE__.t()
   def spec_versions(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
@@ -56,7 +56,7 @@ defmodule MatrixSDK.Request do
         path: "/.well-known/matrix/client"
       }
   """
-  @spec server_discovery(base_url()) :: __MODULE__.t()
+  @spec server_discovery(base_url) :: __MODULE__.t()
   def server_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 
@@ -74,7 +74,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
   """
-  @spec login(base_url()) :: __MODULE__.t()
+  @spec login(base_url) :: __MODULE__.t()
   def login(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/login"}
 
@@ -120,7 +120,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
   """
-  @spec login(base_url(), auth(), opts :: map) :: __MODULE__.t()
+  @spec login(base_url, auth, opts :: map) :: __MODULE__.t()
   def login(base_url, auth, opts \\ %{}) do
     body =
       auth
@@ -164,7 +164,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/logout"
       }
   """
-  @spec logout(base_url(), binary()) :: __MODULE__.t()
+  @spec logout(base_url, binary) :: __MODULE__.t()
   def logout(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout", token)
 
   defp logout(base_url, path, token),
@@ -189,7 +189,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/logout/all"
       }
   """
-  @spec logout_all(base_url(), binary()) :: __MODULE__.t()
+  @spec logout_all(base_url, binary) :: __MODULE__.t()
   def logout_all(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout/all", token)
 
   def register_user(base_url),
