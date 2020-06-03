@@ -50,9 +50,31 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  def login(base_url, username, password) do
+  @doc """
+  Authenticates the user, and issues an access token they can use to authorize themself in subsequent requests.
+
+  ## Args
+
+  - `base_url`: the base URL for the homeserver 
+  - `auth`: either an authentication token or a map containing the `user` and `password` keys 
+  - `opts`: an optional map containing the `device_id` and/or `initial_device_display_name` keys
+
+  ## Examples
+
+  Token authentication, no opts:
+
+      MatrixSDK.API.login("https://matrix.org", "token")
+
+  User and password authentication, with opts:
+
+      auth = %{user: "maurice_moss", password: "super-secure-password"}
+      opts = %{device_id: "device_id", initial_device_display_name: "THE INTERNET"}
+      MatrixSDK.API.login("https://matrix.org", auth, opts)
+  """
+  @spec login(Request.base_url(), Request.auth(), opts :: map()) :: HTTPClient.result()
+  def login(base_url, auth, opts \\ %{}) do
     base_url
-    |> Request.login(username, password)
+    |> Request.login(auth, opts)
     |> @http_client.do_request()
   end
 

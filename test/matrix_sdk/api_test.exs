@@ -51,10 +51,46 @@ defmodule MatrixSDK.APITest do
     assert {:ok, _} = API.login(base_url)
   end
 
-  test "login/3: returns login flows" do
+  test "login/3: token authentication" do
     base_url = "http://test.url"
-    username = "username"
-    password = "password"
+    token = "token"
+
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.token"
+      assert request.body.token == token
+
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.login(base_url, token)
+  end
+
+  test "login/3: token authentication with options" do
+    base_url = "http://test.url"
+    token = "token"
+    opts = %{device_id: "id", initial_device_display_name: "display name"}
+
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.token"
+      assert request.body.token == token
+      assert request.body.device_id == opts.device_id
+      assert request.body.initial_device_display_name == opts.initial_device_display_name
+
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.login(base_url, token, opts)
+  end
+
+  test "login/3: user and password authentication" do
+    base_url = "http://test.url"
+    auth = %{user: "username", password: "password"}
 
     expect(HTTPClientMock, :do_request, fn %Request{} = request ->
       assert request.method == :post
@@ -62,13 +98,35 @@ defmodule MatrixSDK.APITest do
       assert request.path == "/_matrix/client/r0/login"
       assert request.body.type == "m.login.password"
       assert request.body.identifier.type == "m.id.user"
-      assert request.body.identifier.user == "username"
-      assert request.body.password == "password"
+      assert request.body.identifier.user == auth.user
+      assert request.body.password == auth.password
 
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.login(base_url, username, password)
+    assert {:ok, _} = API.login(base_url, auth)
+  end
+
+  test "login/3: user and password authentication with options" do
+    base_url = "http://test.url"
+    auth = %{user: "username", password: "password"}
+    opts = %{device_id: "id", initial_device_display_name: "display name"}
+
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.password"
+      assert request.body.identifier.type == "m.id.user"
+      assert request.body.identifier.user == auth.user
+      assert request.body.password == auth.password
+      assert request.body.device_id == opts.device_id
+      assert request.body.initial_device_display_name == opts.initial_device_display_name
+
+      {:ok, %Tesla.Env{}}
+    end)
+
+    assert {:ok, _} = API.login(base_url, auth, opts)
   end
 
   test "logout/2: invalidates access token" do
