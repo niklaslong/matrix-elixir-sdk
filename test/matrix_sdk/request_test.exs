@@ -31,11 +31,11 @@ defmodule MatrixSDK.RequestTest do
     assert request.path == "/_matrix/client/r0/login"
   end
 
-  test "login/3" do
+  test "login/2" do
     base_url = "http://test-server.url"
     username = "username"
     password = "password"
-    request = Request.login(base_url, username, password)
+    request = Request.login(base_url, %{user: username, password: password})
 
     assert request.method == :post
     assert request.base_url == base_url
