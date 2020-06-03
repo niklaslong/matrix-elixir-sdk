@@ -107,7 +107,7 @@ defmodule MatrixSDK.RequestTest do
   test "logout/3" do
     base_url = "http://test-server.url"
     token = "token"
-    request = Request.logout(base_url, token, :all)
+    request = Request.logout_all(base_url, token)
 
     assert request.method == :post
     assert request.base_url == base_url

@@ -153,12 +153,8 @@ defmodule MatrixSDK.Request do
 
   @doc """
   Returns a  `%Request{}` struct used to invalidates an existing access token, so that it can no longer be used for authorization.
-  Optionally, all access tokens can be invalidated by passing in `:all` as a third argument.
 
   ## Examples
-
-  Invalidating a single token:
-
       iex> MatrixSDK.Request.logout("https://matrix.org", "token")
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
@@ -167,10 +163,24 @@ defmodule MatrixSDK.Request do
         method: :post,
         path: "/_matrix/client/r0/logout"
       }
+  """
+  @spec logout(base_url(), binary()) :: __MODULE__.t()
+  def logout(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout", token)
 
-  Invalidating all tokens:  
+  defp logout(base_url, path, token),
+    do: %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: path,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
 
-      iex> MatrixSDK.Request.logout("https://matrix.org", "token", :all)
+  @doc """
+  Returns a  `%Request{}` struct used to invalidate all existing access tokens, so that they can no longer be used for authorization.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.logout_all("https://matrix.org", "token")
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{},
@@ -179,21 +189,8 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/logout/all"
       }
   """
-  @spec logout(base_url(), binary(), atom | nil) :: __MODULE__.t()
-  def logout(base_url, token, opt \\ nil) do
-    path =
-      case opt do
-        :all -> "/_matrix/client/r0/logout/all"
-        _ -> "/_matrix/client/r0/logout"
-      end
-
-    %__MODULE__{
-      method: :post,
-      base_url: base_url,
-      path: path,
-      headers: [{"Authorization", "Bearer " <> token}]
-    }
-  end
+  @spec logout_all(base_url(), binary()) :: __MODULE__.t()
+  def logout_all(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout/all", token)
 
   def register_user(base_url),
     do: %__MODULE__{

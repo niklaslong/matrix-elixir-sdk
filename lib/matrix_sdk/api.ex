@@ -92,10 +92,24 @@ defmodule MatrixSDK.API do
 
       MatrixSDK.API.logout("https://matrix.org", "token", :all)
   """
-  @spec logout(Request.base_url(), binary, atom | nil) :: HTTPClient.result()
-  def logout(base_url, token, opt \\ nil) do
+  @spec logout(Request.base_url(), binary) :: HTTPClient.result()
+  def logout(base_url, token) do
     base_url
-    |> Request.logout(token, opt)
+    |> Request.logout(token)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Invalidates all existing access tokens, so that they can no longer be used for authorization.
+
+  ## Examples
+
+      MatrixSDK.API.logout_all("https://matrix.org", "token")
+  """
+  @spec logout_all(Request.base_url(), binary) :: HTTPClient.result()
+  def logout_all(base_url, token) do
+    base_url
+    |> Request.logout_all(token)
     |> @http_client.do_request()
   end
 

@@ -145,7 +145,7 @@ defmodule MatrixSDK.APITest do
     assert {:ok, _} = API.logout(base_url, token)
   end
 
-  test "logout/3: invalidates all access token" do
+  test "logout_all/2: invalidates all access token" do
     base_url = "http://test.url"
     token = "token"
 
@@ -158,7 +158,7 @@ defmodule MatrixSDK.APITest do
       {:ok, %Tesla.Env{}}
     end)
 
-    assert {:ok, _} = API.logout(base_url, token, :all)
+    assert {:ok, _} = API.logout_all(base_url, token)
   end
 
   #  User - registration
