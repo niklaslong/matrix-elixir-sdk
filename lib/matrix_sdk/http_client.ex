@@ -6,7 +6,7 @@ defmodule MatrixSDK.HTTPClient do
   use Tesla, docs: false
   alias MatrixSDK.Request
 
-  @type result() :: Tesla.Env.result()
+  @type result :: Tesla.Env.result()
 
   @callback do_request(Request.t()) :: Tesla.Env.result()
 
