@@ -8,7 +8,8 @@ defmodule MatrixSDK.MixProject do
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
-      deps: deps()
+      deps: deps(),
+      docs: docs()
     ]
   end
 
@@ -33,6 +34,15 @@ defmodule MatrixSDK.MixProject do
       {:mox, "~> 0.5.2", only: :test},
       {:bypass, "~> 1.0", only: :test},
       {:ex_doc, "~> 0.22", only: :dev, runtime: false}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      name: "Matrix SDK",
+      source_url: "https://github.com/niklaslong/matrix-sdk",
+      extras: ["README.md"]
     ]
   end
 end
