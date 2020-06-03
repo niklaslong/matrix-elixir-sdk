@@ -119,8 +119,7 @@ defmodule MatrixSDK.Request do
         method: :post,
         path: "/_matrix/client/r0/login"
       }
-  
-  """  
+  """
   @spec login(base_url(), auth(), opts :: map) :: __MODULE__.t()
   def login(base_url, auth, opts \\ %{}) do
     body =
