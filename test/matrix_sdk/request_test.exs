@@ -22,94 +22,96 @@ defmodule MatrixSDK.RequestTest do
     assert request.path == "/.well-known/matrix/client"
   end
 
-  test "login/1" do
-    base_url = "http://test-server.url"
-    request = Request.login(base_url)
+  describe "user login & logout:" do
+    test "login/1" do
+      base_url = "http://test-server.url"
+      request = Request.login(base_url)
 
-    assert request.method == :get
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/login"
-  end
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+    end
 
-  test "login/2: token authentication" do
-    base_url = "http://test-server.url"
-    token = "token"
+    test "login/2 token authentication" do
+      base_url = "http://test-server.url"
+      token = "token"
 
-    request = Request.login(base_url, token)
+      request = Request.login(base_url, token)
 
-    assert request.method == :post
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/login"
-    assert request.body.type == "m.login.token"
-    assert request.body.token == token
-  end
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.token"
+      assert request.body.token == token
+    end
 
-  test "login/2: user and password authentication" do
-    base_url = "http://test-server.url"
-    auth = %{user: "username", password: "password"}
-    request = Request.login(base_url, auth)
+    test "login/2 user and password authentication" do
+      base_url = "http://test-server.url"
+      auth = %{user: "username", password: "password"}
+      request = Request.login(base_url, auth)
 
-    assert request.method == :post
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/login"
-    assert request.body.type == "m.login.password"
-    assert request.body.identifier.type == "m.id.user"
-    assert request.body.identifier.user == auth.user
-    assert request.body.password == auth.password
-  end
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.password"
+      assert request.body.identifier.type == "m.id.user"
+      assert request.body.identifier.user == auth.user
+      assert request.body.password == auth.password
+    end
 
-  test "login/3: token authentication with options" do
-    base_url = "http://test-server.url"
-    token = "token"
-    opts = %{device_id: "id", initial_device_display_name: "display name"}
-    request = Request.login(base_url, token, opts)
+    test "login/3 token authentication with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      opts = %{device_id: "id", initial_device_display_name: "display name"}
+      request = Request.login(base_url, token, opts)
 
-    assert request.method == :post
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/login"
-    assert request.body.type == "m.login.token"
-    assert request.body.token == token
-    assert request.body.device_id == opts.device_id
-    assert request.body.initial_device_display_name == opts.initial_device_display_name
-  end
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.token"
+      assert request.body.token == token
+      assert request.body.device_id == opts.device_id
+      assert request.body.initial_device_display_name == opts.initial_device_display_name
+    end
 
-  test "login/3: user and password authentication with options" do
-    base_url = "http://test-server.url"
-    auth = %{user: "username", password: "password"}
-    opts = %{device_id: "id", initial_device_display_name: "display name"}
-    request = Request.login(base_url, auth, opts)
+    test "login/3 user and password authentication with options" do
+      base_url = "http://test-server.url"
+      auth = %{user: "username", password: "password"}
+      opts = %{device_id: "id", initial_device_display_name: "display name"}
+      request = Request.login(base_url, auth, opts)
 
-    assert request.method == :post
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/login"
-    assert request.body.type == "m.login.password"
-    assert request.body.identifier.type == "m.id.user"
-    assert request.body.identifier.user == auth.user
-    assert request.body.password == auth.password
-    assert request.body.device_id == opts.device_id
-    assert request.body.initial_device_display_name == opts.initial_device_display_name
-  end
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/login"
+      assert request.body.type == "m.login.password"
+      assert request.body.identifier.type == "m.id.user"
+      assert request.body.identifier.user == auth.user
+      assert request.body.password == auth.password
+      assert request.body.device_id == opts.device_id
+      assert request.body.initial_device_display_name == opts.initial_device_display_name
+    end
 
-  test "logout/2" do
-    base_url = "http://test-server.url"
-    token = "token"
-    request = Request.logout(base_url, token)
+    test "logout/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+      request = Request.logout(base_url, token)
 
-    assert request.method == :post
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/logout"
-    assert request.headers == [{"Authorization", "Bearer " <> token}]
-  end
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/logout"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
 
-  test "logout/3" do
-    base_url = "http://test-server.url"
-    token = "token"
-    request = Request.logout_all(base_url, token)
+    test "logout_all/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+      request = Request.logout_all(base_url, token)
 
-    assert request.method == :post
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/logout/all"
-    assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/logout/all"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
   end
 
   test "register_user/1" do
