@@ -184,7 +184,7 @@ defmodule MatrixSDK.RequestTest do
       base_url = "http://test-server.url"
       username = "username"
 
-      request = Request.username_availablity(base_url, username)
+      request = Request.username_availability(base_url, username)
 
       assert request.method == :get
       assert request.base_url == base_url

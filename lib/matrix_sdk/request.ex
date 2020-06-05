@@ -306,7 +306,7 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-       iex> MatrixSDK.Request.username_availablity("https://matrix.org", "maurice_moss")
+       iex> MatrixSDK.Request.username_availability("https://matrix.org", "maurice_moss")
        %MatrixSDK.Request{
          base_url: "https://matrix.org",
          body: %{},
@@ -315,8 +315,8 @@ defmodule MatrixSDK.Request do
          path: "/_matrix/client/r0/register/available?username=maurice_moss"
        }
   """
-  @spec username_availablity(base_url, binary) :: t
-  def username_availablity(base_url, username),
+  @spec username_availability(base_url, binary) :: t
+  def username_availability(base_url, username),
     do: %__MODULE__{
       method: :get,
       base_url: base_url,

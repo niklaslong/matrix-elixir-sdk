@@ -150,12 +150,12 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-       MatrixSDK.Request.username_availablity("https://matrix.org", "maurice_moss")
+       MatrixSDK.Request.username_availability("https://matrix.org", "maurice_moss")
   """
   @spec username_availability(Request.base_url(), binary) :: HTTPClient.result()
   def username_availability(base_url, username) do
     base_url
-    |> Request.username_availablity(username)
+    |> Request.username_availability(username)
     |> @http_client.do_request()
   end
 
