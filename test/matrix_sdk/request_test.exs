@@ -179,6 +179,17 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.initial_device_display_name == opts.initial_device_display_name
       assert request.body.inhibit_login == opts.inhibit_login
     end
+
+    test "username_availability/2" do
+      base_url = "http://test-server.url"
+      username = "username"
+
+      request = Request.username_availablity(base_url, username)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register/available?username=#{username}"
+    end
   end
 
   describe "room administration:" do

@@ -301,6 +301,28 @@ defmodule MatrixSDK.Request do
     }
   end
 
+ @doc """
+ Returns a `%Request{}` struct used to check if a username is available, and valid, for the server.
+
+ ## Examples
+
+      iex> MatrixSDK.Request.username_availablity("https://matrix.org", "maurice_moss")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/client/r0/register/available?username=maurice_moss"
+      }
+ """
+  @spec username_availablity(base_url, binary) :: t
+  def username_availablity(base_url, username),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/register/available?username=#{username}"
+    }
+
   defp user_registration_auth(password), do: %{auth: %{type: "m.login.dummy"}, password: password}
 
   def room_discovery(base_url),
