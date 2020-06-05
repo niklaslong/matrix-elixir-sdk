@@ -84,9 +84,14 @@ defmodule MatrixSDK.Request do
 
   ## Args
 
+  Required:
   - `base_url`: the base URL for the homeserver 
   - `auth`: either an authentication token or a map containing the `user` and `password` keys 
-  - `opts`: an optional map containing the `device_id` and/or `initial_device_display_name` keys
+
+  Optional:
+  - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
+  - `initial_device_display_name`: a display name to assign to the newly-created device
+
 
   ## Examples
       
@@ -191,7 +196,13 @@ defmodule MatrixSDK.Request do
   @doc """
   Returns a `%Request{}` struct used to register a guest account on the homeserver. 
 
-  Note: all parameters in the request body with the exception of `initial_device_display_name` will be ignored by the homeserver.
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+
+  Optional: 
+  - `initial_device_display_name`: a display name to assign to the newly-created device
 
   ## Examples
 
@@ -229,6 +240,16 @@ defmodule MatrixSDK.Request do
   Returns a `%Request{}` struct used to register a user account on the homeserver. 
 
   ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+  - `password`: the desired password for the account
+
+  Optional: 
+  - `username`: the basis for the localpart of the desired Matrix ID. If omitted, the homeserver will generate a Matrix ID local part.
+  - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
+  - `initial_device_display_name`: a display name to assign to the newly-created device
+  - `inhibit_login`: if true, an `access_token` and `device_id` will not be returned from this call, therefore preventing an automatic login
 
   ## Examples
 

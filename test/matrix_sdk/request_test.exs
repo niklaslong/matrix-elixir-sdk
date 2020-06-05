@@ -131,7 +131,7 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/register?kind=guest"
     end
 
-    test "register_guest/1 with options" do
+    test "register_guest/2 with options" do
       base_url = "http://test-server.url"
       opts = %{initial_device_display_name: "display name"}
 
@@ -143,7 +143,7 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.initial_device_display_name == opts.initial_device_display_name
     end
 
-    test "register_user/3" do
+    test "register_user/2" do
       base_url = "http://test-server.url"
       password = "password"
 
