@@ -1,8 +1,12 @@
 # MatrixSDK
 
-**TODO: Add description**
+This will hopefully become the Matrix SDK for Elixir. It is currently in active (and early) development and hasn't yet been released to Hex. 
+
+The first release will provide a simple wrapper around the Matrix client-server API. 
 
 ## Starting a local homeserver
+
+If you have a synapse server installed it can be started as follows:
 
 ```
 cd synapse
