@@ -121,7 +121,7 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
-  describe "user data:" do
+  describe "account registration:" do
     test "register_guest/1" do
       base_url = "http://test-server.url"
       request = Request.register_guest(base_url)

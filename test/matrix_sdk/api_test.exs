@@ -163,7 +163,7 @@ defmodule MatrixSDK.APITest do
     end
   end
 
-  describe "user data:" do
+  describe "account registration:" do
     test "register_guest/1 registers a new guest user" do
       base_url = "http://test.url"
 
