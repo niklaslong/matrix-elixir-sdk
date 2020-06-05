@@ -106,15 +106,47 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  def register_user(base_url) do
+  @doc """
+  Registers a guest account on the homeserver. 
+
+  ## Examples
+
+      MatrixSDK.API.register_guest("https://matrix.org")
+
+  Specifiying a display name for the device:    
+
+      opts = %{initial_device_display_name: "display name"}
+      MatrixSDK.API.register_guest("https://matrix.org", opts)
+  """
+  @spec register_guest(Request.base_url(), map) :: HTTPClient.result()
+  def register_guest(base_url, opts \\ %{}) do
     base_url
-    |> Request.register_user()
+    |> Request.register_guest(opts)
     |> @http_client.do_request()
   end
 
-  def register_user(base_url, username, password) do
+  @doc """
+  Registers a user account on the homeserver. 
+
+  ## Examples
+
+      MatrixSDK.API.register_user("https://matrix.org", "password")
+
+  With optional parameters:    
+
+      opts = %{
+                username: "username",
+                device_id: "id",
+                initial_device_display_name: "display name",
+                inhibit_login: true
+              }
+
+      MatrixSDK.API.register_user("https://matrix.org", "password", opts)
+  """
+  @spec register_user(Request.base_url(), binary, map) :: HTTPClient.result()
+  def register_user(base_url, password, opts \\ %{}) do
     base_url
-    |> Request.register_user(username, password)
+    |> Request.register_user(password, opts)
     |> @http_client.do_request()
   end
 
