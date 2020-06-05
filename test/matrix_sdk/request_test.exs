@@ -4,25 +4,27 @@ defmodule MatrixSDK.RequestTest do
 
   doctest MatrixSDK.Request
 
-  test "spec_versions/1" do
-    base_url = "http://test-server.url"
-    request = Request.spec_versions(base_url)
+  describe "server administration:" do
+    test "spec_versions/1" do
+      base_url = "http://test-server.url"
+      request = Request.spec_versions(base_url)
 
-    assert request.method == :get
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/versions"
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/versions"
+    end
+
+    test "server_discovery/1" do
+      base_url = "http://test-server.url"
+      request = Request.server_discovery(base_url)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/.well-known/matrix/client"
+    end
   end
 
-  test "server_discovery/1" do
-    base_url = "http://test-server.url"
-    request = Request.server_discovery(base_url)
-
-    assert request.method == :get
-    assert request.base_url == base_url
-    assert request.path == "/.well-known/matrix/client"
-  end
-
-  describe "user login & logout:" do
+  describe "session management:" do
     test "login/1" do
       base_url = "http://test-server.url"
       request = Request.login(base_url)
@@ -114,35 +116,39 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
-  test "register_user/1" do
-    base_url = "http://test-server.url"
-    request = Request.register_user(base_url)
+  describe "user data:" do
+    test "register_user/1" do
+      base_url = "http://test-server.url"
+      request = Request.register_user(base_url)
 
-    assert request.method == :post
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/register?kind=guest"
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register?kind=guest"
+    end
+
+    test "register_user/3" do
+      base_url = "http://test-server.url"
+      username = "username"
+      password = "password"
+      request = Request.register_user(base_url, username, password)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register"
+      assert request.body.auth.type == "m.login.dummy"
+      assert request.body.username == username
+      assert request.body.password == password
+    end
   end
 
-  test "register_user/3" do
-    base_url = "http://test-server.url"
-    username = "username"
-    password = "password"
-    request = Request.register_user(base_url, username, password)
+  describe "room administration:" do
+    test "room_discovery/1" do
+      base_url = "http://test-server.url"
+      request = Request.room_discovery(base_url)
 
-    assert request.method == :post
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/register"
-    assert request.body.auth.type == "m.login.dummy"
-    assert request.body.username == username
-    assert request.body.password == password
-  end
-
-  test "room_discovery/1" do
-    base_url = "http://test-server.url"
-    request = Request.room_discovery(base_url)
-
-    assert request.method == :get
-    assert request.base_url == base_url
-    assert request.path == "/_matrix/client/r0/publicRooms"
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/publicRooms"
+    end
   end
 end
