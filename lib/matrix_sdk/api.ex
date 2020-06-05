@@ -145,6 +145,20 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Checks if a username is available and valid for the server.
+
+  ## Examples
+
+       MatrixSDK.Request.username_availablity("https://matrix.org", "maurice_moss")
+  """
+  @spec username_availability(Request.base_url(), binary) :: HTTPClient.result()
+  def username_availability(base_url, username) do
+    base_url
+    |> Request.username_availablity(username)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url

@@ -238,6 +238,21 @@ defmodule MatrixSDK.APITest do
 
       assert {:ok, _} = API.register_user(base_url, password, opts)
     end
+
+    test "username_availability/2" do
+      base_url = "http://test-server.url"
+      username = "username"
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/register/available?username=#{username}"
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.username_availability(base_url, username)
+    end
   end
 
   describe "room administration:" do
