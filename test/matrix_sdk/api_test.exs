@@ -7,35 +7,37 @@ defmodule MatrixSDK.APITest do
 
   setup :verify_on_exit!
 
-  test "spec_versions/1: returns supported matrix spec" do
-    base_url = "http://test.url"
+  describe "server administration:" do
+    test "spec_versions/1 returns supported matrix spec" do
+      base_url = "http://test.url"
 
-    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-      assert request.method == :get
-      assert request.base_url == base_url
-      assert request.path == "/_matrix/client/versions"
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/versions"
 
-      {:ok, %Tesla.Env{}}
-    end)
+        {:ok, %Tesla.Env{}}
+      end)
 
-    assert {:ok, _} = API.spec_versions(base_url)
+      assert {:ok, _} = API.spec_versions(base_url)
+    end
+
+    test "server_discovery/1 returns discovery information about the domain" do
+      base_url = "http://test.url"
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/.well-known/matrix/client"
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.server_discovery(base_url)
+    end
   end
 
-  test "server_discovery/1: returns discovery information about the domain" do
-    base_url = "http://test.url"
-
-    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-      assert request.method == :get
-      assert request.base_url == base_url
-      assert request.path == "/.well-known/matrix/client"
-
-      {:ok, %Tesla.Env{}}
-    end)
-
-    assert {:ok, _} = API.server_discovery(base_url)
-  end
-
-  describe "user login & logout:" do
+  describe "session management:" do
     test "login/1 returns login flows" do
       base_url = "http://test.url"
 
@@ -161,54 +163,54 @@ defmodule MatrixSDK.APITest do
     end
   end
 
-  #  User - registration
+  describe "user data:" do
+    test "register_user/1 registers a new guest user" do
+      base_url = "http://test.url"
 
-  test "register_user/1: registers a new guest user" do
-    base_url = "http://test.url"
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :post
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/register?kind=guest"
 
-    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-      assert request.method == :post
-      assert request.base_url == base_url
-      assert request.path == "/_matrix/client/r0/register?kind=guest"
+        {:ok, %Tesla.Env{}}
+      end)
 
-      {:ok, %Tesla.Env{}}
-    end)
+      assert {:ok, _} = API.register_user(base_url)
+    end
 
-    assert {:ok, _} = API.register_user(base_url)
+    test "register_user/3 registers a new user" do
+      base_url = "http://test.url"
+      username = "username"
+      password = "password"
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :post
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/register"
+        assert request.body.auth.type == "m.login.dummy"
+        assert request.body.username == username
+        assert request.body.password == password
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.register_user(base_url, username, password)
+    end
   end
 
-  test "register_user/3: registers a new user" do
-    base_url = "http://test.url"
-    username = "username"
-    password = "password"
+  describe "room administration:" do
+    test "room_discovery/1 returns public rooms on server" do
+      base_url = "http://test.url"
 
-    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-      assert request.method == :post
-      assert request.base_url == base_url
-      assert request.path == "/_matrix/client/r0/register"
-      assert request.body.auth.type == "m.login.dummy"
-      assert request.body.username == username
-      assert request.body.password == password
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/publicRooms"
 
-      {:ok, %Tesla.Env{}}
-    end)
+        {:ok, %Tesla.Env{}}
+      end)
 
-    assert {:ok, _} = API.register_user(base_url, username, password)
-  end
-
-  # Rooms
-
-  test "room_discovery/1: returns public rooms on server" do
-    base_url = "http://test.url"
-
-    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-      assert request.method == :get
-      assert request.base_url == base_url
-      assert request.path == "/_matrix/client/r0/publicRooms"
-
-      {:ok, %Tesla.Env{}}
-    end)
-
-    assert {:ok, _} = API.room_discovery(base_url)
+      assert {:ok, _} = API.room_discovery(base_url)
+    end
   end
 end
