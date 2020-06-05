@@ -38,7 +38,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/versions"
       }
   """
-  @spec spec_versions(base_url) :: __MODULE__.t()
+  @spec spec_versions(base_url) :: t
   def spec_versions(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
@@ -56,7 +56,7 @@ defmodule MatrixSDK.Request do
         path: "/.well-known/matrix/client"
       }
   """
-  @spec server_discovery(base_url) :: __MODULE__.t()
+  @spec server_discovery(base_url) :: t
   def server_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 
@@ -74,12 +74,12 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
   """
-  @spec login(base_url) :: __MODULE__.t()
+  @spec login(base_url) :: t
   def login(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/login"}
 
   @doc """
-  Returns a  `%Request{}` struct used to authenticate the user and issues an access token
+  Returns a `%Request{}` struct used to authenticate the user and issues an access token
   they can use to authorize themself in subsequent requests.
 
   ## Args
@@ -90,7 +90,7 @@ defmodule MatrixSDK.Request do
 
   ## Examples
       
-  Token authentication, no opts:
+  Token authentication:
 
       iex> MatrixSDK.Request.login("https://matrix.org", "token")
       %MatrixSDK.Request{
@@ -101,7 +101,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
 
-  User and password authentication, with opts:
+  User and password authentication with optional parameters:
 
       iex> auth = %{user: "maurice_moss", password: "super-secure-password"}
       iex> opts = %{device_id: "device_id", initial_device_display_name: "THE INTERNET"}
@@ -120,7 +120,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
   """
-  @spec login(base_url, auth, opts :: map) :: __MODULE__.t()
+  @spec login(base_url, auth, opts :: map) :: t
   def login(base_url, auth, opts \\ %{}) do
     body =
       auth
@@ -135,11 +135,7 @@ defmodule MatrixSDK.Request do
     }
   end
 
-  defp login_auth(token) when is_binary(token),
-    do: %{
-      type: "m.login.token",
-      token: token
-    }
+  defp login_auth(token) when is_binary(token), do: %{type: "m.login.token", token: token}
 
   defp login_auth(%{user: username, password: password}),
     do: %{
@@ -152,7 +148,7 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  Returns a  `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
+  Returns a `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
 
   ## Examples
       iex> MatrixSDK.Request.logout("https://matrix.org", "token")
@@ -164,7 +160,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/logout"
       }
   """
-  @spec logout(base_url, binary) :: __MODULE__.t()
+  @spec logout(base_url, binary) :: t
   def logout(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout", token)
 
   defp logout(base_url, path, token),
@@ -176,7 +172,7 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  Returns a  `%Request{}` struct used to invalidate all existing access tokens, so that they can no longer be used for authorization.
+  Returns a `%Request{}` struct used to invalidate all existing access tokens, so that they can no longer be used for authorization.
 
   ## Examples
 
@@ -189,27 +185,102 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/logout/all"
       }
   """
-  @spec logout_all(base_url, binary) :: __MODULE__.t()
+  @spec logout_all(base_url, binary) :: t
   def logout_all(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout/all", token)
 
-  def register_user(base_url),
+  @doc """
+  Returns a `%Request{}` struct used to register a guest account on the homeserver. 
+
+  Note: all parameters in the request body with the exception of `initial_device_display_name` will be ignored by the homeserver.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.register_guest("https://matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register?kind=guest"
+      }   
+
+  Specifiying a display name for the device:    
+
+      iex> opts = %{initial_device_display_name: "display name"}
+      iex> MatrixSDK.Request.register_guest("https://matrix.org", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{initial_device_display_name: "display name"},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register?kind=guest"
+      }
+  """
+  @spec register_guest(base_url, map) :: t
+  def register_guest(base_url, opts \\ %{}),
     do: %__MODULE__{
       method: :post,
       base_url: base_url,
-      path: "/_matrix/client/r0/register?kind=guest"
+      path: "/_matrix/client/r0/register?kind=guest",
+      body: opts
     }
 
-  def register_user(base_url, username, password),
-    do: %__MODULE__{
+  @doc """
+  Returns a `%Request{}` struct used to register a user account on the homeserver. 
+
+  ## Args
+
+  ## Examples
+
+      iex> MatrixSDK.Request.register_user("https://matrix.org", "password")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{auth: %{type: "m.login.dummy"}, password: "password"},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register"
+      }
+
+  With optional parameters:    
+
+      iex> opts = %{
+      ...>          username: "username",
+      ...>          device_id: "id",
+      ...>          initial_device_display_name: "display name",
+      ...>          inhibit_login: true
+      ...>        }
+      iex> MatrixSDK.Request.register_user("https://matrix.org", "password", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          auth: %{type: "m.login.dummy"},
+          device_id: "id",
+          inhibit_login: true,
+          initial_device_display_name: "display name",
+          password: "password",
+          username: "username"
+        },
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register"
+      }
+  """
+  @spec register_user(base_url, binary, map) :: t
+  def register_user(base_url, password, opts \\ %{}) do
+    body =
+      password
+      |> user_registration_auth()
+      |> Map.merge(opts)
+
+    %__MODULE__{
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register",
-      body: %{
-        auth: %{type: "m.login.dummy"},
-        username: username,
-        password: password
-      }
+      body: body
     }
+  end
+
+  defp user_registration_auth(password), do: %{auth: %{type: "m.login.dummy"}, password: password}
 
   def room_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
