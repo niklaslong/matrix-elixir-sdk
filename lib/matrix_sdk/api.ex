@@ -61,8 +61,8 @@ defmodule MatrixSDK.API do
 
   User and password authentication with optional parameters:
 
-      auth = %{user: "maurice_moss", password: "super-secure-password"}
-      opts = %{device_id: "device_id", initial_device_display_name: "THE INTERNET"}
+      auth = %{user: "maurice_moss", password: "password"}
+      opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
       
       MatrixSDK.API.login("https://matrix.org", auth, opts)
   """
@@ -110,7 +110,7 @@ defmodule MatrixSDK.API do
 
   Specifiying a display name for the device:    
 
-      opts = %{initial_device_display_name: "display name"}
+      opts = %{initial_device_display_name: "THE INTERNET"}
       MatrixSDK.API.register_guest("https://matrix.org", opts)
   """
   @spec register_guest(Request.base_url(), map) :: HTTPClient.result()
@@ -130,9 +130,9 @@ defmodule MatrixSDK.API do
   With optional parameters:    
 
       opts = %{
-                username: "username",
+                username: "maurice_moss",
                 device_id: "id",
-                initial_device_display_name: "display name",
+                initial_device_display_name: "THE INTERNET",
                 inhibit_login: true
               }
 

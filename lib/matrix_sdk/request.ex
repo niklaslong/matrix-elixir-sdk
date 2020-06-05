@@ -108,16 +108,16 @@ defmodule MatrixSDK.Request do
 
   User and password authentication with optional parameters:
 
-      iex> auth = %{user: "maurice_moss", password: "super-secure-password"}
-      iex> opts = %{device_id: "device_id", initial_device_display_name: "THE INTERNET"}
+      iex> auth = %{user: "maurice_moss", password: "password"}
+      iex> opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
       iex> MatrixSDK.Request.login("https://matrix.org", auth, opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
           identifier: %{type: "m.id.user", user: "maurice_moss"},
-          password: "super-secure-password",
+          password: "password",
           type: "m.login.password",
-          device_id: "device_id",
+          device_id: "id",
           initial_device_display_name: "THE INTERNET"
         },
         headers: [],
@@ -217,11 +217,11 @@ defmodule MatrixSDK.Request do
 
   Specifiying a display name for the device:    
 
-      iex> opts = %{initial_device_display_name: "display name"}
+      iex> opts = %{initial_device_display_name: "THE INTERNET"}
       iex> MatrixSDK.Request.register_guest("https://matrix.org", opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
-        body: %{initial_device_display_name: "display name"},
+        body: %{initial_device_display_name: "THE INTERNET"},
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register?kind=guest"
@@ -265,9 +265,9 @@ defmodule MatrixSDK.Request do
   With optional parameters:    
 
       iex> opts = %{
-      ...>          username: "username",
+      ...>          username: "maurice_moss",
       ...>          device_id: "id",
-      ...>          initial_device_display_name: "display name",
+      ...>          initial_device_display_name: "THE INTERNET",
       ...>          inhibit_login: true
       ...>        }
       iex> MatrixSDK.Request.register_user("https://matrix.org", "password", opts)
@@ -277,9 +277,9 @@ defmodule MatrixSDK.Request do
           auth: %{type: "m.login.dummy"},
           device_id: "id",
           inhibit_login: true,
-          initial_device_display_name: "display name",
+          initial_device_display_name: "THE INTERNET",
           password: "password",
-          username: "username"
+          username: "maurice_moss"
         },
         headers: [],
         method: :post,
