@@ -301,6 +301,8 @@ defmodule MatrixSDK.Request do
     }
   end
 
+  defp user_registration_auth(password), do: %{auth: %{type: "m.login.dummy"}, password: password}
+
   @doc """
   Returns a `%Request{}` struct used to check if a username is available and valid for the server.
 
@@ -322,8 +324,6 @@ defmodule MatrixSDK.Request do
       base_url: base_url,
       path: "/_matrix/client/r0/register/available?username=#{username}"
     }
-
-  defp user_registration_auth(password), do: %{auth: %{type: "m.login.dummy"}, password: password}
 
   def room_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
