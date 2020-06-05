@@ -38,7 +38,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/versions"
       }
   """
-  @spec spec_versions(base_url) :: __MODULE__.t()
+  @spec spec_versions(base_url) :: t
   def spec_versions(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
@@ -56,7 +56,7 @@ defmodule MatrixSDK.Request do
         path: "/.well-known/matrix/client"
       }
   """
-  @spec server_discovery(base_url) :: __MODULE__.t()
+  @spec server_discovery(base_url) :: t
   def server_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 
@@ -74,23 +74,28 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
   """
-  @spec login(base_url) :: __MODULE__.t()
+  @spec login(base_url) :: t
   def login(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/login"}
 
   @doc """
-  Returns a  `%Request{}` struct used to authenticate the user and issues an access token
+  Returns a `%Request{}` struct used to authenticate the user and issues an access token
   they can use to authorize themself in subsequent requests.
 
   ## Args
 
+  Required:
   - `base_url`: the base URL for the homeserver 
   - `auth`: either an authentication token or a map containing the `user` and `password` keys 
-  - `opts`: an optional map containing the `device_id` and/or `initial_device_display_name` keys
+
+  Optional:
+  - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
+  - `initial_device_display_name`: a display name to assign to the newly-created device
+
 
   ## Examples
       
-  Token authentication, no opts:
+  Token authentication:
 
       iex> MatrixSDK.Request.login("https://matrix.org", "token")
       %MatrixSDK.Request{
@@ -101,18 +106,18 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
 
-  User and password authentication, with opts:
+  User and password authentication with optional parameters:
 
-      iex> auth = %{user: "maurice_moss", password: "super-secure-password"}
-      iex> opts = %{device_id: "device_id", initial_device_display_name: "THE INTERNET"}
+      iex> auth = %{user: "maurice_moss", password: "password"}
+      iex> opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
       iex> MatrixSDK.Request.login("https://matrix.org", auth, opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
           identifier: %{type: "m.id.user", user: "maurice_moss"},
-          password: "super-secure-password",
+          password: "password",
           type: "m.login.password",
-          device_id: "device_id",
+          device_id: "id",
           initial_device_display_name: "THE INTERNET"
         },
         headers: [],
@@ -120,7 +125,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
   """
-  @spec login(base_url, auth, opts :: map) :: __MODULE__.t()
+  @spec login(base_url, auth, opts :: map) :: t
   def login(base_url, auth, opts \\ %{}) do
     body =
       auth
@@ -135,11 +140,7 @@ defmodule MatrixSDK.Request do
     }
   end
 
-  defp login_auth(token) when is_binary(token),
-    do: %{
-      type: "m.login.token",
-      token: token
-    }
+  defp login_auth(token) when is_binary(token), do: %{type: "m.login.token", token: token}
 
   defp login_auth(%{user: username, password: password}),
     do: %{
@@ -152,7 +153,7 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  Returns a  `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
+  Returns a `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
 
   ## Examples
       iex> MatrixSDK.Request.logout("https://matrix.org", "token")
@@ -164,7 +165,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/logout"
       }
   """
-  @spec logout(base_url, binary) :: __MODULE__.t()
+  @spec logout(base_url, binary) :: t
   def logout(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout", token)
 
   defp logout(base_url, path, token),
@@ -176,7 +177,7 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  Returns a  `%Request{}` struct used to invalidate all existing access tokens, so that they can no longer be used for authorization.
+  Returns a `%Request{}` struct used to invalidate all existing access tokens, so that they can no longer be used for authorization.
 
   ## Examples
 
@@ -189,26 +190,139 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/logout/all"
       }
   """
-  @spec logout_all(base_url, binary) :: __MODULE__.t()
+  @spec logout_all(base_url, binary) :: t
   def logout_all(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout/all", token)
 
-  def register_user(base_url),
+  @doc """
+  Returns a `%Request{}` struct used to register a guest account on the homeserver. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+
+  Optional: 
+  - `initial_device_display_name`: a display name to assign to the newly-created device
+
+  ## Examples
+
+      iex> MatrixSDK.Request.register_guest("https://matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register?kind=guest"
+      }   
+
+  Specifiying a display name for the device:    
+
+      iex> opts = %{initial_device_display_name: "THE INTERNET"}
+      iex> MatrixSDK.Request.register_guest("https://matrix.org", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{initial_device_display_name: "THE INTERNET"},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register?kind=guest"
+      }
+  """
+  @spec register_guest(base_url, map) :: t
+  def register_guest(base_url, opts \\ %{}),
     do: %__MODULE__{
       method: :post,
       base_url: base_url,
-      path: "/_matrix/client/r0/register?kind=guest"
+      path: "/_matrix/client/r0/register?kind=guest",
+      body: opts
     }
 
-  def register_user(base_url, username, password),
-    do: %__MODULE__{
+  @doc """
+  Returns a `%Request{}` struct used to register a user account on the homeserver. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+  - `password`: the desired password for the account
+
+  Optional: 
+  - `username`: the basis for the localpart of the desired Matrix ID. If omitted, the homeserver will generate a Matrix ID local part.
+  - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
+  - `initial_device_display_name`: a display name to assign to the newly-created device
+  - `inhibit_login`: if true, an `access_token` and `device_id` will not be returned from this call, therefore preventing an automatic login
+
+  ## Examples
+
+      iex> MatrixSDK.Request.register_user("https://matrix.org", "password")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{auth: %{type: "m.login.dummy"}, password: "password"},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register"
+      }
+
+  With optional parameters:    
+
+      iex> opts = %{
+      ...>          username: "maurice_moss",
+      ...>          device_id: "id",
+      ...>          initial_device_display_name: "THE INTERNET",
+      ...>          inhibit_login: true
+      ...>        }
+      iex> MatrixSDK.Request.register_user("https://matrix.org", "password", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          auth: %{type: "m.login.dummy"},
+          device_id: "id",
+          inhibit_login: true,
+          initial_device_display_name: "THE INTERNET",
+          password: "password",
+          username: "maurice_moss"
+        },
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register"
+      }
+  """
+  @spec register_user(base_url, binary, map) :: t
+  def register_user(base_url, password, opts \\ %{}) do
+    body =
+      password
+      |> user_registration_auth()
+      |> Map.merge(opts)
+
+    %__MODULE__{
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register",
-      body: %{
-        auth: %{type: "m.login.dummy"},
-        username: username,
-        password: password
-      }
+      body: body
+    }
+  end
+
+  defp user_registration_auth(password), do: %{auth: %{type: "m.login.dummy"}, password: password}
+
+  @doc """
+  Returns a `%Request{}` struct used to check if a username is available and valid for the server.
+
+  ## Examples
+
+       iex> MatrixSDK.Request.username_availability("https://matrix.org", "maurice_moss")
+       %MatrixSDK.Request{
+         base_url: "https://matrix.org",
+         body: %{},
+         headers: [],
+         method: :get,
+         path: "/_matrix/client/r0/register/available?username=maurice_moss"
+       }
+  """
+  @spec username_availability(base_url, binary) :: t
+  def username_availability(base_url, username),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/register/available?username=#{username}"
     }
 
   def room_discovery(base_url),

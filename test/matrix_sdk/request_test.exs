@@ -50,6 +50,7 @@ defmodule MatrixSDK.RequestTest do
     test "login/2 user and password authentication" do
       base_url = "http://test-server.url"
       auth = %{user: "username", password: "password"}
+
       request = Request.login(base_url, auth)
 
       assert request.method == :post
@@ -65,6 +66,7 @@ defmodule MatrixSDK.RequestTest do
       base_url = "http://test-server.url"
       token = "token"
       opts = %{device_id: "id", initial_device_display_name: "display name"}
+
       request = Request.login(base_url, token, opts)
 
       assert request.method == :post
@@ -80,6 +82,7 @@ defmodule MatrixSDK.RequestTest do
       base_url = "http://test-server.url"
       auth = %{user: "username", password: "password"}
       opts = %{device_id: "id", initial_device_display_name: "display name"}
+
       request = Request.login(base_url, auth, opts)
 
       assert request.method == :post
@@ -96,6 +99,7 @@ defmodule MatrixSDK.RequestTest do
     test "logout/2" do
       base_url = "http://test-server.url"
       token = "token"
+
       request = Request.logout(base_url, token)
 
       assert request.method == :post
@@ -107,6 +111,7 @@ defmodule MatrixSDK.RequestTest do
     test "logout_all/2" do
       base_url = "http://test-server.url"
       token = "token"
+
       request = Request.logout_all(base_url, token)
 
       assert request.method == :post
@@ -116,28 +121,74 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
-  describe "user data:" do
-    test "register_user/1" do
+  describe "account registration:" do
+    test "register_guest/1" do
       base_url = "http://test-server.url"
-      request = Request.register_user(base_url)
+      request = Request.register_guest(base_url)
 
       assert request.method == :post
       assert request.base_url == base_url
       assert request.path == "/_matrix/client/r0/register?kind=guest"
     end
 
-    test "register_user/3" do
+    test "register_guest/2 with options" do
       base_url = "http://test-server.url"
-      username = "username"
+      opts = %{initial_device_display_name: "display name"}
+
+      request = Request.register_guest(base_url, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register?kind=guest"
+      assert request.body.initial_device_display_name == opts.initial_device_display_name
+    end
+
+    test "register_user/2" do
+      base_url = "http://test-server.url"
       password = "password"
-      request = Request.register_user(base_url, username, password)
+
+      request = Request.register_user(base_url, password)
 
       assert request.method == :post
       assert request.base_url == base_url
       assert request.path == "/_matrix/client/r0/register"
       assert request.body.auth.type == "m.login.dummy"
-      assert request.body.username == username
       assert request.body.password == password
+    end
+
+    test "register_user/3 with options" do
+      base_url = "http://test-server.url"
+      password = "password"
+
+      opts = %{
+        username: "username",
+        device_id: "id",
+        initial_device_display_name: "display name",
+        inhibit_login: true
+      }
+
+      request = Request.register_user(base_url, password, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register"
+      assert request.body.auth.type == "m.login.dummy"
+      assert request.body.password == password
+      assert request.body.username == opts.username
+      assert request.body.device_id == opts.device_id
+      assert request.body.initial_device_display_name == opts.initial_device_display_name
+      assert request.body.inhibit_login == opts.inhibit_login
+    end
+
+    test "username_availability/2" do
+      base_url = "http://test-server.url"
+      username = "username"
+
+      request = Request.username_availability(base_url, username)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register/available?username=#{username}"
     end
   end
 

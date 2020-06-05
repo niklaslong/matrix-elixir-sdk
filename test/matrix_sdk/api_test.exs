@@ -163,8 +163,8 @@ defmodule MatrixSDK.APITest do
     end
   end
 
-  describe "user data:" do
-    test "register_user/1 registers a new guest user" do
+  describe "account registration:" do
+    test "register_guest/1 registers a new guest user" do
       base_url = "http://test.url"
 
       expect(HTTPClientMock, :do_request, fn %Request{} = request ->
@@ -175,12 +175,27 @@ defmodule MatrixSDK.APITest do
         {:ok, %Tesla.Env{}}
       end)
 
-      assert {:ok, _} = API.register_user(base_url)
+      assert {:ok, _} = API.register_guest(base_url)
     end
 
-    test "register_user/3 registers a new user" do
+    test "register_guest/2 registers a new guest user with options" do
       base_url = "http://test.url"
-      username = "username"
+      opts = %{initial_device_display_name: "display name"}
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :post
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/register?kind=guest"
+        assert request.body.initial_device_display_name == opts.initial_device_display_name
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.register_guest(base_url, opts)
+    end
+
+    test "register_user/2 registers a new user" do
+      base_url = "http://test.url"
       password = "password"
 
       expect(HTTPClientMock, :do_request, fn %Request{} = request ->
@@ -188,13 +203,55 @@ defmodule MatrixSDK.APITest do
         assert request.base_url == base_url
         assert request.path == "/_matrix/client/r0/register"
         assert request.body.auth.type == "m.login.dummy"
-        assert request.body.username == username
         assert request.body.password == password
 
         {:ok, %Tesla.Env{}}
       end)
 
-      assert {:ok, _} = API.register_user(base_url, username, password)
+      assert {:ok, _} = API.register_user(base_url, password)
+    end
+
+    test "register_user/3 registers a new user with options" do
+      base_url = "http://test.url"
+      password = "password"
+
+      opts = %{
+        username: "username",
+        device_id: "id",
+        initial_device_display_name: "display name",
+        inhibit_login: true
+      }
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :post
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/register"
+        assert request.body.auth.type == "m.login.dummy"
+        assert request.body.password == password
+        assert request.body.username == opts.username
+        assert request.body.device_id == opts.device_id
+        assert request.body.initial_device_display_name == opts.initial_device_display_name
+        assert request.body.inhibit_login == opts.inhibit_login
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.register_user(base_url, password, opts)
+    end
+
+    test "username_availability/2" do
+      base_url = "http://test-server.url"
+      username = "username"
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/register/available?username=#{username}"
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.username_availability(base_url, username)
     end
   end
 
