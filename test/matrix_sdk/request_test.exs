@@ -1,6 +1,6 @@
 defmodule MatrixSDK.RequestTest do
   use ExUnit.Case
-  alias MatrixSDK.Request
+  alias MatrixSDK.{Request, Auth}
 
   doctest MatrixSDK.Request
 
@@ -193,12 +193,13 @@ defmodule MatrixSDK.RequestTest do
   end
 
   describe "account management:" do
-    test "change_password/3 token authentication" do
+    test "change_password/4 token authentication" do
       base_url = "http://test-server.url"
       new_password = "new_password"
       token = "token"
+      auth = Auth.token(token)
 
-      request = Request.change_password(base_url, new_password, token)
+      request = Request.change_password(base_url, new_password, auth)
 
       assert request.method == :post
       assert request.base_url == base_url
@@ -208,10 +209,16 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.auth.token == token
     end
 
-    test "change_password/3 user and password authentication" do
+    test "change_password/4 user and password authentication" do
       base_url = "http://test-server.url"
       new_password = "new_password"
-      auth = %{user: "username", password: "password"}
+      user = "username"
+      password = "password"
+
+      auth =
+        user
+        |> Auth.user_identifier()
+        |> Auth.password(password)
 
       request = Request.change_password(base_url, new_password, auth)
 
@@ -220,8 +227,9 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/account/password"
       assert request.body.new_password == new_password
       assert request.body.auth.type == "m.login.password"
-      assert request.body.auth.identifier.user == auth.user
-      assert request.body.auth.password == auth.password
+      assert request.body.auth.identifier.type == "m.id.user"
+      assert request.body.auth.identifier.user == user
+      assert request.body.auth.password == password
     end
   end
 

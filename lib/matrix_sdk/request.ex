@@ -325,12 +325,12 @@ defmodule MatrixSDK.Request do
       path: "/_matrix/client/r0/register/available?username=#{username}"
     }
 
-  def change_password(base_url, new_password, auth) do
+  def change_password(base_url, new_password, auth, opts \\ %{}) do
     body =
-      auth
-      |> build_authentication_data()
-      |> wrap_in_auth_key()
-      |> Map.merge(%{new_password: new_password})
+      %{}
+      |> Map.put(:new_password, new_password)
+      |> Map.put(:auth, auth)
+      |> Map.merge(opts)
 
     %__MODULE__{
       method: :post,
@@ -342,20 +342,4 @@ defmodule MatrixSDK.Request do
 
   def room_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
-
-  # auth
-  
-  defp build_authentication_data(token) when is_binary(token), do:  %{type: "m.login.token", token: token}
-
-  defp build_authentication_data(%{user: username, password: password}) do
-    %{
-      type: "m.login.password",
-      identifier: build_identifier(username),
-      password: password
-    }
-  end
-
-  defp build_identifier(username), do: %{type: "m.id.user", user: username}
-
-  defp wrap_in_auth_key(data), do: %{auth: data}
 end
