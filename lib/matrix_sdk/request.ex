@@ -310,10 +310,19 @@ defmodule MatrixSDK.Request do
   @doc """
   Returns a `%Request{}` struct used to change the password for an account on the homeserver.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+  - `new_password`: the desired password for the account
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Auth`
+
+  Optional: 
+  - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds
+
   ## Examples 
 
       iex> auth = MatrixSDK.Auth.login_token("token")
-      %{token: "token", type: "m.login.token"}
       iex> MatrixSDK.Request.change_password("https://matrix.org", "new_password", auth)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
