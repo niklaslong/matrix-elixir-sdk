@@ -2,7 +2,7 @@ defmodule MatrixSDK.APITest do
   use ExUnit.Case
   import Mox
 
-  alias MatrixSDK.{API, Request, HTTPClientMock}
+  alias MatrixSDK.{API, Request, Auth, HTTPClientMock}
   alias Tesla
 
   setup :verify_on_exit!
@@ -55,6 +55,7 @@ defmodule MatrixSDK.APITest do
     test "login/2 token authentication" do
       base_url = "http://test.url"
       token = "token"
+      auth = Auth.login_token(token)
 
       expect(HTTPClientMock, :do_request, fn %Request{} = request ->
         assert request.method == :post
@@ -66,12 +67,14 @@ defmodule MatrixSDK.APITest do
         {:ok, %Tesla.Env{}}
       end)
 
-      assert {:ok, _} = API.login(base_url, token)
+      assert {:ok, _} = API.login(base_url, auth)
     end
 
     test "login/2 user and password authentication" do
       base_url = "http://test.url"
-      auth = %{user: "username", password: "password"}
+      user = "username"
+      password = "password"
+      auth = Auth.login_user(user, password)
 
       expect(HTTPClientMock, :do_request, fn %Request{} = request ->
         assert request.method == :post
@@ -79,8 +82,8 @@ defmodule MatrixSDK.APITest do
         assert request.path == "/_matrix/client/r0/login"
         assert request.body.type == "m.login.password"
         assert request.body.identifier.type == "m.id.user"
-        assert request.body.identifier.user == auth.user
-        assert request.body.password == auth.password
+        assert request.body.identifier.user == user
+        assert request.body.password == password
 
         {:ok, %Tesla.Env{}}
       end)
@@ -91,6 +94,7 @@ defmodule MatrixSDK.APITest do
     test "login/3 token authentication with options" do
       base_url = "http://test.url"
       token = "token"
+      auth = Auth.login_token(token)
       opts = %{device_id: "id", initial_device_display_name: "display name"}
 
       expect(HTTPClientMock, :do_request, fn %Request{} = request ->
@@ -105,12 +109,14 @@ defmodule MatrixSDK.APITest do
         {:ok, %Tesla.Env{}}
       end)
 
-      assert {:ok, _} = API.login(base_url, token, opts)
+      assert {:ok, _} = API.login(base_url, auth, opts)
     end
 
     test "login/3 user and password authentication with options" do
       base_url = "http://test.url"
-      auth = %{user: "username", password: "password"}
+      user = "username"
+      password = "password"
+      auth = Auth.login_user(user, password)
       opts = %{device_id: "id", initial_device_display_name: "display name"}
 
       expect(HTTPClientMock, :do_request, fn %Request{} = request ->
@@ -119,8 +125,8 @@ defmodule MatrixSDK.APITest do
         assert request.path == "/_matrix/client/r0/login"
         assert request.body.type == "m.login.password"
         assert request.body.identifier.type == "m.id.user"
-        assert request.body.identifier.user == auth.user
-        assert request.body.password == auth.password
+        assert request.body.identifier.user == user
+        assert request.body.password == password
         assert request.body.device_id == opts.device_id
         assert request.body.initial_device_display_name == opts.initial_device_display_name
 

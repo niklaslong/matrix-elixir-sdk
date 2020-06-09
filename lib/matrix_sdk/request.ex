@@ -86,7 +86,7 @@ defmodule MatrixSDK.Request do
 
   Required:
   - `base_url`: the base URL for the homeserver 
-  - `auth`: either an authentication token or a map containing the `user` and `password` keys 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Auth`.
 
   Optional:
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
@@ -96,8 +96,8 @@ defmodule MatrixSDK.Request do
   ## Examples
       
   Token authentication:
-
-      iex> MatrixSDK.Request.login("https://matrix.org", "token")
+      iex> auth = MatrixSDK.Auth.login_token("token")
+      iex> MatrixSDK.Request.login("https://matrix.org", auth)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{token: "token", type: "m.login.token"},
@@ -108,7 +108,7 @@ defmodule MatrixSDK.Request do
 
   User and password authentication with optional parameters:
 
-      iex> auth = %{user: "maurice_moss", password: "password"}
+      iex> auth = MatrixSDK.Auth.login_user("maurice_moss", "password")
       iex> opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
       iex> MatrixSDK.Request.login("https://matrix.org", auth, opts)
       %MatrixSDK.Request{

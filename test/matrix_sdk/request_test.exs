@@ -52,11 +52,7 @@ defmodule MatrixSDK.RequestTest do
       base_url = "http://test-server.url"
       user = "username"
       password = "password"
-
-      auth =
-        user
-        |> Auth.id_user()
-        |> Auth.login_password(password)
+      auth = Auth.login_user(user, password)
 
       request = Request.login(base_url, auth)
 
@@ -90,12 +86,8 @@ defmodule MatrixSDK.RequestTest do
       base_url = "http://test-server.url"
       user = "username"
       password = "password"
+      auth = Auth.login_user(user, password)
       opts = %{device_id: "id", initial_device_display_name: "display name"}
-
-      auth =
-        user
-        |> Auth.id_user()
-        |> Auth.login_password(password)
 
       request = Request.login(base_url, auth, opts)
 
@@ -228,11 +220,7 @@ defmodule MatrixSDK.RequestTest do
       new_password = "new_password"
       user = "username"
       password = "password"
-
-      auth =
-        user
-        |> Auth.id_user()
-        |> Auth.login_password(password)
+      auth = Auth.login_user(user, password)
 
       request = Request.change_password(base_url, new_password, auth)
 

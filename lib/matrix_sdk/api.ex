@@ -4,7 +4,7 @@ defmodule MatrixSDK.API do
   `MatrixSDK.Request` and `MatrixSDK.HTTPClient` modules.
   """
 
-  alias MatrixSDK.{Request, HTTPClient}
+  alias MatrixSDK.{Request, HTTPClient, Auth}
 
   @http_client Application.get_env(:matrix_sdk, :http_client)
 
@@ -57,13 +57,14 @@ defmodule MatrixSDK.API do
 
   Token authentication:
 
-      MatrixSDK.API.login("https://matrix.org", "token")
+      auth = MatrixSDK.Auth.login_token("token")
+      MatrixSDK.API.login("https://matrix.org", auth)
 
   User and password authentication with optional parameters:
 
-      auth = %{user: "maurice_moss", password: "password"}
+      auth = MatrixSDK.Auth.login_user("maurice_moss", "password")
       opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
-      
+
       MatrixSDK.API.login("https://matrix.org", auth, opts)
   """
   @spec login(Request.base_url(), Auth.t(), opts :: map) :: HTTPClient.result()

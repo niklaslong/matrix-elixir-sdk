@@ -1,6 +1,8 @@
 defmodule MatrixSDK.Auth do
   @moduledoc """
   Convenience functions for building authentication types.
+
+  Note: an identifier is only used when doing a password login.
   """
 
   @type dummy :: %{type: binary}
@@ -17,15 +19,33 @@ defmodule MatrixSDK.Auth do
   def login_dummy(), do: %{type: "m.login.dummy"}
   def login_token(token), do: %{type: "m.login.token", token: token}
 
-  def login_password(identifier, password),
+  defp login_password(identifier, password),
     do: %{type: "m.login.password", identifier: identifier, password: password}
 
-  def id_user(user), do: %{type: "m.id.user", user: user}
+  def login_user(user, password),
+    do:
+      user
+      |> id_user()
+      |> login_password(password)
 
-  def id_thirdparty(medium, address),
+  def login_3pid(medium, address, password),
+    do:
+      medium
+      |> id_thirdparty(address)
+      |> login_password(password)
+
+  def login_phone(country, phone, password),
+    do:
+      country
+      |> id_phone(phone)
+      |> login_password(password)
+
+  defp id_user(user), do: %{type: "m.id.user", user: user}
+
+  defp id_thirdparty(medium, address),
     do: %{type: "m.id.thirdparty", medium: medium, address: address}
 
-  def id_phone(country, phone),
+  defp id_phone(country, phone),
     do: %{type: "m.id.phone", country: country, phone: phone}
 
   def put_session(map, session_id), do: Map.put(map, :session, session_id)
