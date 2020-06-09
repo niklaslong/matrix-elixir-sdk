@@ -160,6 +160,21 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Changes the password for an account on the homeserver.
+
+  ## Examples 
+
+      auth = MatrixSDK.Auth.login_token("token")
+      MatrixSDK.API.change_password("https://matrix.org", "new_password", auth)
+  """
+  @spec change_password(Reuqest.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
+  def change_password(base_url, new_password, auth, opts \\ %{}) do
+    base_url
+    |> Request.change_password(new_password, auth, opts)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url

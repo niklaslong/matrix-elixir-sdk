@@ -261,6 +261,98 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "account management:" do
+    test "change_password/3 token authentication" do
+      base_url = "http://test-server.url"
+      new_password = "new_password"
+      token = "token"
+      auth = Auth.login_token(token)
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :post
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/account/password"
+        assert request.body.new_password == new_password
+        assert request.body.auth.type == "m.login.token"
+        assert request.body.auth.token == token
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.change_password(base_url, new_password, auth)
+    end
+
+    test "change_password/3 user and password authentication" do
+      base_url = "http://test-server.url"
+      new_password = "new_password"
+      user = "username"
+      password = "password"
+      auth = Auth.login_user(user, password)
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :post
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/account/password"
+        assert request.body.new_password == new_password
+        assert request.body.auth.type == "m.login.password"
+        assert request.body.auth.identifier.type == "m.id.user"
+        assert request.body.auth.identifier.user == user
+        assert request.body.auth.password == password
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.change_password(base_url, new_password, auth)
+    end
+
+    test "change_password/4 token authentication with options" do
+      base_url = "http://test-server.url"
+      new_password = "new_password"
+      token = "token"
+      auth = Auth.login_token(token)
+      opts = %{logout_devices: true}
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :post
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/account/password"
+        assert request.body.new_password == new_password
+        assert request.body.auth.type == "m.login.token"
+        assert request.body.auth.token == token
+        assert request.body.logout_devices == true
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.change_password(base_url, new_password, auth, opts)
+    end
+
+    test "change_password/4 user and password authentication with options" do
+      base_url = "http://test-server.url"
+      new_password = "new_password"
+      user = "username"
+      password = "password"
+      auth = Auth.login_user(user, password)
+      opts = %{logout_devices: true}
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :post
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/account/password"
+        assert request.body.new_password == new_password
+        assert request.body.auth.type == "m.login.password"
+        assert request.body.auth.identifier.type == "m.id.user"
+        assert request.body.auth.identifier.user == user
+        assert request.body.auth.password == password
+        assert request.body.logout_devices == true
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.change_password(base_url, new_password, auth, opts)
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1 returns public rooms on server" do
       base_url = "http://test.url"
