@@ -37,8 +37,9 @@ defmodule MatrixSDK.RequestTest do
     test "login/2 token authentication" do
       base_url = "http://test-server.url"
       token = "token"
+      auth = Auth.login_token(token)
 
-      request = Request.login(base_url, token)
+      request = Request.login(base_url, auth)
 
       assert request.method == :post
       assert request.base_url == base_url
@@ -49,7 +50,13 @@ defmodule MatrixSDK.RequestTest do
 
     test "login/2 user and password authentication" do
       base_url = "http://test-server.url"
-      auth = %{user: "username", password: "password"}
+      user = "username"
+      password = "password"
+
+      auth =
+        user
+        |> Auth.id_user()
+        |> Auth.login_password(password)
 
       request = Request.login(base_url, auth)
 
@@ -58,16 +65,17 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/login"
       assert request.body.type == "m.login.password"
       assert request.body.identifier.type == "m.id.user"
-      assert request.body.identifier.user == auth.user
-      assert request.body.password == auth.password
+      assert request.body.identifier.user == user
+      assert request.body.password == password
     end
 
     test "login/3 token authentication with options" do
       base_url = "http://test-server.url"
       token = "token"
+      auth = Auth.login_token(token)
       opts = %{device_id: "id", initial_device_display_name: "display name"}
 
-      request = Request.login(base_url, token, opts)
+      request = Request.login(base_url, auth, opts)
 
       assert request.method == :post
       assert request.base_url == base_url
@@ -80,8 +88,14 @@ defmodule MatrixSDK.RequestTest do
 
     test "login/3 user and password authentication with options" do
       base_url = "http://test-server.url"
-      auth = %{user: "username", password: "password"}
+      user = "username"
+      password = "password"
       opts = %{device_id: "id", initial_device_display_name: "display name"}
+
+      auth =
+        user
+        |> Auth.id_user()
+        |> Auth.login_password(password)
 
       request = Request.login(base_url, auth, opts)
 
@@ -90,8 +104,8 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/login"
       assert request.body.type == "m.login.password"
       assert request.body.identifier.type == "m.id.user"
-      assert request.body.identifier.user == auth.user
-      assert request.body.password == auth.password
+      assert request.body.identifier.user == user
+      assert request.body.password == password
       assert request.body.device_id == opts.device_id
       assert request.body.initial_device_display_name == opts.initial_device_display_name
     end
@@ -197,7 +211,7 @@ defmodule MatrixSDK.RequestTest do
       base_url = "http://test-server.url"
       new_password = "new_password"
       token = "token"
-      auth = Auth.token(token)
+      auth = Auth.login_token(token)
 
       request = Request.change_password(base_url, new_password, auth)
 
@@ -217,8 +231,8 @@ defmodule MatrixSDK.RequestTest do
 
       auth =
         user
-        |> Auth.user_identifier()
-        |> Auth.password(password)
+        |> Auth.id_user()
+        |> Auth.login_password(password)
 
       request = Request.change_password(base_url, new_password, auth)
 

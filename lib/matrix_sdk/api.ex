@@ -66,7 +66,7 @@ defmodule MatrixSDK.API do
       
       MatrixSDK.API.login("https://matrix.org", auth, opts)
   """
-  @spec login(Request.base_url(), Request.auth(), opts :: map) :: HTTPClient.result()
+  @spec login(Request.base_url(), Auth.t(), opts :: map) :: HTTPClient.result()
   def login(base_url, auth, opts \\ %{}) do
     base_url
     |> Request.login(auth, opts)

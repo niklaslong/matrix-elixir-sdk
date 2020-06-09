@@ -4,6 +4,8 @@ defmodule MatrixSDK.Request do
   each HTTP request.
   """
 
+  alias MatrixSDK.Auth
+
   @enforce_keys [:method, :base_url, :path]
   defstruct([:method, :base_url, :path, headers: [], body: %{}])
 
@@ -20,8 +22,6 @@ defmodule MatrixSDK.Request do
           headers: headers,
           body: body
         }
-
-  @type auth :: token :: binary | %{user: binary, password: binary}
 
   @doc """
   Returns a `%Request{}` struct used to get the versions of the Matrix specification
@@ -125,32 +125,15 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
   """
-  @spec login(base_url, auth, opts :: map) :: t
+  @spec login(base_url, Auth.t(), opts :: map) :: t
   def login(base_url, auth, opts \\ %{}) do
-    body =
-      auth
-      |> login_auth()
-      |> Map.merge(opts)
-
     %__MODULE__{
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/login",
-      body: body
+      body: Map.merge(opts, auth)
     }
   end
-
-  defp login_auth(token) when is_binary(token), do: %{type: "m.login.token", token: token}
-
-  defp login_auth(%{user: username, password: password}),
-    do: %{
-      type: "m.login.password",
-      identifier: %{
-        type: "m.id.user",
-        user: username
-      },
-      password: password
-    }
 
   @doc """
   Returns a `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
@@ -289,8 +272,9 @@ defmodule MatrixSDK.Request do
   @spec register_user(base_url, binary, map) :: t
   def register_user(base_url, password, opts \\ %{}) do
     body =
-      password
-      |> user_registration_auth()
+      %{}
+      |> Map.put(:password, password)
+      |> Map.put(:auth, Auth.login_dummy())
       |> Map.merge(opts)
 
     %__MODULE__{
@@ -300,8 +284,6 @@ defmodule MatrixSDK.Request do
       body: body
     }
   end
-
-  defp user_registration_auth(password), do: %{auth: %{type: "m.login.dummy"}, password: password}
 
   @doc """
   Returns a `%Request{}` struct used to check if a username is available and valid for the server.
