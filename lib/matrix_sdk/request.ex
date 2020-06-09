@@ -86,7 +86,7 @@ defmodule MatrixSDK.Request do
 
   Required:
   - `base_url`: the base URL for the homeserver 
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Auth`.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Auth`
 
   Optional:
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
@@ -307,6 +307,26 @@ defmodule MatrixSDK.Request do
       path: "/_matrix/client/r0/register/available?username=#{username}"
     }
 
+  @doc """
+  Returns a `%Request{}` struct used to change the password for an account on the homeserver.
+
+  ## Examples 
+
+      iex> auth = MatrixSDK.Auth.login_token("token")
+      %{token: "token", type: "m.login.token"}
+      iex> MatrixSDK.Request.change_password("https://matrix.org", "new_password", auth)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          auth: %{token: "token", type: "m.login.token"},
+          new_password: "new_password"
+        },
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/account/password"
+      }
+  """
+  @spec change_password(base_url, binary, Auth.t(), map) :: t
   def change_password(base_url, new_password, auth, opts \\ %{}) do
     body =
       %{}
