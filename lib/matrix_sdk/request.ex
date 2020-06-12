@@ -4,6 +4,8 @@ defmodule MatrixSDK.Request do
   each HTTP request.
   """
 
+  alias MatrixSDK.Auth
+
   @enforce_keys [:method, :base_url, :path]
   defstruct([:method, :base_url, :path, headers: [], body: %{}])
 
@@ -20,8 +22,6 @@ defmodule MatrixSDK.Request do
           headers: headers,
           body: body
         }
-
-  @type auth :: token :: binary | %{user: binary, password: binary}
 
   @doc """
   Returns a `%Request{}` struct used to get the versions of the Matrix specification
@@ -86,7 +86,7 @@ defmodule MatrixSDK.Request do
 
   Required:
   - `base_url`: the base URL for the homeserver 
-  - `auth`: either an authentication token or a map containing the `user` and `password` keys 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Auth`
 
   Optional:
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
@@ -96,8 +96,8 @@ defmodule MatrixSDK.Request do
   ## Examples
       
   Token authentication:
-
-      iex> MatrixSDK.Request.login("https://matrix.org", "token")
+      iex> auth = MatrixSDK.Auth.login_token("token")
+      iex> MatrixSDK.Request.login("https://matrix.org", auth)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{token: "token", type: "m.login.token"},
@@ -108,7 +108,7 @@ defmodule MatrixSDK.Request do
 
   User and password authentication with optional parameters:
 
-      iex> auth = %{user: "maurice_moss", password: "password"}
+      iex> auth = MatrixSDK.Auth.login_user("maurice_moss", "password")
       iex> opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
       iex> MatrixSDK.Request.login("https://matrix.org", auth, opts)
       %MatrixSDK.Request{
@@ -125,32 +125,15 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/login"
       }
   """
-  @spec login(base_url, auth, opts :: map) :: t
+  @spec login(base_url, Auth.t(), opts :: map) :: t
   def login(base_url, auth, opts \\ %{}) do
-    body =
-      auth
-      |> login_auth()
-      |> Map.merge(opts)
-
     %__MODULE__{
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/login",
-      body: body
+      body: Map.merge(opts, auth)
     }
   end
-
-  defp login_auth(token) when is_binary(token), do: %{type: "m.login.token", token: token}
-
-  defp login_auth(%{user: username, password: password}),
-    do: %{
-      type: "m.login.password",
-      identifier: %{
-        type: "m.id.user",
-        user: username
-      },
-      password: password
-    }
 
   @doc """
   Returns a `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
@@ -289,8 +272,9 @@ defmodule MatrixSDK.Request do
   @spec register_user(base_url, binary, map) :: t
   def register_user(base_url, password, opts \\ %{}) do
     body =
-      password
-      |> user_registration_auth()
+      %{}
+      |> Map.put(:password, password)
+      |> Map.put(:auth, Auth.login_dummy())
       |> Map.merge(opts)
 
     %__MODULE__{
@@ -300,8 +284,6 @@ defmodule MatrixSDK.Request do
       body: body
     }
   end
-
-  defp user_registration_auth(password), do: %{auth: %{type: "m.login.dummy"}, password: password}
 
   @doc """
   Returns a `%Request{}` struct used to check if a username is available and valid for the server.
@@ -323,6 +305,96 @@ defmodule MatrixSDK.Request do
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/register/available?username=#{username}"
+    }
+
+  @doc """
+  Returns a `%Request{}` struct used to change the password for an account on the homeserver.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+  - `new_password`: the desired password for the account
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Auth`
+
+  Optional: 
+  - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds
+
+  ## Examples 
+
+      iex> auth = MatrixSDK.Auth.login_token("token")
+      iex> MatrixSDK.Request.change_password("https://matrix.org", "new_password", auth)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          auth: %{token: "token", type: "m.login.token"},
+          new_password: "new_password"
+        },
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/account/password"
+      }
+  """
+  @spec change_password(base_url, binary, Auth.t(), map) :: t
+  def change_password(base_url, new_password, auth, opts \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:new_password, new_password)
+      |> Map.put(:auth, auth)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/password",
+      body: body
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to get a list of the third party identifiers the homeserver has associated with the user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_3pids("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/account/3pid"
+      }
+  """
+  @spec account_3pids(base_url, binary) :: t
+  def account_3pids(base_url, token),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+
+  @doc """
+  Returns a `%Request{}` struct used to get information about the owner of a given access token.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.whoami("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/account/whoami"
+      }
+  """
+  @spec whoami(base_url, binary) :: t
+  def whoami(base_url, token),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/whoami",
+      headers: [{"Authorization", "Bearer " <> token}]
     }
 
   def room_discovery(base_url),

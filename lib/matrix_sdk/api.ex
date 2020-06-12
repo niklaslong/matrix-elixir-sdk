@@ -4,7 +4,7 @@ defmodule MatrixSDK.API do
   `MatrixSDK.Request` and `MatrixSDK.HTTPClient` modules.
   """
 
-  alias MatrixSDK.{Request, HTTPClient}
+  alias MatrixSDK.{Request, HTTPClient, Auth}
 
   @http_client Application.get_env(:matrix_sdk, :http_client)
 
@@ -57,16 +57,17 @@ defmodule MatrixSDK.API do
 
   Token authentication:
 
-      MatrixSDK.API.login("https://matrix.org", "token")
+      auth = MatrixSDK.Auth.login_token("token")
+      MatrixSDK.API.login("https://matrix.org", auth)
 
   User and password authentication with optional parameters:
 
-      auth = %{user: "maurice_moss", password: "password"}
+      auth = MatrixSDK.Auth.login_user("maurice_moss", "password")
       opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
-      
+
       MatrixSDK.API.login("https://matrix.org", auth, opts)
   """
-  @spec login(Request.base_url(), Request.auth(), opts :: map) :: HTTPClient.result()
+  @spec login(Request.base_url(), Auth.t(), opts :: map) :: HTTPClient.result()
   def login(base_url, auth, opts \\ %{}) do
     base_url
     |> Request.login(auth, opts)
@@ -156,6 +157,50 @@ defmodule MatrixSDK.API do
   def username_availability(base_url, username) do
     base_url
     |> Request.username_availability(username)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Changes the password for an account on the homeserver.
+
+  ## Examples 
+
+      auth = MatrixSDK.Auth.login_token("token")
+      MatrixSDK.API.change_password("https://matrix.org", "new_password", auth)
+  """
+  @spec change_password(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
+  # REVIEW: This requires m.login.email.identity 
+  def change_password(base_url, new_password, auth, opts \\ %{}) do
+    base_url
+    |> Request.change_password(new_password, auth, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Gets a list of the third party identifiers the homeserver has associated with the user's account.
+
+  ## Examples
+
+      MatrixSDK.API.account_3pids("https://matrix.org", "token")
+  """
+  @spec account_3pids(Request.base_url(), binary) :: HTTPClient.result()
+  def account_3pids(base_url, token) do
+    base_url
+    |> Request.account_3pids(token)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Gets information about the owner of a given access token.
+
+  ## Examples
+
+      MatrixSDK.API.whoami("https://matrix.org", "token")
+  """
+  @spec whoami(Request.base_url(), binary) :: HTTPClient.result()
+  def whoami(base_url, token) do
+    base_url
+    |> Request.whoami(token)
     |> @http_client.do_request()
   end
 

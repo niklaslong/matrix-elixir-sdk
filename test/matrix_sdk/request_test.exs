@@ -1,6 +1,6 @@
 defmodule MatrixSDK.RequestTest do
   use ExUnit.Case
-  alias MatrixSDK.Request
+  alias MatrixSDK.{Request, Auth}
 
   doctest MatrixSDK.Request
 
@@ -37,8 +37,9 @@ defmodule MatrixSDK.RequestTest do
     test "login/2 token authentication" do
       base_url = "http://test-server.url"
       token = "token"
+      auth = Auth.login_token(token)
 
-      request = Request.login(base_url, token)
+      request = Request.login(base_url, auth)
 
       assert request.method == :post
       assert request.base_url == base_url
@@ -49,7 +50,9 @@ defmodule MatrixSDK.RequestTest do
 
     test "login/2 user and password authentication" do
       base_url = "http://test-server.url"
-      auth = %{user: "username", password: "password"}
+      user = "username"
+      password = "password"
+      auth = Auth.login_user(user, password)
 
       request = Request.login(base_url, auth)
 
@@ -58,16 +61,17 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/login"
       assert request.body.type == "m.login.password"
       assert request.body.identifier.type == "m.id.user"
-      assert request.body.identifier.user == auth.user
-      assert request.body.password == auth.password
+      assert request.body.identifier.user == user
+      assert request.body.password == password
     end
 
     test "login/3 token authentication with options" do
       base_url = "http://test-server.url"
       token = "token"
+      auth = Auth.login_token(token)
       opts = %{device_id: "id", initial_device_display_name: "display name"}
 
-      request = Request.login(base_url, token, opts)
+      request = Request.login(base_url, auth, opts)
 
       assert request.method == :post
       assert request.base_url == base_url
@@ -80,7 +84,9 @@ defmodule MatrixSDK.RequestTest do
 
     test "login/3 user and password authentication with options" do
       base_url = "http://test-server.url"
-      auth = %{user: "username", password: "password"}
+      user = "username"
+      password = "password"
+      auth = Auth.login_user(user, password)
       opts = %{device_id: "id", initial_device_display_name: "display name"}
 
       request = Request.login(base_url, auth, opts)
@@ -90,8 +96,8 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/login"
       assert request.body.type == "m.login.password"
       assert request.body.identifier.type == "m.id.user"
-      assert request.body.identifier.user == auth.user
-      assert request.body.password == auth.password
+      assert request.body.identifier.user == user
+      assert request.body.password == password
       assert request.body.device_id == opts.device_id
       assert request.body.initial_device_display_name == opts.initial_device_display_name
     end
@@ -189,6 +195,110 @@ defmodule MatrixSDK.RequestTest do
       assert request.method == :get
       assert request.base_url == base_url
       assert request.path == "/_matrix/client/r0/register/available?username=#{username}"
+    end
+  end
+
+  describe "account management:" do
+    test "change_password/3 token authentication" do
+      base_url = "http://test-server.url"
+      new_password = "new_password"
+      token = "token"
+      auth = Auth.login_token(token)
+
+      request = Request.change_password(base_url, new_password, auth)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password"
+      assert request.body.new_password == new_password
+      assert request.body.auth.type == "m.login.token"
+      assert request.body.auth.token == token
+    end
+
+    test "change_password/3 user and password authentication" do
+      base_url = "http://test-server.url"
+      new_password = "new_password"
+      user = "username"
+      password = "password"
+      auth = Auth.login_user(user, password)
+
+      request = Request.change_password(base_url, new_password, auth)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password"
+      assert request.body.new_password == new_password
+      assert request.body.auth.type == "m.login.password"
+      assert request.body.auth.identifier.type == "m.id.user"
+      assert request.body.auth.identifier.user == user
+      assert request.body.auth.password == password
+    end
+
+    test "change_password/4 token authentication with options" do
+      base_url = "http://test-server.url"
+      new_password = "new_password"
+      token = "token"
+      auth = Auth.login_token(token)
+      opts = %{logout_devices: true}
+
+      request = Request.change_password(base_url, new_password, auth, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password"
+      assert request.body.new_password == new_password
+      assert request.body.auth.type == "m.login.token"
+      assert request.body.auth.token == token
+      assert request.body.logout_devices == true
+    end
+
+    test "change_password/4 user and password authentication with options" do
+      base_url = "http://test-server.url"
+      new_password = "new_password"
+      user = "username"
+      password = "password"
+      auth = Auth.login_user(user, password)
+      opts = %{logout_devices: true}
+
+      request = Request.change_password(base_url, new_password, auth, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password"
+      assert request.body.new_password == new_password
+      assert request.body.auth.type == "m.login.password"
+      assert request.body.auth.identifier.type == "m.id.user"
+      assert request.body.auth.identifier.user == user
+      assert request.body.auth.password == password
+      assert request.body.logout_devices == true
+    end
+  end
+
+  describe "user contact information:" do
+    test "account_3pids/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      request = Request.account_3pids(base_url, token)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+  end
+
+  describe "current account information:" do
+    test "whoami/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      request = Request.whoami(base_url, token)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/whoami"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
     end
   end
 
