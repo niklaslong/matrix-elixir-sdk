@@ -169,9 +169,24 @@ defmodule MatrixSDK.API do
       MatrixSDK.API.change_password("https://matrix.org", "new_password", auth)
   """
   @spec change_password(Reuqest.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
+  # REVIEW: This requires m.login.email.identity 
   def change_password(base_url, new_password, auth, opts \\ %{}) do
     base_url
     |> Request.change_password(new_password, auth, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Gets a list of the third party identifiers the homeserver has associated with the user's account.
+
+  ## Examples
+
+      MatrixSDK.API.account_3pids("https://matrix.org", "token")
+  """
+  @spec account_3pids(Request.base_url(), binary) :: HTTPClient.result()
+  def account_3pids(base_url, token) do
+    base_url
+    |> Request.account_3pids(token)
     |> @http_client.do_request()
   end
 

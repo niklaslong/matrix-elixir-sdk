@@ -351,6 +351,29 @@ defmodule MatrixSDK.Request do
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to get a list of the third party identifiers the homeserver has associated with the user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_3pids("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/account/3pid"
+      }
+  """
+  @spec account_3pids(base_url, binary) :: t
+  def account_3pids(base_url, token),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+
   def room_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
 end

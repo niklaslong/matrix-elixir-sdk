@@ -353,6 +353,24 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "user contact information:" do
+    test "account_3pids/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/account/3pid"
+        assert request.headers == [{"Authorization", "Bearer " <> token}]
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.account_3pids(base_url, token)
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1 returns public rooms on server" do
       base_url = "http://test.url"

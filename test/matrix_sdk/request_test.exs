@@ -274,6 +274,20 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
+  describe "user contact information:" do
+    test "account_3pids/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      request = Request.account_3pids(base_url, token)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1" do
       base_url = "http://test-server.url"
