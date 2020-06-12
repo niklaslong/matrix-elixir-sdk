@@ -168,7 +168,7 @@ defmodule MatrixSDK.API do
       auth = MatrixSDK.Auth.login_token("token")
       MatrixSDK.API.change_password("https://matrix.org", "new_password", auth)
   """
-  @spec change_password(Reuqest.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
+  @spec change_password(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
   # REVIEW: This requires m.login.email.identity 
   def change_password(base_url, new_password, auth, opts \\ %{}) do
     base_url
