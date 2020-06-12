@@ -159,6 +159,21 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Checks the given email address is not already associated with an account on the homeserver.
+
+  ## Examples
+
+        MatrixSDK.API.register_email("https://matrix.org", "secret", "maurice@moss.yay", 1)
+  """
+  @spec register_email(Request.base_url(), binary, binary, pos_integer, map) ::
+          HTTPClient.result()
+  def register_email(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+    base_url
+    |> Request.register_email(client_secret, email, send_attempt, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Checks if a username is available and valid for the server.
 
   ## Examples
