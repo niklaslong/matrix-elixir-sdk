@@ -190,6 +190,20 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Gets information about the owner of a given access token.
+
+  ## Examples
+
+      MatrixSDK.API.whoami("https://matrix.org", "token")
+  """
+  @spec whoami(Request.base_url(), binary) :: HTTPClient.result()
+  def whoami(base_url, token) do
+    base_url
+    |> Request.whoami(token)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url

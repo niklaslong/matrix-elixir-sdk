@@ -288,6 +288,20 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
+  describe "current account information:" do
+    test "whoami/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      request = Request.whoami(base_url, token)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/whoami"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1" do
       base_url = "http://test-server.url"

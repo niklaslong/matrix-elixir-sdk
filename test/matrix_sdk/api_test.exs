@@ -371,6 +371,24 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "current account information:" do
+    test "whoami/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/account/whoami"
+        assert request.headers == [{"Authorization", "Bearer " <> token}]
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.whoami(base_url, token)
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1 returns public rooms on server" do
       base_url = "http://test.url"

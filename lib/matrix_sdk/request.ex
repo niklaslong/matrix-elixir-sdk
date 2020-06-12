@@ -374,6 +374,29 @@ defmodule MatrixSDK.Request do
       headers: [{"Authorization", "Bearer " <> token}]
     }
 
+  @doc """
+  Returns a `%Request{}` struct used to get information about the owner of a given access token.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.whoami("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/account/whoami"
+      }
+  """
+  @spec whoami(base_url, binary) :: t
+  def whoami(base_url, token),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/whoami",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+
   def room_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
 end
