@@ -37,6 +37,20 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Gets information about the server's supported feature set and other relevant capabilities.
+
+  ## Examples
+
+      MatrixSDK.API.server_capabilities("https://matrix.org")
+  """
+  @spec server_capabilities(Request.base_url(), binary) :: HTTPClient.result()
+  def server_capabilities(base_url, token) do
+    base_url
+    |> Request.server_capabilities(token)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the homeserver's supported login types to authenticate users. 
 
   ## Examples

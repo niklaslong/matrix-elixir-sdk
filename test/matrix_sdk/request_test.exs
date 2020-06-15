@@ -22,6 +22,16 @@ defmodule MatrixSDK.RequestTest do
       assert request.base_url == base_url
       assert request.path == "/.well-known/matrix/client"
     end
+
+    test "server_capabilities/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+      request = Request.server_capabilities(base_url, token)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/capabilities"
+    end
   end
 
   describe "session management:" do

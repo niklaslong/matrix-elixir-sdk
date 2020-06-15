@@ -61,6 +61,30 @@ defmodule MatrixSDK.Request do
     do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 
   @doc """
+  Returns a `%Request{}` struct used to get information about the server's supported feature set and other relevant capabilities.
+
+  ## Examples
+
+      iex> token = "token"
+      iex> MatrixSDK.Request.server_capabilities("https://matrix.org", token)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/capabilities"
+      }
+  """
+  @spec server_capabilities(base_url, binary) :: t
+  def server_capabilities(base_url, token),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/capabilities",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+
+  @doc """
   Returns a `%Request{}` struct used to get the homeserver's supported login types to authenticate users. 
 
   ## Examples
