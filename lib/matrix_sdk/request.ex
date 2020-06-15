@@ -461,6 +461,26 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
+  WIP
+  """
+  @spec account_add_3pid(base_url, Auth.t(), binary, binary, binary) :: t
+  def account_add_3pid(base_url, auth, client_secret, sid, token) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:sid, sid)
+      |> Map.put(:auth, auth)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/add",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
 
   ## Examples

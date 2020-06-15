@@ -217,6 +217,14 @@ defmodule MatrixSDK.API do
     |> http_client().do_request()
   end
 
+  @spec account_add_3pid(Request.base_url(), Auth.t(), binary, binary, binary) ::
+          HTTPClient.result()
+  def account_add_3pid(base_url, auth, client_secret, sid, token) do
+    base_url
+    |> Request.account_add_3pid(auth, client_secret, sid, token)
+    |> @http_client.do_request()
+  end
+
   @doc """
   Gets information about the owner of a given access token.
 
