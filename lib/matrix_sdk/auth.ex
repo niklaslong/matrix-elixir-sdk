@@ -8,6 +8,7 @@ defmodule MatrixSDK.Auth do
   @type dummy :: %{type: binary}
   @type token :: %{type: binary, token: binary}
   @type password :: %{type: binary, identifier: id, password: binary}
+  @type recaptcha :: %{type: binary, response: binary}
 
   @type id_user :: %{type: binary, user: binary}
   @type id_thirdparty :: %{type: binary, medium: binary, address: binary}
@@ -21,6 +22,9 @@ defmodule MatrixSDK.Auth do
 
   @spec login_token(binary) :: token
   def login_token(token), do: %{type: "m.login.token", token: token}
+
+  @spec login_recaptcha(binary) :: recaptcha
+  def login_recaptcha(response), do: %{type: "m.login.recaptcha", response: response}
 
   @spec login_password(id, binary) :: password
   defp login_password(identifier, password),

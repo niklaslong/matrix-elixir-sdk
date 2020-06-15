@@ -15,6 +15,14 @@ defmodule MatrixSDK.AuthTest do
     assert auth.token == token
   end
 
+  test "login_recaptcha/1" do
+    response = "response"
+    auth = Auth.login_recaptcha(response)
+
+    assert auth.type == "m.login.recaptcha"
+    assert auth.response == response
+  end
+
   test "login_user/2" do
     user = "username"
     password = "password"
