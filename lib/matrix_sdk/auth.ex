@@ -9,13 +9,13 @@ defmodule MatrixSDK.Auth do
   @type token :: %{type: binary, token: binary}
   @type password :: %{type: binary, identifier: id, password: binary}
   @type recaptcha :: %{type: binary, response: binary}
-  @type three_pid :: %{type: binary, threepidCreds: [sid: binary, client_secret: binary]}
+  @type thirdparty :: %{type: binary, threepidCreds: [sid: binary, client_secret: binary]}
 
   @type id_user :: %{type: binary, user: binary}
   @type id_thirdparty :: %{type: binary, medium: binary, address: binary}
   @type id_phone :: %{type: binary, country: binary, phone: binary}
 
-  @type t :: dummy | token | password
+  @type t :: dummy | token | password | recaptcha | thirdparty
   @type id :: id_user | id_thirdparty | id_phone
 
   @spec login_dummy() :: dummy
@@ -27,11 +27,11 @@ defmodule MatrixSDK.Auth do
   @spec login_recaptcha(binary) :: recaptcha
   def login_recaptcha(response), do: %{type: "m.login.recaptcha", response: response}
 
-  @spec login_email_identity(binary, binary) :: three_pid
+  @spec login_email_identity(binary, binary) :: thirdparty
   def login_email_identity(sid, client_secret),
     do: %{type: "m.login.email.identity", threepidCreds: [three_pid_creds(sid, client_secret)]}
 
-  @spec login_msisdn(binary, binary) :: three_pid
+  @spec login_msisdn(binary, binary) :: thirdparty
   def login_msisdn(sid, client_secret),
     do: %{type: "m.login.msisdn", threepidCreds: [three_pid_creds(sid, client_secret)]}
 
