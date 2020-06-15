@@ -421,6 +421,16 @@ defmodule MatrixSDK.Request do
       headers: [{"Authorization", "Bearer " <> token}]
     }
 
+  @spec room_sync(base_url, binary, map) :: t
+  def room_sync(base_url, token, opts \\ %{}),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/sync",
+      query_params: Map.to_list(opts),
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+
   def room_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
 end

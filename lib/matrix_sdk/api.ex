@@ -224,4 +224,11 @@ defmodule MatrixSDK.API do
     |> Request.room_discovery()
     |> @http_client.do_request()
   end
+
+  @spec room_sync(Request.base_url(), binary, map) :: HTTPClient.result()
+  def room_sync(base_url, token, opts \\ %{}) do
+    base_url
+    |> Request.room_sync(token, opts)
+    |> @http_client.do_request()
+  end
 end
