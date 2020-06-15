@@ -426,9 +426,9 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.room_sync("https://matrux.org", "token")
+      iex> MatrixSDK.Request.room_sync("https://matrix.org", "token")
       %MatrixSDK.Request{
-        base_url: "https://matrux.org",
+        base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
@@ -438,9 +438,9 @@ defmodule MatrixSDK.Request do
 
   With optional parameters:
 
-      iex> MatrixSDK.Request.room_sync("https://matrux.org", "token", %{since: "s123456789"})
+      iex> MatrixSDK.Request.room_sync("https://matrix.org", "token", %{since: "s123456789"})
       %MatrixSDK.Request{
-        base_url: "https://matrux.org",
+        base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
