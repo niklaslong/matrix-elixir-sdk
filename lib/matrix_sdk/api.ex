@@ -41,7 +41,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.server_capabilities("https://matrix.org")
+      MatrixSDK.API.server_capabilities("https://matrix.org", "token")
   """
   @spec server_capabilities(Request.base_url(), binary) :: HTTPClient.result()
   def server_capabilities(base_url, token) do
