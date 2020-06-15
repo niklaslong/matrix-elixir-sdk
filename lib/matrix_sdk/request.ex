@@ -7,7 +7,7 @@ defmodule MatrixSDK.Request do
   alias MatrixSDK.Auth
 
   @enforce_keys [:method, :base_url, :path]
-  defstruct([:method, :base_url, :path, headers: [], body: %{}])
+  defstruct([:method, :base_url, :path, query_params: %{}, headers: [], body: %{}])
 
   @type method :: :head | :get | :delete | :trace | :options | :post | :put | :patch
   @type base_url :: binary
