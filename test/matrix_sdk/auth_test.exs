@@ -23,6 +23,28 @@ defmodule MatrixSDK.AuthTest do
     assert auth.response == response
   end
 
+  test "login_email_identity/2" do
+    sid = "sid"
+    client_secret = "client_secret"
+    auth = Auth.login_email_identity(sid, client_secret)
+    [creds] = auth.threepidCreds
+
+    assert auth.type == "m.login.email.identity"
+    assert creds.sid == sid
+    assert creds.client_secret == client_secret
+  end
+
+  test "login_msisdn/" do
+    sid = "sid"
+    client_secret = "client_secret"
+    auth = Auth.login_msisdn(sid, client_secret)
+    [creds] = auth.threepidCreds
+
+    assert auth.type == "m.login.msisdn"
+    assert creds.sid == sid
+    assert creds.client_secret == client_secret
+  end
+
   test "login_user/2" do
     user = "username"
     password = "password"

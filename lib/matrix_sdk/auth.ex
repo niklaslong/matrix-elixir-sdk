@@ -9,6 +9,7 @@ defmodule MatrixSDK.Auth do
   @type token :: %{type: binary, token: binary}
   @type password :: %{type: binary, identifier: id, password: binary}
   @type recaptcha :: %{type: binary, response: binary}
+  @type three_pid :: %{type: binary, threepidCreds: [sid: binary, client_secret: binary]}
 
   @type id_user :: %{type: binary, user: binary}
   @type id_thirdparty :: %{type: binary, medium: binary, address: binary}
@@ -25,6 +26,17 @@ defmodule MatrixSDK.Auth do
 
   @spec login_recaptcha(binary) :: recaptcha
   def login_recaptcha(response), do: %{type: "m.login.recaptcha", response: response}
+
+  @spec login_email_identity(binary, binary) :: three_pid
+  def login_email_identity(sid, client_secret),
+    do: %{type: "m.login.email.identity", threepidCreds: [three_pid_creds(sid, client_secret)]}
+
+  @spec login_msisdn(binary, binary) :: three_pid
+  def login_msisdn(sid, client_secret),
+    do: %{type: "m.login.msisdn", threepidCreds: [three_pid_creds(sid, client_secret)]}
+
+  @spec three_pid_creds(binary, binary) :: map
+  defp three_pid_creds(sid, client_secret), do: %{sid: sid, client_secret: client_secret}
 
   @spec login_password(id, binary) :: password
   defp login_password(identifier, password),
