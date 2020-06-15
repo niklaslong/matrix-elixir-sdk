@@ -225,6 +225,21 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Synchronises the client's state with the latest state on the server.
+
+  ## Examples 
+      
+      MatrixSDK.API.room_sync("https://matrix.org", "token")
+
+  With optional parameters:
+
+      opts = %{
+        since: "s123456789"
+      }
+
+  TODO: add other parameters in example
+  """
   @spec room_sync(Request.base_url(), binary, map) :: HTTPClient.result()
   def room_sync(base_url, token, opts \\ %{}) do
     base_url

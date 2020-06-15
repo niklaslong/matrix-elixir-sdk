@@ -421,6 +421,35 @@ defmodule MatrixSDK.Request do
       headers: [{"Authorization", "Bearer " <> token}]
     }
 
+  @doc """
+  Returns a `%Request{}` struct used to synchronises the client's state with the latest state on the server.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.room_sync("https://matrux.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrux.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/sync",
+        query_params: []
+      }
+
+  With optional parameters:
+
+      iex> MatrixSDK.Request.room_sync("https://matrux.org", "token", %{since: "s123456789"})
+      %MatrixSDK.Request{
+        base_url: "https://matrux.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/sync",
+        query_params: [since: "s123456789"]
+      }
+
+  TODO: add other parameters in example
+  """
   @spec room_sync(base_url, binary, map) :: t
   def room_sync(base_url, token, opts \\ %{}),
     do: %__MODULE__{
