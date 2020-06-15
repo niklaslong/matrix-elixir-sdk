@@ -35,6 +35,21 @@ defmodule MatrixSDK.APITest do
 
       assert {:ok, _} = API.server_discovery(base_url)
     end
+
+    test "server_capabilities/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/capabilities"
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.server_capabilities(base_url, token)
+    end
   end
 
   describe "session management:" do
