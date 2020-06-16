@@ -1,5 +1,5 @@
 defmodule MatrixSDK.APITest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   import Mox
 
   alias MatrixSDK.{API, Request, Auth, HTTPClientMock}

@@ -1,5 +1,5 @@
 defmodule MatrixSDK.RequestTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   alias MatrixSDK.{Request, Auth}
 
   doctest MatrixSDK.Request
