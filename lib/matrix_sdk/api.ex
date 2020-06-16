@@ -218,13 +218,6 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  # REVIEW: this works on matrix.org but not on local?
-  def room_discovery(base_url) do
-    base_url
-    |> Request.room_discovery()
-    |> @http_client.do_request()
-  end
-
   @doc """
   Synchronises the client's state with the latest state on the server.
 
@@ -248,6 +241,13 @@ defmodule MatrixSDK.API do
   def sync(base_url, token, opts \\ %{}) do
     base_url
     |> Request.sync(token, opts)
+    |> @http_client.do_request()
+  end
+
+  # REVIEW: this works on matrix.org but not on local?
+  def room_discovery(base_url) do
+    base_url
+    |> Request.room_discovery()
     |> @http_client.do_request()
   end
 end

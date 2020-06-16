@@ -312,7 +312,7 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
-  describe "room syncing:" do
+  describe "client-server syncing:" do
     test "sync/2" do
       base_url = "http://test-server.url"
       token = "token"
