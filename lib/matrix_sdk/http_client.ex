@@ -25,12 +25,12 @@ defmodule MatrixSDK.HTTPClient do
   def do_request(%Request{method: :get} = request) do
     request.base_url
     |> client(request.headers)
-    |> get(request.path)
+    |> get(request.path, query: request.query_params)
   end
 
   def do_request(%Request{method: :post} = request) do
     request.base_url
     |> client(request.headers)
-    |> post(request.path, request.body)
+    |> post(request.path, request.body, query: request.query_params)
   end
 end

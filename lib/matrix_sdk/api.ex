@@ -218,6 +218,32 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Synchronises the client's state with the latest state on the server.
+
+  ## Examples 
+      
+      MatrixSDK.API.sync("https://matrix.org", "token")
+
+  With optional parameters:
+
+      opts = %{
+                since: "s123456789",
+                filter: "filter",
+                full_state: true,
+                set_presence: "online",
+                timeout: 1000
+              }
+
+      MatrixSDK.API.sync("https://matrix.org", "token", opts)
+  """
+  @spec sync(Request.base_url(), binary, map) :: HTTPClient.result()
+  def sync(base_url, token, opts \\ %{}) do
+    base_url
+    |> Request.sync(token, opts)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url

@@ -63,6 +63,28 @@ defmodule MatrixSDK.HTTPClientTest do
       assert HTTPClient.do_request(request)
     end
 
+    test "GET with query params", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :get,
+        base_url: base_url,
+        path: path,
+        query_params: [{:key, "value"}, {:query, "query"}]
+      }
+
+      Bypass.expect_once(bypass, "GET", path, fn conn ->
+        assert conn.method == "GET"
+        assert conn.request_path == path
+        assert conn.query_string == "key=value&query=query"
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      assert HTTPClient.do_request(request)
+    end
+
     test "POST", %{bypass: bypass} do
       base_url = "http://localhost:#{bypass.port}"
       path = "/test/path"
@@ -76,6 +98,33 @@ defmodule MatrixSDK.HTTPClientTest do
       Bypass.expect_once(bypass, "POST", path, fn conn ->
         assert conn.method == "POST"
         assert conn.request_path == path
+
+        assert conn
+               |> Plug.Conn.read_body()
+               |> elem(1)
+               |> Jason.decode!() == %{}
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      assert HTTPClient.do_request(request)
+    end
+
+    test "POST with query params", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :post,
+        base_url: base_url,
+        path: path,
+        query_params: [{:key, "value"}, {:query, "query"}]
+      }
+
+      Bypass.expect_once(bypass, "POST", path, fn conn ->
+        assert conn.method == "POST"
+        assert conn.request_path == path
+        assert conn.query_string == "key=value&query=query"
 
         assert conn
                |> Plug.Conn.read_body()

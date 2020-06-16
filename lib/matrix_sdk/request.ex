@@ -7,7 +7,7 @@ defmodule MatrixSDK.Request do
   alias MatrixSDK.Auth
 
   @enforce_keys [:method, :base_url, :path]
-  defstruct([:method, :base_url, :path, headers: [], body: %{}])
+  defstruct([:method, :base_url, :path, query_params: %{}, headers: [], body: %{}])
 
   @type method :: :head | :get | :delete | :trace | :options | :post | :put | :patch
   @type base_url :: binary
@@ -418,6 +418,69 @@ defmodule MatrixSDK.Request do
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/account/whoami",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+
+  @doc """
+  Returns a `%Request{}` struct used to synchronises the client's state with the latest state on the server.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+  - `token`: the authentication token returned from user login 
+
+  Optional:
+  - `filter`: the ID of a filter created using the filter API or a filter JSON object encoded as a string
+  - `since`: a point in time to continue a sync from (usuall the `next_batch` value from last sync)
+  - `full_state`: controls whether to include the full state for all rooms the user is a member of
+  - `set_presence`: controls whether the client is automatically marked as online by polling this API
+  - `timeout`: the maximum time to wait, in milliseconds, before returning this request
+
+  ## Examples
+
+      iex> MatrixSDK.Request.sync("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/sync",
+        query_params: []
+      }
+
+  With optional parameters:
+
+      iex> opts = %{
+      ...>          since: "s123456789",
+      ...>          filter: "filter",
+      ...>          full_state: true,
+      ...>          set_presence: "online",
+      ...>          timeout: 1000
+      ...>         }
+      iex> MatrixSDK.Request.sync("https://matrix.org", "token", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/sync",
+        query_params: [
+          {:filter, "filter"},
+          {:full_state, true}, 
+          {:set_presence, "online"}, 
+          {:since, "s123456789"}, 
+          {:timeout, 1000}
+        ]
+      }
+  """
+  @spec sync(base_url, binary, map) :: t
+  def sync(base_url, token, opts \\ %{}),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/sync",
+      query_params: Map.to_list(opts),
       headers: [{"Authorization", "Bearer " <> token}]
     }
 
