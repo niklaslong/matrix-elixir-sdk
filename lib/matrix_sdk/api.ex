@@ -230,7 +230,7 @@ defmodule MatrixSDK.API do
 
   ## Examples 
       
-      MatrixSDK.API.room_sync("https://matrix.org", "token")
+      MatrixSDK.API.sync("https://matrix.org", "token")
 
   With optional parameters:
 
@@ -240,10 +240,10 @@ defmodule MatrixSDK.API do
 
   TODO: add other parameters in example
   """
-  @spec room_sync(Request.base_url(), binary, map) :: HTTPClient.result()
-  def room_sync(base_url, token, opts \\ %{}) do
+  @spec sync(Request.base_url(), binary, map) :: HTTPClient.result()
+  def sync(base_url, token, opts \\ %{}) do
     base_url
-    |> Request.room_sync(token, opts)
+    |> Request.sync(token, opts)
     |> @http_client.do_request()
   end
 end

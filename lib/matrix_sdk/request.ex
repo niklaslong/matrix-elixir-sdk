@@ -426,7 +426,7 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.room_sync("https://matrix.org", "token")
+      iex> MatrixSDK.Request.sync("https://matrix.org", "token")
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{},
@@ -438,7 +438,7 @@ defmodule MatrixSDK.Request do
 
   With optional parameters:
 
-      iex> MatrixSDK.Request.room_sync("https://matrix.org", "token", %{since: "s123456789"})
+      iex> MatrixSDK.Request.sync("https://matrix.org", "token", %{since: "s123456789"})
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{},
@@ -450,8 +450,8 @@ defmodule MatrixSDK.Request do
 
   TODO: add other parameters in example
   """
-  @spec room_sync(base_url, binary, map) :: t
-  def room_sync(base_url, token, opts \\ %{}),
+  @spec sync(base_url, binary, map) :: t
+  def sync(base_url, token, opts \\ %{}),
     do: %__MODULE__{
       method: :get,
       base_url: base_url,
