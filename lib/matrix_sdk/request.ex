@@ -424,6 +424,19 @@ defmodule MatrixSDK.Request do
   @doc """
   Returns a `%Request{}` struct used to synchronises the client's state with the latest state on the server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+  - `token`: the authentication token returned from user login 
+
+  Optional:
+  - `filter`: the ID of a filter created using the filter API or a filter JSON object encoded as a string
+  - `since`: a point in time to continue a sync from (usuall the `next_batch` value from last sync)
+  - `full_state`: controls whether to include the full state for all rooms the user is a member of
+  - `set_presence`: controls whether the client is automatically marked as online by polling this API
+  - `timeout`: the maximum time to wait, in milliseconds, before returning this request
+
   ## Examples
 
       iex> MatrixSDK.Request.sync("https://matrix.org", "token")
@@ -438,17 +451,28 @@ defmodule MatrixSDK.Request do
 
   With optional parameters:
 
-      iex> MatrixSDK.Request.sync("https://matrix.org", "token", %{since: "s123456789"})
+      iex> opts = %{
+      ...>          since: "s123456789",
+      ...>          filter: "filter",
+      ...>          full_state: true,
+      ...>          set_presence: "online",
+      ...>          timeout: 1000
+      ...>         }
+      iex> MatrixSDK.Request.sync("https://matrix.org", "token", opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/sync",
-        query_params: [since: "s123456789"]
+        query_params: [
+          {:filter, "filter"},
+          {:full_state, true}, 
+          {:set_presence, "online"}, 
+          {:since, "s123456789"}, 
+          {:timeout, 1000}
+        ]
       }
-
-  TODO: add other parameters in example
   """
   @spec sync(base_url, binary, map) :: t
   def sync(base_url, token, opts \\ %{}),

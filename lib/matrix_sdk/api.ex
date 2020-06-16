@@ -235,10 +235,14 @@ defmodule MatrixSDK.API do
   With optional parameters:
 
       opts = %{
-        since: "s123456789"
-      }
+                since: "s123456789",
+                filter: "filter",
+                full_state: true,
+                set_presence: "online",
+                timeout: 1000
+              }
 
-  TODO: add other parameters in example
+      MatrixSDK.API.sync("https://matrix.org", "token", opts)
   """
   @spec sync(Request.base_url(), binary, map) :: HTTPClient.result()
   def sync(base_url, token, opts \\ %{}) do
