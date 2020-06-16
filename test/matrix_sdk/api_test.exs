@@ -404,6 +404,56 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "room syncing:" do
+    test "sync/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/sync"
+        assert request.headers == [{"Authorization", "Bearer " <> token}]
+
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.sync(base_url, token)
+    end
+
+    test "sync/3 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      opts = %{
+        since: "s123456789",
+        filter: "filter",
+        full_state: true,
+        set_presence: "online",
+        timeout: 1000
+      }
+
+      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+        assert request.method == :get
+        assert request.base_url == base_url
+        assert request.path == "/_matrix/client/r0/sync"
+
+        assert request.query_params == [
+                 {:filter, opts.filter},
+                 {:full_state, opts.full_state},
+                 {:set_presence, opts.set_presence},
+                 {:since, opts.since},
+                 {:timeout, opts.timeout}
+               ]
+
+        assert request.headers == [{"Authorization", "Bearer " <> token}]
+        {:ok, %Tesla.Env{}}
+      end)
+
+      assert {:ok, _} = API.sync(base_url, token, opts)
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1 returns public rooms on server" do
       base_url = "http://test.url"
