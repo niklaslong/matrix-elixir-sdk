@@ -12,12 +12,7 @@ defmodule MatrixSDK.APITest do
       base_url = "http://test.url"
       expected_request = Request.spec_versions(base_url)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.spec_versions(base_url)
     end
 
@@ -25,12 +20,7 @@ defmodule MatrixSDK.APITest do
       base_url = "http://test.url"
       expected_request = Request.server_discovery(base_url)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.server_discovery(base_url)
     end
 
@@ -39,12 +29,7 @@ defmodule MatrixSDK.APITest do
       token = "token"
       expected_request = Request.server_capabilities(base_url, token)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.server_capabilities(base_url, token)
     end
   end
@@ -54,12 +39,7 @@ defmodule MatrixSDK.APITest do
       base_url = "http://test.url"
       expected_request = Request.login(base_url)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.login(base_url)
     end
 
@@ -68,12 +48,7 @@ defmodule MatrixSDK.APITest do
       auth = Auth.login_token("token")
       expected_request = Request.login(base_url, auth)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.login(base_url, auth)
     end
 
@@ -82,12 +57,7 @@ defmodule MatrixSDK.APITest do
       auth = Auth.login_user("username", "password")
       expected_request = Request.login(base_url, auth)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.login(base_url, auth)
     end
 
@@ -97,12 +67,7 @@ defmodule MatrixSDK.APITest do
       opts = %{device_id: "id", initial_device_display_name: "display name"}
       expected_request = Request.login(base_url, auth, opts)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.login(base_url, auth, opts)
     end
 
@@ -112,12 +77,7 @@ defmodule MatrixSDK.APITest do
       opts = %{device_id: "id", initial_device_display_name: "display name"}
       expected_request = Request.login(base_url, auth, opts)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.login(base_url, auth, opts)
     end
 
@@ -126,12 +86,7 @@ defmodule MatrixSDK.APITest do
       token = "token"
       expected_request = Request.logout(base_url, token)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.logout(base_url, token)
     end
 
@@ -140,12 +95,7 @@ defmodule MatrixSDK.APITest do
       token = "token"
       expected_request = Request.logout_all(base_url, token)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.logout_all(base_url, token)
     end
   end
@@ -155,12 +105,7 @@ defmodule MatrixSDK.APITest do
       base_url = "http://test.url"
       expected_request = Request.register_guest(base_url)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.register_guest(base_url)
     end
 
@@ -169,12 +114,7 @@ defmodule MatrixSDK.APITest do
       opts = %{initial_device_display_name: "display name"}
       expected_request = Request.register_guest(base_url, opts)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.register_guest(base_url, opts)
     end
 
@@ -183,12 +123,7 @@ defmodule MatrixSDK.APITest do
       password = "password"
       expected_request = Request.register_user(base_url, password)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.register_user(base_url, password)
     end
 
@@ -205,12 +140,7 @@ defmodule MatrixSDK.APITest do
 
       expected_request = Request.register_user(base_url, password, opts)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.register_user(base_url, password, opts)
     end
 
@@ -219,12 +149,7 @@ defmodule MatrixSDK.APITest do
       username = "username"
       expected_request = Request.username_availability(base_url, username)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.username_availability(base_url, username)
     end
   end
@@ -236,12 +161,7 @@ defmodule MatrixSDK.APITest do
       auth = Auth.login_token("token")
       expected_request = Request.change_password(base_url, new_password, auth)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.change_password(base_url, new_password, auth)
     end
 
@@ -251,12 +171,7 @@ defmodule MatrixSDK.APITest do
       auth = Auth.login_user("username", "password")
       expected_request = Request.change_password(base_url, new_password, auth)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.change_password(base_url, new_password, auth)
     end
 
@@ -267,12 +182,7 @@ defmodule MatrixSDK.APITest do
       opts = %{logout_devices: true}
       expected_request = Request.change_password(base_url, new_password, auth, opts)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.change_password(base_url, new_password, auth, opts)
     end
 
@@ -283,12 +193,7 @@ defmodule MatrixSDK.APITest do
       opts = %{logout_devices: true}
       expected_request = Request.change_password(base_url, new_password, auth, opts)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.change_password(base_url, new_password, auth, opts)
     end
   end
@@ -299,12 +204,7 @@ defmodule MatrixSDK.APITest do
       token = "token"
       expected_request = Request.account_3pids(base_url, token)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.account_3pids(base_url, token)
     end
   end
@@ -315,12 +215,7 @@ defmodule MatrixSDK.APITest do
       token = "token"
       expected_request = Request.whoami(base_url, token)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.whoami(base_url, token)
     end
   end
@@ -331,12 +226,7 @@ defmodule MatrixSDK.APITest do
       token = "token"
       expected_request = Request.sync(base_url, token)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.sync(base_url, token)
     end
 
@@ -354,12 +244,7 @@ defmodule MatrixSDK.APITest do
 
       expected_request = Request.sync(base_url, token, opts)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.sync(base_url, token, opts)
     end
   end
@@ -369,13 +254,16 @@ defmodule MatrixSDK.APITest do
       base_url = "http://test.url"
       expected_request = Request.room_discovery(base_url)
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert Map.equal?(request, expected_request)
-
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.room_discovery(base_url)
     end
+  end
+
+  defp assert_client_mock_got(expected_request) do
+    expect(HTTPClientMock, :do_request, fn %Request{} = request ->
+      assert Map.equal?(request, expected_request)
+
+      {:ok, %Tesla.Env{}}
+    end)
   end
 end
