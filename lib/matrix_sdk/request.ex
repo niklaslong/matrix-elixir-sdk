@@ -556,6 +556,33 @@ defmodule MatrixSDK.Request do
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to get a map of MXIDs to member info objects for members of the room.
+
+  ## Example 
+
+      iex> MatrixSDK.Request.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/joined_members",
+        query_params: %{}
+      }
+  """
+  @spec room_joined_members(base_url, binary, binary) :: t
+  def room_joined_members(base_url, token, room_id) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/joined_members",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
   def room_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
 end

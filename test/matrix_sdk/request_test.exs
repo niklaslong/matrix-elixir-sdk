@@ -406,6 +406,19 @@ defmodule MatrixSDK.RequestTest do
                not_membership: opts.not_membership
              ]
     end
+
+    test "room_joined_members/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      request = Request.room_joined_members(base_url, token, room_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/joined_members"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
   end
 
   describe "room administration:" do

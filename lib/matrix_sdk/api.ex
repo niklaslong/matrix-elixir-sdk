@@ -282,6 +282,20 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Gets a map of MXIDs to member info objects for members of the room.
+
+  ## Example 
+
+      MatrixSDK.API.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec room_joined_members(Request.base_url(), binary, binary) :: HTTPClient.result()
+  def room_joined_members(base_url, token, room_id) do
+    base_url
+    |> Request.room_joined_members(token, room_id)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url
