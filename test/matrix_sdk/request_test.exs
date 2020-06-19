@@ -355,6 +355,21 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
+  describe "getting events for a room:" do
+    test "room_state/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      request = Request.room_state(base_url, token, room_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/state"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1" do
       base_url = "http://test-server.url"

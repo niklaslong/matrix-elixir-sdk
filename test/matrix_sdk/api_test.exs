@@ -249,6 +249,19 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "getting events for a room:" do
+    test "room_state/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      expected_request = Request.room_state(base_url, token, room_id)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_state(base_url, token, room_id)
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1 returns public rooms on server" do
       base_url = "http://test.url"

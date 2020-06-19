@@ -244,6 +244,20 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Gets the state events for the current state of a room.
+
+  ## Example 
+
+      MatrixSDK.API.room_state("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec room_state(Request.base_url(), binary, binary) :: HTTPClient.result()
+  def room_state(base_url, token, room_id) do
+    base_url
+    |> Request.room_state(token, room_id)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url
