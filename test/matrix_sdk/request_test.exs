@@ -419,6 +419,47 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/joined_members"
       assert request.headers == [{"Authorization", "Bearer " <> token}]
     end
+
+    test "room_messages/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      from = "t123456789"
+      dir = "f"
+
+      request = Request.room_messages(base_url, token, room_id, from, dir)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/messages"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.query_params == [dir: dir, from: from]
+    end
+
+    test "room_messages/6 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      from = "t123456789"
+      dir = "f"
+
+      opts = %{to: "t987654321", limit: 10, filter: "filter"}
+
+      request = Request.room_messages(base_url, token, room_id, from, dir, opts)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/messages"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+
+      assert request.query_params == [
+               dir: dir,
+               filter: opts.filter,
+               from: from,
+               limit: opts.limit,
+               to: opts.to
+             ]
+    end
   end
 
   describe "room administration:" do

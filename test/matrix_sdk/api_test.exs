@@ -299,6 +299,34 @@ defmodule MatrixSDK.APITest do
       assert assert_client_mock_got(expected_request)
       assert {:ok, _} = API.room_joined_members(base_url, token, room_id)
     end
+
+    test "room_messages/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      from = "t123456789"
+      dir = "f"
+
+      expected_request = Request.room_messages(base_url, token, room_id, from, dir)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_messages(base_url, token, room_id, from, dir)
+    end
+
+    test "room_messages/6 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      from = "t123456789"
+      dir = "f"
+
+      opts = %{to: "t987654321", limit: 10, filter: "filter"}
+
+      expected_request = Request.room_messages(base_url, token, room_id, from, dir, opts)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_messages(base_url, token, room_id, from, dir, opts)
+    end
   end
 
   describe "room administration:" do

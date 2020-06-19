@@ -275,7 +275,7 @@ defmodule MatrixSDK.API do
 
       MatrixSDK.API.room_members("https://matrix.org", "token", "!someroom:matrix.org", opts)
   """
-  @spec room_members(Request.base_url(), binary, binary) :: HTTPClient.result()
+  @spec room_members(Request.base_url(), binary, binary, map) :: HTTPClient.result()
   def room_members(base_url, token, room_id, opts \\ %{}) do
     base_url
     |> Request.room_members(token, room_id, opts)
@@ -293,6 +293,32 @@ defmodule MatrixSDK.API do
   def room_joined_members(base_url, token, room_id) do
     base_url
     |> Request.room_joined_members(token, room_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Gets message and state events for a room. 
+  It uses pagination query parameters to paginate history in the room.
+
+  ## Example 
+
+      MatrixSDK.API.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
+
+  With optional parameters:
+
+      opts = %{
+                to: "t123456789",
+                limit: 10,
+                filter: "filter"
+              }
+
+      MatrixSDK.API.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
+  """
+  @spec room_messages(Request.base_url(), binary, binary, binary, binary, map) ::
+          HTTPClient.result()
+  def room_messages(base_url, token, room_id, from, dir, opts \\ %{}) do
+    base_url
+    |> Request.room_messages(token, room_id, from, dir, opts)
     |> @http_client.do_request()
   end
 
