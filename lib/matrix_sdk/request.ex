@@ -513,6 +513,35 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to look up the contents of a state event in a room.
+
+  ## Example
+
+      iex> MatrixSDK.Request.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state/m.room.member/%40user%3Amatrix.org",
+        query_params: %{}
+      }
+  """
+  @spec room_state_event(base_url, binary, binary, binary, binary) :: t
+  def room_state_event(base_url, token, room_id, event_type, state_key) do
+    encoded_room_id = URI.encode_www_form(room_id)
+    encoded_state_key = URI.encode_www_form(state_key)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path:
+        "/_matrix/client/r0/rooms/#{encoded_room_id}/state/#{event_type}/#{encoded_state_key}",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
     Returns a `%Request{}` struct used to get the state events for the current state of a room.
 
   ## Example 

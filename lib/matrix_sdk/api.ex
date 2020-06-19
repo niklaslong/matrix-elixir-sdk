@@ -259,6 +259,21 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Looks up the contents of a state event in a room.
+
+  ## Example
+
+      MatrixSDK.API.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
+  """
+  @spec room_state_event(Request.base_url(), binary, binary, binary, binary) ::
+          HTTPClient.result()
+  def room_state_event(base_url, token, room_id, event_type, state_key) do
+    base_url
+    |> Request.room_state_event(token, room_id, event_type, state_key)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the state events for the current state of a room.
 
   ## Example 

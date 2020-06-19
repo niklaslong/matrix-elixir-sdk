@@ -262,6 +262,19 @@ defmodule MatrixSDK.APITest do
       assert {:ok, _} = API.room_event(base_url, token, room_id, event_id)
     end
 
+    test "room_state_event/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      event_type = "m.room.event"
+      state_key = "@user:matrix.org"
+
+      expected_request = Request.room_state_event(base_url, token, room_id, event_type, state_key)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_state_event(base_url, token, room_id, event_type, state_key)
+    end
+
     test "room_state/3" do
       base_url = "http://test-server.url"
       token = "token"
