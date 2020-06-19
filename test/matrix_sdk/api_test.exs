@@ -205,16 +205,9 @@ defmodule MatrixSDK.APITest do
       email = "email@test.url"
       send_attempt = 1
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert request.method == :post
-        assert request.base_url == base_url
-        assert request.path == "/_matrix/client/r0/register/email/requestToken"
-        assert request.body.client_secret == client_secret
-        assert request.body.email == email
-        assert request.body.send_attempt == send_attempt
-        {:ok, %Tesla.Env{}}
-      end)
+      expected_request = Request.register_email(base_url, client_secret, email, send_attempt)
 
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.register_email(base_url, client_secret, email, send_attempt)
     end
 
@@ -225,19 +218,10 @@ defmodule MatrixSDK.APITest do
       send_attempt = 1
       opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
 
-      expect(HTTPClientMock, :do_request, fn %Request{} = request ->
-        assert request.method == :post
-        assert request.base_url == base_url
-        assert request.path == "/_matrix/client/r0/register/email/requestToken"
-        assert request.body.client_secret == client_secret
-        assert request.body.email == email
-        assert request.body.send_attempt == send_attempt
-        assert request.body.id_access_token == opts.id_access_token
-        assert request.body.next_link == opts.next_link
+      expected_request =
+        Request.register_email(base_url, client_secret, email, send_attempt, opts)
 
-        {:ok, %Tesla.Env{}}
-      end)
-
+      assert_client_mock_got(expected_request)
       assert {:ok, _} = API.register_email(base_url, client_secret, email, send_attempt, opts)
     end
   end
