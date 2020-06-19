@@ -368,6 +368,44 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/state"
       assert request.headers == [{"Authorization", "Bearer " <> token}]
     end
+
+    test "room_members/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      request = Request.room_members(base_url, token, room_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/members"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "room_members/4 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      opts = %{
+        at: "s123456789",
+        membership: "join",
+        not_membership: "invite"
+      }
+
+      request = Request.room_members(base_url, token, room_id, opts)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/members"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+
+      assert request.query_params == [
+               at: opts.at,
+               membership: opts.membership,
+               not_membership: opts.not_membership
+             ]
+    end
   end
 
   describe "room administration:" do

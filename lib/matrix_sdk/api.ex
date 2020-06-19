@@ -258,6 +258,30 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Gets the list of members for this room.
+
+  ## Example 
+
+      MatrixSDK.API.room_members("https://matrix.org", "token", "!someroom:matrix.org")
+
+  With optional parameters:
+
+      opts = %{
+                at: "t123456789",
+                membership: "join",
+                not_membership: "invite"
+              }
+
+      MatrixSDK.API.room_members("https://matrix.org", "token", "!someroom:matrix.org", opts)
+  """
+  @spec room_members(Request.base_url(), binary, binary) :: HTTPClient.result()
+  def room_members(base_url, token, room_id, opts \\ %{}) do
+    base_url
+    |> Request.room_members(token, room_id, opts)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url
