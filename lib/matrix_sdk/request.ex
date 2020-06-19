@@ -485,6 +485,34 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
+  Returns a `%Request{}` struct used to get a single event based on `room_id` and `event_id`.
+
+  ## Example
+
+      iex> MatrixSDK.Request.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/event/%24someevent",
+        query_params: %{}
+      }
+  """
+  @spec room_event(base_url, binary, binary, binary) :: t
+  def room_event(base_url, token, room_id, event_id) do
+    encoded_room_id = URI.encode_www_form(room_id)
+    encoded_event_id = URI.encode_www_form(event_id)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/event/#{encoded_event_id}",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
     Returns a `%Request{}` struct used to get the state events for the current state of a room.
 
   ## Example 
@@ -632,34 +660,6 @@ defmodule MatrixSDK.Request do
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/messages",
       query_params: query_params,
-      headers: [{"Authorization", "Bearer " <> token}]
-    }
-  end
-
-  @doc """
-  Returns a `%Request{}` struct used to get a single event based on `room_id` and `event_id`.
-
-  ## Example
-
-      iex> MatrixSDK.Request.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
-      %MatrixSDK.Request{
-        base_url: "https://matrix.org",
-        body: %{},
-        headers: [{"Authorization", "Bearer token"}],
-        method: :get,
-        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/event/%24someevent",
-        query_params: %{}
-      }
-  """
-  @spec room_event(base_url, binary, binary, binary) :: t
-  def room_event(base_url, token, room_id, event_id) do
-    encoded_room_id = URI.encode_www_form(room_id)
-    encoded_event_id = URI.encode_www_form(event_id)
-
-    %__MODULE__{
-      method: :get,
-      base_url: base_url,
-      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/event/#{encoded_event_id}",
       headers: [{"Authorization", "Bearer " <> token}]
     }
   end

@@ -245,6 +245,20 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Gets a single event based on `room_id` and `event_id`.
+
+  ## Example
+
+      MatrixSDK.API.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
+  """
+  @spec room_event(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_event(base_url, token, room_id, event_id) do
+    base_url
+    |> Request.room_event(token, room_id, event_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the state events for the current state of a room.
 
   ## Example 
@@ -319,20 +333,6 @@ defmodule MatrixSDK.API do
   def room_messages(base_url, token, room_id, from, dir, opts \\ %{}) do
     base_url
     |> Request.room_messages(token, room_id, from, dir, opts)
-    |> @http_client.do_request()
-  end
-
-  @doc """
-  Gets a single event based on `room_id` and `event_id`.
-
-  ## Example
-
-      MatrixSDK.API.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
-  """
-  @spec room_event(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
-  def room_event(base_url, token, room_id, event_id) do
-    base_url
-    |> Request.room_event(token, room_id, event_id)
     |> @http_client.do_request()
   end
 
