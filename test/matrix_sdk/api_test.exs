@@ -249,6 +249,111 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "getting events for a room:" do
+    test "room_event/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      event_id = "$event"
+
+      expected_request = Request.room_event(base_url, token, room_id, event_id)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_event(base_url, token, room_id, event_id)
+    end
+
+    test "room_state_event/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      event_type = "m.room.event"
+      state_key = "@user:matrix.org"
+
+      expected_request = Request.room_state_event(base_url, token, room_id, event_type, state_key)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_state_event(base_url, token, room_id, event_type, state_key)
+    end
+
+    test "room_state/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      expected_request = Request.room_state(base_url, token, room_id)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_state(base_url, token, room_id)
+    end
+
+    test "room_members/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      expected_request = Request.room_members(base_url, token, room_id)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_members(base_url, token, room_id)
+    end
+
+    test "room_members/4 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      opts = %{
+        at: "t123456789",
+        membership: "join",
+        not_membership: "invite"
+      }
+
+      expected_request = Request.room_members(base_url, token, room_id, opts)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_members(base_url, token, room_id, opts)
+    end
+
+    test "room_joined_members/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      expected_request = Request.room_joined_members(base_url, token, room_id)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_joined_members(base_url, token, room_id)
+    end
+
+    test "room_messages/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      from = "t123456789"
+      dir = "f"
+
+      expected_request = Request.room_messages(base_url, token, room_id, from, dir)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_messages(base_url, token, room_id, from, dir)
+    end
+
+    test "room_messages/6 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      from = "t123456789"
+      dir = "f"
+
+      opts = %{to: "t987654321", limit: 10, filter: "filter"}
+
+      expected_request = Request.room_messages(base_url, token, room_id, from, dir, opts)
+
+      assert assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_messages(base_url, token, room_id, from, dir, opts)
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1 returns public rooms on server" do
       base_url = "http://test.url"

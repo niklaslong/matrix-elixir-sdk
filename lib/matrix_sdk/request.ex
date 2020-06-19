@@ -484,6 +484,215 @@ defmodule MatrixSDK.Request do
       headers: [{"Authorization", "Bearer " <> token}]
     }
 
+  @doc """
+  Returns a `%Request{}` struct used to get a single event based on `room_id` and `event_id`.
+
+  ## Example
+
+      iex> MatrixSDK.Request.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/event/%24someevent",
+        query_params: %{}
+      }
+  """
+  @spec room_event(base_url, binary, binary, binary) :: t
+  def room_event(base_url, token, room_id, event_id) do
+    encoded_room_id = URI.encode_www_form(room_id)
+    encoded_event_id = URI.encode_www_form(event_id)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/event/#{encoded_event_id}",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to look up the contents of a state event in a room.
+
+  ## Example
+
+      iex> MatrixSDK.Request.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state/m.room.member/%40user%3Amatrix.org",
+        query_params: %{}
+      }
+  """
+  @spec room_state_event(base_url, binary, binary, binary, binary) :: t
+  def room_state_event(base_url, token, room_id, event_type, state_key) do
+    encoded_room_id = URI.encode_www_form(room_id)
+    encoded_state_key = URI.encode_www_form(state_key)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path:
+        "/_matrix/client/r0/rooms/#{encoded_room_id}/state/#{event_type}/#{encoded_state_key}",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+    Returns a `%Request{}` struct used to get the state events for the current state of a room.
+
+  ## Example 
+
+      iex> MatrixSDK.Request.room_state("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state",
+        query_params: %{}
+      }
+  """
+  @spec room_state(base_url, binary, binary) :: t
+  def room_state(base_url, token, room_id) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/state",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to get the list of members for this room.
+
+  ## Example 
+
+      iex> MatrixSDK.Request.room_members("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/members",
+        query_params: []
+      }
+
+  With optional parameters:
+
+      iex> opts = %{
+      ...>          at: "t123456789",
+      ...>          membership: "join",
+      ...>          not_membership: "invite"
+      ...>        }
+      iex> MatrixSDK.Request.room_members("https://matrix.org", "token", "!someroom:matrix.org", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/members",
+        query_params: [at: "t123456789", membership: "join", not_membership: "invite"]
+      }
+  """
+  @spec room_members(base_url, binary, binary) :: t
+  def room_members(base_url, token, room_id, opts \\ %{}) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/members",
+      query_params: Map.to_list(opts),
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to get a map of MXIDs to member info objects for members of the room.
+
+  ## Example 
+
+      iex> MatrixSDK.Request.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/joined_members",
+        query_params: %{}
+      }
+  """
+  @spec room_joined_members(base_url, binary, binary) :: t
+  def room_joined_members(base_url, token, room_id) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/joined_members",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to get message and state events for a room. 
+  It uses pagination query parameters to paginate history in the room.
+
+  ## Example 
+
+      iex> MatrixSDK.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/messages",
+        query_params: [dir: "f", from: "t123456789"]
+      }
+
+  With optional parameters:
+
+      iex> opts = %{
+      ...>          to: "t123456789",
+      ...>          limit: 10,
+      ...>          filter: "filter"
+      ...>        }
+      iex> MatrixSDK.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/messages",
+        query_params: [dir: "f", filter: "filter", from: "t123456789", limit: 10, to: "t123456789"]
+      }
+  """
+  @spec room_messages(base_url, binary, binary, binary, binary, map) :: t
+  def room_messages(base_url, token, room_id, from, dir, opts \\ %{}) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    query_params =
+      %{}
+      |> Map.put(:from, from)
+      |> Map.put(:dir, dir)
+      |> Map.merge(opts)
+      |> Map.to_list()
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/messages",
+      query_params: query_params,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
   def room_discovery(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
 end

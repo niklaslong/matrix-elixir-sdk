@@ -355,6 +355,145 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
+  describe "getting events for a room:" do
+    test "room_event/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      event_id = "$event"
+
+      request = Request.room_event(base_url, token, room_id, event_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/event/%24event"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "room_state_event/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      event_type = "m.room.event"
+      state_key = "@user:matrix.org"
+
+      request = Request.room_state_event(base_url, token, room_id, event_type, state_key)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+
+      assert request.path ==
+               "/_matrix/client/r0/rooms/%21room%3Atest-server.url/state/m.room.event/%40user%3Amatrix.org"
+
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "room_state/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      request = Request.room_state(base_url, token, room_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/state"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "room_members/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      request = Request.room_members(base_url, token, room_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/members"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "room_members/4 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      opts = %{
+        at: "s123456789",
+        membership: "join",
+        not_membership: "invite"
+      }
+
+      request = Request.room_members(base_url, token, room_id, opts)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/members"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+
+      assert request.query_params == [
+               at: opts.at,
+               membership: opts.membership,
+               not_membership: opts.not_membership
+             ]
+    end
+
+    test "room_joined_members/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+
+      request = Request.room_joined_members(base_url, token, room_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/joined_members"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "room_messages/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      from = "t123456789"
+      dir = "f"
+
+      request = Request.room_messages(base_url, token, room_id, from, dir)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/messages"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.query_params == [dir: dir, from: from]
+    end
+
+    test "room_messages/6 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      from = "t123456789"
+      dir = "f"
+
+      opts = %{to: "t987654321", limit: 10, filter: "filter"}
+
+      request = Request.room_messages(base_url, token, room_id, from, dir, opts)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21room%3Atest-server.url/messages"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+
+      assert request.query_params == [
+               dir: dir,
+               filter: opts.filter,
+               from: from,
+               limit: opts.limit,
+               to: opts.to
+             ]
+    end
+  end
+
   describe "room administration:" do
     test "room_discovery/1" do
       base_url = "http://test-server.url"

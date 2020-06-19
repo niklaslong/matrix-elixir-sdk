@@ -244,6 +244,113 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Gets a single event based on `room_id` and `event_id`.
+
+  ## Example
+
+      MatrixSDK.API.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
+  """
+  @spec room_event(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_event(base_url, token, room_id, event_id) do
+    base_url
+    |> Request.room_event(token, room_id, event_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Looks up the contents of a state event in a room.
+
+  ## Example
+
+      MatrixSDK.API.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
+  """
+  @spec room_state_event(Request.base_url(), binary, binary, binary, binary) ::
+          HTTPClient.result()
+  def room_state_event(base_url, token, room_id, event_type, state_key) do
+    base_url
+    |> Request.room_state_event(token, room_id, event_type, state_key)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Gets the state events for the current state of a room.
+
+  ## Example 
+
+      MatrixSDK.API.room_state("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec room_state(Request.base_url(), binary, binary) :: HTTPClient.result()
+  def room_state(base_url, token, room_id) do
+    base_url
+    |> Request.room_state(token, room_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Gets the list of members for this room.
+
+  ## Example 
+
+      MatrixSDK.API.room_members("https://matrix.org", "token", "!someroom:matrix.org")
+
+  With optional parameters:
+
+      opts = %{
+                at: "t123456789",
+                membership: "join",
+                not_membership: "invite"
+              }
+
+      MatrixSDK.API.room_members("https://matrix.org", "token", "!someroom:matrix.org", opts)
+  """
+  @spec room_members(Request.base_url(), binary, binary, map) :: HTTPClient.result()
+  def room_members(base_url, token, room_id, opts \\ %{}) do
+    base_url
+    |> Request.room_members(token, room_id, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Gets a map of MXIDs to member info objects for members of the room.
+
+  ## Example 
+
+      MatrixSDK.API.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec room_joined_members(Request.base_url(), binary, binary) :: HTTPClient.result()
+  def room_joined_members(base_url, token, room_id) do
+    base_url
+    |> Request.room_joined_members(token, room_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Gets message and state events for a room. 
+  It uses pagination query parameters to paginate history in the room.
+
+  ## Example 
+
+      MatrixSDK.API.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
+
+  With optional parameters:
+
+      opts = %{
+                to: "t123456789",
+                limit: 10,
+                filter: "filter"
+              }
+
+      MatrixSDK.API.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
+  """
+  @spec room_messages(Request.base_url(), binary, binary, binary, binary, map) ::
+          HTTPClient.result()
+  def room_messages(base_url, token, room_id, from, dir, opts \\ %{}) do
+    base_url
+    |> Request.room_messages(token, room_id, from, dir, opts)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url
