@@ -322,6 +322,20 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  @doc """
+  Gets a single event based on `room_id` and `event_id`.
+
+  ## Example
+
+      MatrixSDK.API.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
+  """
+  @spec room_event(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_event(base_url, token, room_id, event_id) do
+    base_url
+    |> Request.room_event(token, room_id, event_id)
+    |> @http_client.do_request()
+  end
+
   # REVIEW: this works on matrix.org but not on local?
   def room_discovery(base_url) do
     base_url
