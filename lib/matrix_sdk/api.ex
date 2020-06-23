@@ -351,10 +351,67 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  # REVIEW: this works on matrix.org but not on local?
-  def room_discovery(base_url) do
+  @doc """
+  Gets the visibility of a given room on the server's public room directory.
+
+  ## Example
+
+      MatrixSDK.Request.room_visibility("https://matrix.org", "!someroom:matrix.org")
+  """
+  @spec room_visibility(Request.base_url(), binary) :: HTTPClient.result()
+  def room_visibility(base_url, room_id) do
     base_url
-    |> Request.room_discovery()
+    |> Request.room_visibility(room_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Sets the visibility of a given room in the server's public room directory.
+
+  ## Example
+
+      MatrixSDK.Request.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
+  """
+  @spec room_visibility(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_visibility(base_url, token, room_id, visibility) do
+    base_url
+    |> Request.room_visibility(token, room_id, visibility)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Lists the public rooms on the server with basic filtering.
+
+  ## Examples
+
+      MatrixSDK.API.public_rooms("https://matrix.org")
+
+  With optional parameters:   
+
+      MatrixSDK.API.public_rooms("https://matrix.org", %{limit: 10})
+  """
+  @spec public_rooms(Request.base_url(), map) :: HTTPClient.result()
+  def public_rooms(base_url, opts \\ %{}) do
+    base_url
+    |> Request.public_rooms(opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Lists the public rooms on the server with more advanced filtering options. 
+
+  ## Examples
+
+      MatrixSDK.API.public_rooms("https://matrix.org", "token", %{limit: 10})
+
+  With optional parameter:
+
+      MatrixSDK.API.public_rooms("https://matrix.org", "token", %{limit: 10}, "server")
+  """
+  @spec public_rooms(Request.base_url(), binary, map, binary) :: HTTPClient.result()
+  def public_rooms(base_url, token, filter, server \\ nil) do
+    base_url
+    |> Request.public_rooms(token, filter, server)
     |> @http_client.do_request()
   end
 end

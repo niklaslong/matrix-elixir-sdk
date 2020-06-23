@@ -494,14 +494,84 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
-  describe "room administration:" do
-    test "room_discovery/1" do
+  describe "room discovery and visibility:" do
+    test "room_visibility/2" do
       base_url = "http://test-server.url"
-      request = Request.room_discovery(base_url)
+      room_id = "!room:test-server.url"
+
+      request = Request.room_visibility(base_url, room_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/directory/list/room/%21room%3Atest-server.url"
+    end
+
+    test "room_visibility/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      visibility = "public"
+
+      request = Request.room_visibility(base_url, token, room_id, visibility)
+
+      assert request.method == :put
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/directory/list/room/%21room%3Atest-server.url"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{visibility: visibility}
+    end
+
+    test "public_rooms/1" do
+      base_url = "http://test-server.url"
+      request = Request.public_rooms(base_url)
 
       assert request.method == :get
       assert request.base_url == base_url
       assert request.path == "/_matrix/client/r0/publicRooms"
+    end
+
+    test "public_rooms/2 with options" do
+      base_url = "http://test-server.url"
+      opts = %{limit: 10, since: "t123456789", server: "server"}
+      request = Request.public_rooms(base_url, opts)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/publicRooms"
+
+      assert request.query_params == [
+               limit: opts.limit,
+               server: opts.server,
+               since: opts.since
+             ]
+    end
+
+    test "public_rooms/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      filters = %{limit: 10, since: "t123456789"}
+      request = Request.public_rooms(base_url, token, filters)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/publicRooms"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == filters
+    end
+
+    test "public_rooms/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      filters = %{limit: 10, since: "t123456789"}
+      server = "server"
+      request = Request.public_rooms(base_url, token, filters, server)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/publicRooms"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == filters
+      assert request.query_params == [server: server]
     end
   end
 end

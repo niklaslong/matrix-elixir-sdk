@@ -354,13 +354,68 @@ defmodule MatrixSDK.APITest do
     end
   end
 
-  describe "room administration:" do
-    test "room_discovery/1 returns public rooms on server" do
-      base_url = "http://test.url"
-      expected_request = Request.room_discovery(base_url)
+  describe "room discovery and visibility:" do
+    test "room_visibility/2" do
+      base_url = "http://test-server.url"
+      room_id = "!room:test-server.url"
+
+      expected_request = Request.room_visibility(base_url, room_id)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.room_discovery(base_url)
+      assert {:ok, _} = API.room_visibility(base_url, room_id)
+    end
+
+    test "room_visibility/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      visibility = "public"
+
+      expected_request = Request.room_visibility(base_url, token, room_id, visibility)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_visibility(base_url, token, room_id, visibility)
+    end
+
+    test "public_rooms/1" do
+      base_url = "http://test.url"
+      expected_request = Request.public_rooms(base_url)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.public_rooms(base_url)
+    end
+
+    test "public_rooms/2 with options" do
+      base_url = "http://test-server.url"
+      opts = %{limit: 10, since: "t123456789", server: "server"}
+
+      expected_request = Request.public_rooms(base_url, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.public_rooms(base_url, opts)
+    end
+
+    test "public_rooms/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      filters = %{limit: 10, since: "t123456789"}
+
+      expected_request = Request.public_rooms(base_url, token, filters)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.public_rooms(base_url, token, filters)
+    end
+
+    test "public_rooms/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      filters = %{limit: 10, since: "t123456789"}
+      server = "server"
+
+      expected_request = Request.public_rooms(base_url, token, filters, server)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.public_rooms(base_url, token, filters, server)
     end
   end
 
