@@ -136,5 +136,57 @@ defmodule MatrixSDK.HTTPClientTest do
 
       assert HTTPClient.do_request(request)
     end
+
+    test "PUT", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :put,
+        base_url: base_url,
+        path: path
+      }
+
+      Bypass.expect_once(bypass, "PUT", path, fn conn ->
+        assert conn.method == "PUT"
+        assert conn.request_path == path
+
+        assert conn
+               |> Plug.Conn.read_body()
+               |> elem(1)
+               |> Jason.decode!() == %{}
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      assert HTTPClient.do_request(request)
+    end
+
+    test "PUT with query params", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :put,
+        base_url: base_url,
+        path: path,
+        query_params: [{:key, "value"}, {:query, "query"}]
+      }
+
+      Bypass.expect_once(bypass, "PUT", path, fn conn ->
+        assert conn.method == "PUT"
+        assert conn.request_path == path
+        assert conn.query_string == "key=value&query=query"
+
+        assert conn
+               |> Plug.Conn.read_body()
+               |> elem(1)
+               |> Jason.decode!() == %{}
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      assert HTTPClient.do_request(request)
+    end
   end
 end
