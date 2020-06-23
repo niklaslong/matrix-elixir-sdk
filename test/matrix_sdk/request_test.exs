@@ -494,7 +494,33 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
-  describe "room administration:" do
+  describe "room discovery and visibility:" do
+    test "room_visibility/2" do
+      base_url = "http://test-server.url"
+      room_id = "!room:test-server.url"
+
+      request = Request.room_visibility(base_url, room_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/directory/list/room/%21room%3Atest-server.url"
+    end
+
+    test "room_visibility/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!room:test-server.url"
+      visibility = "public"
+
+      request = Request.room_visibility(base_url, token, room_id, visibility)
+
+      assert request.method == :put
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/directory/list/room/%21room%3Atest-server.url"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{visibility: visibility}
+    end
+
     test "public_rooms/1" do
       base_url = "http://test-server.url"
       request = Request.public_rooms(base_url)

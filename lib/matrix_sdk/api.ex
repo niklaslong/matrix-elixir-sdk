@@ -352,6 +352,34 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Gets the visibility of a given room on the server's public room directory.
+
+  ## Example
+
+      MatrixSDK.Request.room_visibility("https://matrix.org", "!someroom:matrix.org")
+  """
+  @spec room_visibility(Request.base_url(), binary) :: HTTPClient.result()
+  def room_visibility(base_url, room_id) do
+    base_url
+    |> Request.room_visibility(room_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Sets the visibility of a given room in the server's public room directory.
+
+  ## Example
+
+      MatrixSDK.Request.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
+  """
+  @spec room_visibility(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_visibility(base_url, token, room_id, visibility) do
+    base_url
+    |> Request.room_visibility(token, room_id, visibility)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Lists the public rooms on the server with basic filtering.
 
   ## Examples
