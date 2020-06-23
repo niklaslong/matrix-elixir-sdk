@@ -351,10 +351,39 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  # REVIEW: this works on matrix.org but not on local?
-  def public_rooms(base_url) do
+  @doc """
+  Lists the public rooms on the server with basic filtering.
+
+  ## Examples
+
+      MatrixSDK.API.public_rooms("https://matrix.org")
+
+  With optional parameters:   
+
+      MatrixSDK.API.public_rooms("https://matrix.org", %{limit: 10})
+  """
+  @spec public_rooms(Request.base_url(), map) :: HTTPClient.result()
+  def public_rooms(base_url, opts \\ %{}) do
     base_url
-    |> Request.public_rooms()
+    |> Request.public_rooms(opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Lists the public rooms on the server with more advanced filtering options. 
+
+  ## Examples
+
+      MatrixSDK.API.public_rooms("https://matrix.org", "token", %{limit: 10})
+
+  With optional parameter:
+
+      MatrixSDK.API.public_rooms("https://matrix.org", "token", %{limit: 10}, "server")
+  """
+  @spec public_rooms(Request.base_url(), binary, map, binary) :: HTTPClient.result()
+  def public_rooms(base_url, token, filter, server \\ nil) do
+    base_url
+    |> Request.public_rooms(token, filter, server)
     |> @http_client.do_request()
   end
 end

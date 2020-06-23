@@ -362,6 +362,39 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.public_rooms(base_url)
     end
+
+    test "public_rooms/2 with options" do
+      base_url = "http://test-server.url"
+      opts = %{limit: 10, since: "t123456789", server: "server"}
+
+      expected_request = Request.public_rooms(base_url, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.public_rooms(base_url, opts)
+    end
+
+    test "public_rooms/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      filters = %{limit: 10, since: "t123456789"}
+
+      expected_request = Request.public_rooms(base_url, token, filters)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.public_rooms(base_url, token, filters)
+    end
+
+    test "public_rooms/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      filters = %{limit: 10, since: "t123456789"}
+      server = "server"
+
+      expected_request = Request.public_rooms(base_url, token, filters, server)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.public_rooms(base_url, token, filters, server)
+    end
   end
 
   defp assert_client_mock_got(expected_request) do

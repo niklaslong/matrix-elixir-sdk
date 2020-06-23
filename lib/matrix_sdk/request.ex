@@ -693,6 +693,80 @@ defmodule MatrixSDK.Request do
     }
   end
 
-  def public_rooms(base_url),
-    do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
+  @doc """
+  Lists the public rooms on the server with basic filtering.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.public_rooms("https://matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/client/r0/publicRooms",
+        query_params: []
+      }
+
+  With optional parameters:   
+
+      iex> MatrixSDK.Request.public_rooms("https://matrix.org", %{limit: 10})
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/client/r0/publicRooms",
+        query_params: [limit: 10]
+      }
+  """
+  @spec public_rooms(base_url, map) :: t
+  def public_rooms(base_url, opts \\ %{}),
+    do: %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/publicRooms",
+      query_params: Map.to_list(opts)
+    }
+
+  @doc """
+  Lists the public rooms on the server with more advanced filtering options. 
+
+  ## Examples
+
+      iex> MatrixSDK.Request.public_rooms("https://matrix.org", "token", %{limit: 10})
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{limit: 10},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/publicRooms",
+        query_params: []
+      }
+
+  With optional parameter:
+
+      iex> MatrixSDK.Request.public_rooms("https://matrix.org", "token", %{limit: 10}, "server")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{limit: 10},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/publicRooms",
+        query_params: [server: "server"]
+      }
+  """
+  @spec public_rooms(base_url, binary, map, binary) :: t
+  def public_rooms(base_url, token, filters, server \\ nil) do
+    query_params = if server, do: [server: server], else: []
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/publicRooms",
+      query_params: query_params,
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: filters
+    }
+  end
 end
