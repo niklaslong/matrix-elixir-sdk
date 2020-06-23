@@ -355,12 +355,12 @@ defmodule MatrixSDK.APITest do
   end
 
   describe "room administration:" do
-    test "room_discovery/1 returns public rooms on server" do
+    test "public_rooms/1" do
       base_url = "http://test.url"
-      expected_request = Request.room_discovery(base_url)
+      expected_request = Request.public_rooms(base_url)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.room_discovery(base_url)
+      assert {:ok, _} = API.public_rooms(base_url)
     end
   end
 

@@ -693,6 +693,6 @@ defmodule MatrixSDK.Request do
     }
   end
 
-  def room_discovery(base_url),
+  def public_rooms(base_url),
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/publicRooms"}
 end

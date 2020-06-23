@@ -495,9 +495,9 @@ defmodule MatrixSDK.RequestTest do
   end
 
   describe "room administration:" do
-    test "room_discovery/1" do
+    test "public_rooms/1" do
       base_url = "http://test-server.url"
-      request = Request.room_discovery(base_url)
+      request = Request.public_rooms(base_url)
 
       assert request.method == :get
       assert request.base_url == base_url
