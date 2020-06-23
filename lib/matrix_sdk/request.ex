@@ -745,7 +745,7 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
-  Lists the public rooms on the server with basic filtering.
+  Returns a `%Request{}` struct used to list the public rooms on the server with basic filtering.
 
   ## Examples
 
@@ -781,7 +781,7 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  Lists the public rooms on the server with more advanced filtering options. 
+  Returns a `%Request{}` struct used to list the public rooms on the server with more advanced filtering options. 
 
   ## Examples
 
