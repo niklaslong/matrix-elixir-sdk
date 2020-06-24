@@ -352,6 +352,21 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Gets a list of the user's current rooms.
+
+  ## Example
+
+      MatrixSDK.API.joined_rooms("https://matrix.org", "token")
+
+  """
+  @spec joined_rooms(Request.base_url(), binary) :: HTTPClient.result()
+  def joined_rooms(base_url, token) do
+    base_url
+    |> Request.joined_rooms(token)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the visibility of a given room on the server's public room directory.
 
   ## Example
