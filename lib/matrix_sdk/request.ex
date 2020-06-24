@@ -717,6 +717,33 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
+  Invites a user to participate in a particular room.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{user_id: "@user:matrix.org"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/invite",
+      }
+  """
+  @spec room_invite(base_url, binary, binary, binary) :: t
+  def room_invite(base_url, token, room_id, user_id) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/invite",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: %{user_id: user_id}
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get the visibility of a given room on the server's public room directory.
 
   ## Example

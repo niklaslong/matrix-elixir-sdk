@@ -367,6 +367,20 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Invites a user to participate in a particular room.
+
+  ## Exanple
+
+      MatrixSDK.API.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+  """
+  @spec room_invite(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_invite(base_url, token, room_id, user_id) do
+    base_url
+    |> Request.room_invite(token, room_id, user_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the visibility of a given room on the server's public room directory.
 
   ## Example

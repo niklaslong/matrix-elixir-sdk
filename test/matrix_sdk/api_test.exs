@@ -364,6 +364,18 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.joined_rooms(base_url, token)
     end
+
+    test "room_invite/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      expected_request = Request.room_invite(base_url, token, room_id, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_invite(base_url, token, room_id, user_id)
+    end
   end
 
   describe "room discovery and visibility:" do
