@@ -21,3 +21,6 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 matrix_sdk-*.tar
+
+# Conveniences for IEx sessions (aliases, ...)
+.iex.exs
