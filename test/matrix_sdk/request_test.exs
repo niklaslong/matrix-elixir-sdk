@@ -518,6 +518,7 @@ defmodule MatrixSDK.RequestTest do
       assert request.method == :post
       assert request.base_url == base_url
       assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/invite"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
       assert request.body == %{user_id: user_id}
     end
 
