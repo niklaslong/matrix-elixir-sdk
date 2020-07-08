@@ -717,7 +717,7 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  Invites a user to participate in a particular room.
+  Returns a `%Request{}` struct used to invite a user to participate in a room.
 
   ## Examples
 
