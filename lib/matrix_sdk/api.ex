@@ -381,6 +381,20 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Returns a `%Request{}` struct used by a user to join a room.
+
+  ## Example 
+
+      MatrixSDK.API.join_room("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec join_room(Request.base_url(), binary, binary, map) :: HTTPClient.result()
+  def join_room(base_url, token, room_id_or_alias, opts \\ %{}) do
+    base_url
+    |> Request.join_room(token, room_id_or_alias, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the visibility of a given room on the server's public room directory.
 
   ## Example

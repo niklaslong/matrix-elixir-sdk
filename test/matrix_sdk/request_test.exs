@@ -520,6 +520,46 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/invite"
       assert request.body == %{user_id: user_id}
     end
+
+    test "join_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      request = Request.join_room(base_url, token, room_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/join/%21someroom%3Amatrix.org"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "join_room/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      # Example from 0.6.1 docs
+      opts = %{
+        third_party_signed: %{
+          sender: "@alice:example.org",
+          mxid: "@bob:example.org",
+          token: "random8nonce",
+          signatures: %{
+            "example.org": %{
+              "ed25519:0": "some9signature"
+            }
+          }
+        }
+      }
+
+      request = Request.join_room(base_url, token, room_id, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/join/%21someroom%3Amatrix.org"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == opts
+    end
   end
 
   describe "room discovery and visibility:" do

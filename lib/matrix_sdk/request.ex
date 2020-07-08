@@ -744,6 +744,34 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used by a user to join a room.
+
+  ## Example 
+
+      iex> MatrixSDK.Request.join_room("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/join/%21someroom%3Amatrix.org",
+      }
+
+  TODO: add example for 3pids
+  """
+  @spec join_room(base_url, binary, binary, map) :: t
+  def join_room(base_url, token, room_id_or_alias, opts \\ %{}) do
+    encoded_room_id_or_alias = URI.encode_www_form(room_id_or_alias)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/join/#{encoded_room_id_or_alias}",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: opts
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get the visibility of a given room on the server's public room directory.
 
   ## Example

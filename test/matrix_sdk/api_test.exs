@@ -376,6 +376,41 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.room_invite(base_url, token, room_id, user_id)
     end
+
+    test "join_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      expected_request = Request.join_room(base_url, token, room_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.join_room(base_url, token, room_id)
+    end
+
+    test "join_room/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      # Example from 0.6.1 docs
+      opts = %{
+        third_party_signed: %{
+          sender: "@alice:example.org",
+          mxid: "@bob:example.org",
+          token: "random8nonce",
+          signatures: %{
+            "example.org": %{
+              "ed25519:0": "some9signature"
+            }
+          }
+        }
+      }
+
+      expected_request = Request.join_room(base_url, token, room_id, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.join_room(base_url, token, room_id, opts)
+    end
   end
 
   describe "room discovery and visibility:" do
