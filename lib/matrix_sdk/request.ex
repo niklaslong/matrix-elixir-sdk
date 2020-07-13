@@ -772,6 +772,31 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to leave a room.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/leave",
+      }
+  """
+  @spec leave_room(base_url, binary, binary) :: t
+  def leave_room(base_url, token, room_id) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/leave",
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get the visibility of a given room on the server's public room directory.
 
   ## Example

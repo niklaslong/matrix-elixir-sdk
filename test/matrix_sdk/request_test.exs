@@ -561,6 +561,19 @@ defmodule MatrixSDK.RequestTest do
       assert request.headers == [{"Authorization", "Bearer " <> token}]
       assert request.body == opts
     end
+
+    test "leave_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      request = Request.leave_room(base_url, token, room_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/leave"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
   end
 
   describe "room discovery and visibility:" do

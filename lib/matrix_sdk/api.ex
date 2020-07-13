@@ -381,7 +381,7 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
-  Returns a `%Request{}` struct used by a user to join a room.
+  Lets a user join a room.
 
   ## Example 
 
@@ -391,6 +391,20 @@ defmodule MatrixSDK.API do
   def join_room(base_url, token, room_id_or_alias, opts \\ %{}) do
     base_url
     |> Request.join_room(token, room_id_or_alias, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Lets a user leave a room.
+
+  ## Example 
+
+      MatrixSDK.API.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec leave_room(Request.base_url(), binary, binary) :: HTTPClient.result()
+  def leave_room(base_url, token, room_id) do
+    base_url
+    |> Request.leave_room(token, room_id)
     |> @http_client.do_request()
   end
 
