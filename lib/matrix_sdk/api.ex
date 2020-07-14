@@ -441,6 +441,24 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Bans a user from a room.
+
+  ## Examples
+
+      MatrixSDK.API.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+
+  With option: 
+
+      MatrixSDK.API.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+  """
+  @spec room_ban(Request.base_url(), binary, binary, binary, map) :: HTTPClient.result()
+  def room_ban(base_url, token, room_id, user_id, opt \\ %{}) do
+    base_url
+    |> Request.room_ban(token, room_id, user_id, opt)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the visibility of a given room on the server's public room directory.
 
   ## Example

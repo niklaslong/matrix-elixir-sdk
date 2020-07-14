@@ -458,6 +458,31 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.room_kick(base_url, token, room_id, user_id, opt)
     end
+
+    test "room_ban/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      expected_request = Request.room_ban(base_url, token, room_id, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_ban(base_url, token, room_id, user_id)
+    end
+
+    test "room_ban/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+      opt = %{reason: "Eating all the chocolate."}
+
+      expected_request = Request.room_ban(base_url, token, room_id, user_id, opt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_ban(base_url, token, room_id, user_id, opt)
+    end
   end
 
   describe "room discovery and visibility:" do

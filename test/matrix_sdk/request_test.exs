@@ -618,6 +618,37 @@ defmodule MatrixSDK.RequestTest do
       assert request.headers == [{"Authorization", "Bearer " <> token}]
       assert request.body == %{user_id: user_id, reason: opt.reason}
     end
+
+    test "room_ban/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      request = Request.room_ban(base_url, token, room_id, user_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{user_id: user_id}
+    end
+
+    test "room_ban/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+      opt = %{reason: "Eating all the chocolate."}
+
+      request = Request.room_ban(base_url, token, room_id, user_id, opt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{user_id: user_id, reason: opt.reason}
+    end
   end
 
   describe "room discovery and visibility:" do

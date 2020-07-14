@@ -863,6 +863,47 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to ban a user from a room.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban",
+        body: %{user_id: "@user:matrix.org"}
+      }
+
+      iex> MatrixSDK.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban",
+        body: %{user_id: "@user:matrix.org", reason: "Ate all the chocolate"}
+      }
+  """
+  @spec room_ban(base_url, binary, binary, binary, map) :: t
+  def room_ban(base_url, token, room_id, user_id, opt \\ %{}) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    body =
+      %{}
+      |> Map.put(:user_id, user_id)
+      |> Map.merge(opt)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/ban",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: body
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get the visibility of a given room on the server's public room directory.
 
   ## Example
