@@ -354,6 +354,149 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "room membership:" do
+    test "joined_rooms/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      expected_request = Request.joined_rooms(base_url, token)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.joined_rooms(base_url, token)
+    end
+
+    test "room_invite/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      expected_request = Request.room_invite(base_url, token, room_id, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_invite(base_url, token, room_id, user_id)
+    end
+
+    test "join_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      expected_request = Request.join_room(base_url, token, room_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.join_room(base_url, token, room_id)
+    end
+
+    test "join_room/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      # Example from 0.6.1 docs
+      opts = %{
+        third_party_signed: %{
+          sender: "@alice:example.org",
+          mxid: "@bob:example.org",
+          token: "random8nonce",
+          signatures: %{
+            "example.org": %{
+              "ed25519:0": "some9signature"
+            }
+          }
+        }
+      }
+
+      expected_request = Request.join_room(base_url, token, room_id, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.join_room(base_url, token, room_id, opts)
+    end
+
+    test "leave_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      expected_request = Request.leave_room(base_url, token, room_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.leave_room(base_url, token, room_id)
+    end
+
+    test "forget_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      expected_request = Request.forget_room(base_url, token, room_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.forget_room(base_url, token, room_id)
+    end
+
+    test "room_kick/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      expected_request = Request.room_kick(base_url, token, room_id, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_kick(base_url, token, room_id, user_id)
+    end
+
+    test "room_kick/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+      opt = %{reason: "Eating all the chocolate."}
+
+      expected_request = Request.room_kick(base_url, token, room_id, user_id, opt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_kick(base_url, token, room_id, user_id, opt)
+    end
+
+    test "room_ban/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      expected_request = Request.room_ban(base_url, token, room_id, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_ban(base_url, token, room_id, user_id)
+    end
+
+    test "room_ban/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+      opt = %{reason: "Eating all the chocolate."}
+
+      expected_request = Request.room_ban(base_url, token, room_id, user_id, opt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_ban(base_url, token, room_id, user_id, opt)
+    end
+
+    test "room_unban/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      expected_request = Request.room_unban(base_url, token, room_id, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_unban(base_url, token, room_id, user_id)
+    end
+  end
+
   describe "room discovery and visibility:" do
     test "room_visibility/2" do
       base_url = "http://test-server.url"

@@ -352,6 +352,127 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Gets a list of the user's current rooms.
+
+  ## Example
+
+      MatrixSDK.API.joined_rooms("https://matrix.org", "token")
+
+  """
+  @spec joined_rooms(Request.base_url(), binary) :: HTTPClient.result()
+  def joined_rooms(base_url, token) do
+    base_url
+    |> Request.joined_rooms(token)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Invites a user to participate in a particular room.
+
+  ## Exanple
+
+      MatrixSDK.API.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+  """
+  @spec room_invite(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_invite(base_url, token, room_id, user_id) do
+    base_url
+    |> Request.room_invite(token, room_id, user_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Lets a user join a room.
+
+  ## Example 
+
+      MatrixSDK.API.join_room("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec join_room(Request.base_url(), binary, binary, map) :: HTTPClient.result()
+  def join_room(base_url, token, room_id_or_alias, opts \\ %{}) do
+    base_url
+    |> Request.join_room(token, room_id_or_alias, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Lets a user leave a room.
+
+  ## Example 
+
+      MatrixSDK.API.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec leave_room(Request.base_url(), binary, binary) :: HTTPClient.result()
+  def leave_room(base_url, token, room_id) do
+    base_url
+    |> Request.leave_room(token, room_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Lets a user forget a room.
+
+  ## Example 
+
+      MatrixSDK.API.forget_room("https://matrix.org", "token", "!someroom:matrix.org")
+  """
+  @spec forget_room(Request.base_url(), binary, binary) :: HTTPClient.result()
+  def forget_room(base_url, token, room_id) do
+    base_url
+    |> Request.forget_room(token, room_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Kicks a user from a room.
+
+  ## Examples
+
+      MatrixSDK.API.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+
+  With option: 
+
+      MatrixSDK.API.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+  """
+  @spec room_kick(Request.base_url(), binary, binary, binary, map) :: HTTPClient.result()
+  def room_kick(base_url, token, room_id, user_id, opt \\ %{}) do
+    base_url
+    |> Request.room_kick(token, room_id, user_id, opt)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Bans a user from a room.
+
+  ## Examples
+
+      MatrixSDK.API.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+
+  With option: 
+
+      MatrixSDK.API.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+  """
+  @spec room_ban(Request.base_url(), binary, binary, binary, map) :: HTTPClient.result()
+  def room_ban(base_url, token, room_id, user_id, opt \\ %{}) do
+    base_url
+    |> Request.room_ban(token, room_id, user_id, opt)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Unbans a user from a room.
+
+  ## Examples
+
+      MatrixSDK.API.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+  """
+  @spec room_unban(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_unban(base_url, token, room_id, user_id) do
+    base_url
+    |> Request.room_unban(token, room_id, user_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the visibility of a given room on the server's public room directory.
 
   ## Example

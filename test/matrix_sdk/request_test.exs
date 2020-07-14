@@ -494,6 +494,178 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
+  describe "room membership:" do
+    test "joined_rooms/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      request = Request.joined_rooms(base_url, token)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/joined_rooms"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "room_invite/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      request = Request.room_invite(base_url, token, room_id, user_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/invite"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{user_id: user_id}
+    end
+
+    test "join_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      request = Request.join_room(base_url, token, room_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/join/%21someroom%3Amatrix.org"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "join_room/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      # Example from 0.6.1 docs
+      opts = %{
+        third_party_signed: %{
+          sender: "@alice:example.org",
+          mxid: "@bob:example.org",
+          token: "random8nonce",
+          signatures: %{
+            "example.org": %{
+              "ed25519:0": "some9signature"
+            }
+          }
+        }
+      }
+
+      request = Request.join_room(base_url, token, room_id, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/join/%21someroom%3Amatrix.org"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == opts
+    end
+
+    test "leave_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      request = Request.leave_room(base_url, token, room_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/leave"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "forget_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+
+      request = Request.forget_room(base_url, token, room_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/forget"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "room_kick/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      request = Request.room_kick(base_url, token, room_id, user_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/kick"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{user_id: user_id}
+    end
+
+    test "room_kick/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+      opt = %{reason: "Eating all the chocolate."}
+
+      request = Request.room_kick(base_url, token, room_id, user_id, opt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/kick"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{user_id: user_id, reason: opt.reason}
+    end
+
+    test "room_ban/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      request = Request.room_ban(base_url, token, room_id, user_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{user_id: user_id}
+    end
+
+    test "room_ban/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+      opt = %{reason: "Eating all the chocolate."}
+
+      request = Request.room_ban(base_url, token, room_id, user_id, opt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{user_id: user_id, reason: opt.reason}
+    end
+
+    test "room_unban/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      request = Request.room_unban(base_url, token, room_id, user_id)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/unban"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{user_id: user_id}
+    end
+  end
+
   describe "room discovery and visibility:" do
     test "room_visibility/2" do
       base_url = "http://test-server.url"
