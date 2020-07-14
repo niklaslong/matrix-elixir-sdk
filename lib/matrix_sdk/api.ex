@@ -423,6 +423,24 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Kicks a user from a room.
+
+  ## Examples
+
+      MatrixSDK.API.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+
+  With option: 
+
+      MatrixSDK.API.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+  """
+  @spec room_kick(Request.base_url(), binary, binary, binary, map) :: HTTPClient.result()
+  def room_kick(base_url, token, room_id, user_id, opt \\ %{}) do
+    base_url
+    |> Request.room_kick(token, room_id, user_id, opt)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the visibility of a given room on the server's public room directory.
 
   ## Example
