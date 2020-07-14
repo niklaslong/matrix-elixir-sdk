@@ -483,6 +483,18 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.room_ban(base_url, token, room_id, user_id, opt)
     end
+
+    test "room_unban/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      user_id = "@user:matrix.org"
+
+      expected_request = Request.room_unban(base_url, token, room_id, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.room_unban(base_url, token, room_id, user_id)
+    end
   end
 
   describe "room discovery and visibility:" do

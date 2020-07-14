@@ -459,6 +459,20 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Unbans a user from a room.
+
+  ## Examples
+
+      MatrixSDK.API.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+  """
+  @spec room_unban(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def room_unban(base_url, token, room_id, user_id) do
+    base_url
+    |> Request.room_unban(token, room_id, user_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets the visibility of a given room on the server's public room directory.
 
   ## Example
