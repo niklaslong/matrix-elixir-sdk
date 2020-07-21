@@ -477,7 +477,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.Request.room_visibility("https://matrix.org", "!someroom:matrix.org")
+      MatrixSDK.API.room_visibility("https://matrix.org", "!someroom:matrix.org")
   """
   @spec room_visibility(Request.base_url(), binary) :: HTTPClient.result()
   def room_visibility(base_url, room_id) do
@@ -491,7 +491,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.Request.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
+      MatrixSDK.API.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
   """
   @spec room_visibility(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
   def room_visibility(base_url, token, room_id, visibility) do
