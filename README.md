@@ -1,8 +1,8 @@
 # MatrixSDK
 
-This will hopefully become the Matrix SDK for Elixir. It is currently in active (and early) development and hasn't yet been released to Hex. 
+A [Matrix](https://matrix.org/) SDK for Elixir. It is currently in active (and early) development and hasn't yet been released to Hex. 
 
-The first release will provide a simple wrapper around the Matrix client-server API. 
+The first release will provide a simple wrapper around the [Matrix client-server API](https://matrix.org/docs/spec/client_server/r0.6.1). 
 
 ## Starting a local homeserver
 
