@@ -1,4 +1,4 @@
-# MatrixSDK
+# Matrix Elixir SDK 
 
 A [Matrix](https://matrix.org/) SDK for Elixir. It is currently in active (and early) development and hasn't yet been released to Hex. 
 
