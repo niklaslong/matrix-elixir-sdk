@@ -354,7 +354,7 @@ defmodule MatrixSDK.API do
   @doc """
   Creates a new room. 
 
-  ## Example
+  ## Examples
 
       MatrixSDK.API.create_room("https://matrix.org", "token")
 

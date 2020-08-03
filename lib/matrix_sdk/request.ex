@@ -696,6 +696,8 @@ defmodule MatrixSDK.Request do
   @doc """
   Returns a `%Request{}` struct used to create a new room. 
 
+  ## Examples
+
       iex> MatrixSDK.Request.create_room("https://matrix.org", "token")
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
