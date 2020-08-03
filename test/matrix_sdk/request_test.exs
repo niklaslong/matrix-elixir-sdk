@@ -494,6 +494,40 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
+  describe "room creation:" do
+    test "create_room/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      request = Request.create_room(base_url, token)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/createRoom"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{}
+    end
+
+    test "create_room/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      opts = %{
+        visibility: "public",
+        room_alias_name: "chocolate",
+        topic: "Some cool stuff about chocolate."
+      }
+
+      request = Request.create_room(base_url, token, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/createRoom"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == opts
+    end
+  end
+
   describe "room membership:" do
     test "joined_rooms/2" do
       base_url = "http://test-server.url"

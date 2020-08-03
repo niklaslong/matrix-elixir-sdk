@@ -694,6 +694,46 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to create a new room. 
+
+  ## Examples
+
+      iex> MatrixSDK.Request.create_room("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/createRoom"
+      }
+
+  With options:
+      
+      iex> opts = %{
+      ...>          visibility: "public",
+      ...>          room_alias_name: "chocolate",
+      ...>          topic: "Some cool stuff about chocolate."
+      ...>        }
+      iex> MatrixSDK.Request.create_room("https://matrix.org", "token", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{room_alias_name: "chocolate", topic: "Some cool stuff about chocolate.", visibility: "public"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/createRoom"
+      }
+  """
+  @spec create_room(base_url, binary, map) :: t
+  def create_room(base_url, token, opts \\ %{}),
+    do: %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/createRoom",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: opts
+    }
+
+  @doc """
   Returns a `%Request{}` struct used to get a list of the user's current rooms.
 
   ## Example
