@@ -352,12 +352,35 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Creates a new room. 
+
+  ## Example
+
+      MatrixSDK.API.create_room("https://matrix.org", "token")
+
+  With options:
+
+      opts = %{
+        visibility: "public",
+        room_alias_name: "chocolate",
+        topic: "Some cool stuff about chocolate."
+      }
+      
+      MatrixSDK.API.create_room("https://matrix.org", "token", opts)
+  """
+  @spec create_room(Request.base_url(), binary, map) :: HTTPClient.result()
+  def create_room(base_url, token, opts \\ %{}) do
+    base_url
+    |> Request.create_room(token, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets a list of the user's current rooms.
 
   ## Example
 
       MatrixSDK.API.joined_rooms("https://matrix.org", "token")
-
   """
   @spec joined_rooms(Request.base_url(), binary) :: HTTPClient.result()
   def joined_rooms(base_url, token) do
@@ -369,7 +392,7 @@ defmodule MatrixSDK.API do
   @doc """
   Invites a user to participate in a particular room.
 
-  ## Exanple
+  ## Example
 
       MatrixSDK.API.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
   """
