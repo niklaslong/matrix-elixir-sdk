@@ -720,7 +720,6 @@ defmodule MatrixSDK.Request do
         method: :post,
         path: "/_matrix/client/r0/createRoom"
       }
-
   """
   @spec create_room(base_url, binary, map) :: t
   def create_room(base_url, token, opts \\ %{}),
