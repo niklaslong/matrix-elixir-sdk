@@ -1214,7 +1214,7 @@ defmodule MatrixSDK.Request do
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname",
       }
-  """  
+  """
   @spec display_name(base_url, binary) :: t
   def display_name(base_url, user_id) do
     encoded_user_id = URI.encode_www_form(user_id)
@@ -1222,7 +1222,34 @@ defmodule MatrixSDK.Request do
     %__MODULE__{
       method: :get,
       base_url: base_url,
-      path: "/_matrix/client/r0/profile/#{encoded_user_id}/displayname",
+      path: "/_matrix/client/r0/profile/#{encoded_user_id}/displayname"
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to set the avatar url for a user.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        method: :put,
+        path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url",
+        body: %{avatar_url: "mxc://matrix.org/wefh34uihSDRGhw34"},
+        headers: [{"Authorization", "Bearer token"}],
+      }
+  """
+  @spec set_avatar_url(base_url, binary, binary, binary) :: t
+  def set_avatar_url(base_url, token, user_id, avatar_url) do
+    encoded_user_id = URI.encode_www_form(user_id)
+
+    %__MODULE__{
+      method: :put,
+      base_url: base_url,
+      path: "/_matrix/client/r0/profile/#{encoded_user_id}/avatar_url",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: %{avatar_url: avatar_url}
     }
   end
 end
