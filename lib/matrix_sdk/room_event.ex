@@ -12,6 +12,7 @@ defmodule MatrixSDK.RoomEvent do
 
   defp content(:text, body), do: %{msgtype: "m.text", body: body}
 
+  # In future use incrementing number (startup timestamp + increment), however this does imply state...
   defp transaction_id(),
     do:
       100
