@@ -354,6 +354,42 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "sending events to a room:" do
+    test "send_state_event/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      state_event = %{
+        content: %{join_rule: "private"},
+        room_id: "!someroom:matrix.org",
+        state_key: "",
+        type: "m.room.join_rules"
+      }
+
+      expected_request = Request.send_state_event(base_url, token, state_event)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.send_state_event(base_url, token, state_event)
+    end
+
+    test "send_room_event/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      room_event = %{
+        content: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
+        room_id: "!someroom:matrix.org",
+        type: "m.room.message",
+        transaction_id: "transaction_id"
+      }
+
+      expected_request = Request.send_room_event(base_url, token, room_event)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.send_room_event(base_url, token, room_event)
+    end
+  end
+
   describe "room creation:" do
     test "create_room/2" do
       base_url = "http://test-server.url"

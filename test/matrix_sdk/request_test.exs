@@ -494,6 +494,53 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
+  describe "sending events to a room:" do
+    test "send_state_event/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      # TODO: test state key in future
+      state_event = %{
+        content: %{join_rule: "private"},
+        room_id: "!someroom:matrix.org",
+        state_key: "",
+        type: "m.room.join_rules"
+      }
+
+      request = Request.send_state_event(base_url, token, state_event)
+
+      assert request.method == :put
+      assert request.base_url == base_url
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{join_rule: "private"}
+
+      assert request.path ==
+               "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state/m.room.join_rules/"
+    end
+
+    test "send_room_event/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      room_event = %{
+        content: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
+        room_id: "!someroom:matrix.org",
+        type: "m.room.message",
+        transaction_id: "transaction_id"
+      }
+
+      request = Request.send_room_event(base_url, token, room_event)
+
+      assert request.method == :put
+      assert request.base_url == base_url
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{body: "Fire! Fire! Fire!", msgtype: "m.text"}
+
+      assert request.path ==
+               "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/send/m.room.message/transaction_id"
+    end
+  end
+
   describe "room creation:" do
     test "create_room/2" do
       base_url = "http://test-server.url"
