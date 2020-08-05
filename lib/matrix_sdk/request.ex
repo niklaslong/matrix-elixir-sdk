@@ -640,6 +640,24 @@ defmodule MatrixSDK.Request do
     }
   end
 
+  def send_state_event(base_url, token, state_event) do
+    encoded_room_id = URI.encode_www_form(state_event.room_id)
+    encoded_event_type = URI.encode_www_form(state_event.type)
+    encoded_state_key = URI.encode_www_form(state_event.state_key)
+
+    %__MODULE__{
+      method: :put,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/state/#{encoded_event_type}/#{encoded_state_key}",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: state_event.content
+    }
+  end
+
+  def send_room_event(base_url, token, room_event) do
+    
+  end
+
   @doc """
   Returns a `%Request{}` struct used to get message and state events for a room. 
   It uses pagination query parameters to paginate history in the room.

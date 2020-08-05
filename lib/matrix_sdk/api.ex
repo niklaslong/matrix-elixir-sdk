@@ -351,6 +351,16 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
+  def send_state_event(base_url, token, event) do
+    base_url
+    |> Request.send_state_event(token, event)
+    |> @http_client.do_request()
+  end
+
+  def send_room_event() do
+    
+  end
+
   @doc """
   Creates a new room. 
 
