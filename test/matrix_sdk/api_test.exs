@@ -665,7 +665,16 @@ defmodule MatrixSDK.APITest do
 
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.avatar_url(base_url, user_id)
-    end    
+    end
+
+    test "user_profile/2" do
+      base_url = "http://test-server.url"
+      user_id = "@user:matrix.org"
+      expected_request = Request.user_profile(base_url, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.user_profile(base_url, user_id)
+    end
   end
 
   defp assert_client_mock_got(expected_request) do

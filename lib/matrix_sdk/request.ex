@@ -1275,4 +1275,28 @@ defmodule MatrixSDK.Request do
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/avatar_url",
     }
   end
+
+  @doc """
+  Returns a `%Request{}` struct used to get the user profile for a given user id.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.user_profile("https://matrix.org", "@user:matrix.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        method: :get,
+        path: "/_matrix/client/r0/profile/%40user%3Amatrix.org",
+      }
+  """  
+  @spec user_profile(base_url, binary) :: t
+  def user_profile(base_url, user_id) do
+    encoded_user_id = URI.encode_www_form(user_id)
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/profile/#{encoded_user_id}",
+    }
+  end
+  
 end

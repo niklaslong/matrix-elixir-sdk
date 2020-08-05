@@ -633,6 +633,20 @@ defmodule MatrixSDK.API do
     base_url
     |> Request.avatar_url(user_id)
     |> @http_client.do_request()
-  end  
+  end
+
+  @doc """
+  Retrieves the user profile for a given user profile.
+
+  ## Examples
+
+      MatrixSDK.API.user_profile("https://matrix.org", "@user:matrix.org")
+  """
+  @spec user_profile(Request.base_url(), binary) :: HTTPClient.result()
+  def user_profile(base_url, user_id) do
+    base_url
+    |> Request.user_profile(user_id)
+    |> @http_client.do_request()
+  end
 
 end
