@@ -4,7 +4,7 @@ defmodule MatrixSDK.API do
   `MatrixSDK.Request` and `MatrixSDK.HTTPClient` modules.
   """
 
-  alias MatrixSDK.{Request, HTTPClient, Auth}
+  alias MatrixSDK.{Request, HTTPClient, Auth, RoomEvent, StateEvent}
 
   @http_client Application.get_env(:matrix_sdk, :http_client)
 
@@ -354,7 +354,7 @@ defmodule MatrixSDK.API do
   @doc """
   Sends a state event to a room. 
   """
-  @spec send_state_event(Request.base_url(), binary, map) :: HTTPClient.result()
+  @spec send_state_event(Request.base_url(), binary, StateEvent.t()) :: HTTPClient.result()
   def send_state_event(base_url, token, state_event) do
     base_url
     |> Request.send_state_event(token, state_event)
@@ -364,7 +364,7 @@ defmodule MatrixSDK.API do
   @doc """
   Sends a room event to a room.
   """
-  @spec send_room_event(Request.base_url(), binary, map) :: HTTPClient.result()
+  @spec send_room_event(Request.base_url(), binary, RoomEvent.t()) :: HTTPClient.result()
   def send_room_event(base_url, token, room_event) do
     base_url
     |> Request.send_room_event(token, room_event)

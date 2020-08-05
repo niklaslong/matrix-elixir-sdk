@@ -2,6 +2,8 @@ defmodule MatrixSDK.StateEvent do
   @enforce_keys [:content, :type, :room_id, :state_key]
   defstruct [:content, :type, :room_id, state_key: ""]
 
+  @type t :: %__MODULE__{}
+
   @doc """
   Returns a `StateEvent` struct of type `m.room.join_rules`. 
 

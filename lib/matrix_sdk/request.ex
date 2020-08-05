@@ -4,7 +4,7 @@ defmodule MatrixSDK.Request do
   each HTTP request.
   """
 
-  alias MatrixSDK.Auth
+  alias MatrixSDK.{Auth, RoomEvent, StateEvent}
 
   @enforce_keys [:method, :base_url, :path]
   defstruct([:method, :base_url, :path, query_params: %{}, headers: [], body: %{}])
@@ -714,7 +714,7 @@ defmodule MatrixSDK.Request do
         query_params: %{}
       }
   """
-  @spec send_state_event(base_url, binary, map) :: t
+  @spec send_state_event(base_url, binary, StateEvent.t()) :: t
   def send_state_event(base_url, token, state_event) do
     encoded_room_id = URI.encode_www_form(state_event.room_id)
     encoded_event_type = URI.encode_www_form(state_event.type)
@@ -753,7 +753,7 @@ defmodule MatrixSDK.Request do
         query_params: %{}
       }
   """
-  @spec send_room_event(base_url, binary, map) :: t
+  @spec send_room_event(base_url, binary, RoomEvent.t()) :: t
   def send_room_event(base_url, token, room_event) do
     encoded_room_id = URI.encode_www_form(room_event.room_id)
     encoded_event_type = URI.encode_www_form(room_event.type)
