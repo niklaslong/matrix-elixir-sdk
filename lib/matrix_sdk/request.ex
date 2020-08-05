@@ -655,7 +655,17 @@ defmodule MatrixSDK.Request do
   end
 
   def send_room_event(base_url, token, room_event) do
-    
+    encoded_room_id = URI.encode_www_form(room_event.room_id)
+    encoded_event_type = URI.encode_www_form(room_event.type)
+    encoded_transaction_id = URI.encode_www_form(room_event.transaction_id)
+
+    %__MODULE__{
+      method: :put,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/send/#{encoded_event_type}/#{encoded_transaction_id}",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: room_event.content
+    }
   end
 
   @doc """
