@@ -641,6 +641,59 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to get message and state events for a room. 
+  It uses pagination query parameters to paginate history in the room.
+
+  ## Example 
+
+      iex> MatrixSDK.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/messages",
+        query_params: [dir: "f", from: "t123456789"]
+      }
+
+  With optional parameters:
+
+      iex> opts = %{
+      ...>          to: "t123456789",
+      ...>          limit: 10,
+      ...>          filter: "filter"
+      ...>        }
+      iex> MatrixSDK.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/messages",
+        query_params: [dir: "f", filter: "filter", from: "t123456789", limit: 10, to: "t123456789"]
+      }
+  """
+  @spec room_messages(base_url, binary, binary, binary, binary, map) :: t
+  def room_messages(base_url, token, room_id, from, dir, opts \\ %{}) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    query_params =
+      %{}
+      |> Map.put(:from, from)
+      |> Map.put(:dir, dir)
+      |> Map.merge(opts)
+      |> Map.to_list()
+
+    %__MODULE__{
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/messages",
+      query_params: query_params,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to send a state event to a room. 
 
   ## Example
@@ -715,59 +768,6 @@ defmodule MatrixSDK.Request do
         }",
       headers: [{"Authorization", "Bearer " <> token}],
       body: room_event.content
-    }
-  end
-
-  @doc """
-  Returns a `%Request{}` struct used to get message and state events for a room. 
-  It uses pagination query parameters to paginate history in the room.
-
-  ## Example 
-
-      iex> MatrixSDK.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
-      %MatrixSDK.Request{
-        base_url: "https://matrix.org",
-        body: %{},
-        headers: [{"Authorization", "Bearer token"}],
-        method: :get,
-        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/messages",
-        query_params: [dir: "f", from: "t123456789"]
-      }
-
-  With optional parameters:
-
-      iex> opts = %{
-      ...>          to: "t123456789",
-      ...>          limit: 10,
-      ...>          filter: "filter"
-      ...>        }
-      iex> MatrixSDK.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
-      %MatrixSDK.Request{
-        base_url: "https://matrix.org",
-        body: %{},
-        headers: [{"Authorization", "Bearer token"}],
-        method: :get,
-        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/messages",
-        query_params: [dir: "f", filter: "filter", from: "t123456789", limit: 10, to: "t123456789"]
-      }
-  """
-  @spec room_messages(base_url, binary, binary, binary, binary, map) :: t
-  def room_messages(base_url, token, room_id, from, dir, opts \\ %{}) do
-    encoded_room_id = URI.encode_www_form(room_id)
-
-    query_params =
-      %{}
-      |> Map.put(:from, from)
-      |> Map.put(:dir, dir)
-      |> Map.merge(opts)
-      |> Map.to_list()
-
-    %__MODULE__{
-      method: :get,
-      base_url: base_url,
-      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/messages",
-      query_params: query_params,
-      headers: [{"Authorization", "Bearer " <> token}]
     }
   end
 
