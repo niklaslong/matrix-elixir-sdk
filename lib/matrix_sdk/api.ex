@@ -619,6 +619,20 @@ defmodule MatrixSDK.API do
     base_url
     |> Request.set_avatar_url(token, user_id, avatar_url)
     |> @http_client.do_request()
+  end
+
+  @doc """
+  Retrieves the avatar url for a user.
+
+  ## Examples
+
+      MatrixSDK.API.avatar_url("https://matrix.org", "@user:matrix.org")
+  """
+  @spec avatar_url(Request.base_url(), binary) :: HTTPClient.result()
+  def avatar_url(base_url, user_id) do
+    base_url
+    |> Request.avatar_url(user_id)
+    |> @http_client.do_request()
   end  
 
 end
