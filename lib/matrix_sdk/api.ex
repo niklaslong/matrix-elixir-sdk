@@ -592,4 +592,18 @@ defmodule MatrixSDK.API do
     |> Request.set_display_name(token, user_id, display_name)
     |> @http_client.do_request()
   end
+
+  @doc """
+  Retrieves the display name for a user.
+
+  ## Examples
+
+      MatrixSDK.API.display_name("https://matrix.org", "@user:matrix.org")
+  """  
+  @spec display_name(Request.base_url(), binary) :: HTTPClient.result()
+  def display_name(base_url, user_id) do
+    base_url
+    |> Request.display_name(user_id)
+    |> @http_client.do_request()
+  end
 end

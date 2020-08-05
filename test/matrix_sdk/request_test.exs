@@ -842,5 +842,15 @@ defmodule MatrixSDK.RequestTest do
       assert request.headers == [{"Authorization", "Bearer " <> token}]
       assert request.body == %{displayname: display_name}
     end
+
+    test "display_name/2" do
+      base_url = "http://test-server.url"
+      user_id = "@user:matrix.org"
+      request = Request.display_name(base_url, user_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname"
+    end
   end
 end
