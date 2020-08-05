@@ -626,6 +626,19 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "user profile:" do
+    test "set_display_name/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      user_id = "@user:matrix.org"
+      display_name = "mickey"
+      expected_request = Request.set_display_name(base_url, token, user_id, display_name)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.set_display_name(base_url, token, user_id, display_name)
+    end
+  end
+
   defp assert_client_mock_got(expected_request) do
     expect(HTTPClientMock, :do_request, fn %Request{} = request ->
       assert Map.equal?(request, expected_request)

@@ -827,4 +827,20 @@ defmodule MatrixSDK.RequestTest do
       assert request.query_params == [server: server]
     end
   end
+
+  describe "user profile:" do
+    test "set_display_name/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      user_id = "@user:matrix.org"
+      display_name = "mickey"
+      request = Request.set_display_name(base_url, token, user_id, display_name)
+
+      assert request.method == :put
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{displayname: display_name}
+    end
+  end
 end

@@ -1175,4 +1175,31 @@ defmodule MatrixSDK.Request do
       body: filters
     }
   end
+
+  @doc """
+  Returns a `%Request{}` struct used to set the display name for a user.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{displayname: "mickey"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :put,
+        path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname",
+      }
+  """
+  @spec set_display_name(base_url, binary, binary, binary) :: t
+  def set_display_name(base_url, token, user_id, display_name) do
+    encoded_user_id = URI.encode_www_form(user_id)
+
+    %__MODULE__{
+      method: :put,
+      base_url: base_url,
+      path: "/_matrix/client/r0/profile/#{encoded_user_id}/displayname",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: %{displayname: display_name}
+    }
+  end
 end
