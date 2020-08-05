@@ -2,6 +2,13 @@ defmodule MatrixSDK.RoomEvent do
   @enforce_keys [:content, :type, :transaction_id, :room_id]
   defstruct [:content, :type, :room_id, :transaction_id]
 
+  @doc """
+  Returns a `RoomEvent` struct of type `m.room.message`. 
+
+  ## Example
+
+      MatrixSDK.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!")
+  """
   def message(room_id, type, body),
     do: %__MODULE__{
       content: content(type, body),
