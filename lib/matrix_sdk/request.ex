@@ -1264,7 +1264,7 @@ defmodule MatrixSDK.Request do
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url",
       }
-  """  
+  """
   @spec avatar_url(base_url, binary) :: t
   def avatar_url(base_url, user_id) do
     encoded_user_id = URI.encode_www_form(user_id)
@@ -1272,7 +1272,7 @@ defmodule MatrixSDK.Request do
     %__MODULE__{
       method: :get,
       base_url: base_url,
-      path: "/_matrix/client/r0/profile/#{encoded_user_id}/avatar_url",
+      path: "/_matrix/client/r0/profile/#{encoded_user_id}/avatar_url"
     }
   end
 
@@ -1287,7 +1287,7 @@ defmodule MatrixSDK.Request do
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org",
       }
-  """  
+  """
   @spec user_profile(base_url, binary) :: t
   def user_profile(base_url, user_id) do
     encoded_user_id = URI.encode_www_form(user_id)
@@ -1295,8 +1295,7 @@ defmodule MatrixSDK.Request do
     %__MODULE__{
       method: :get,
       base_url: base_url,
-      path: "/_matrix/client/r0/profile/#{encoded_user_id}",
+      path: "/_matrix/client/r0/profile/#{encoded_user_id}"
     }
   end
-  
 end

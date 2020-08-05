@@ -648,5 +648,4 @@ defmodule MatrixSDK.API do
     |> Request.user_profile(user_id)
     |> @http_client.do_request()
   end
-
 end

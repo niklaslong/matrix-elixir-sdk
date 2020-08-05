@@ -864,7 +864,7 @@ defmodule MatrixSDK.RequestTest do
       assert request.base_url == base_url
       assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url"
       assert request.headers == [{"Authorization", "Bearer " <> token}]
-      assert request.body == %{avatar_url: avatar_url}      
+      assert request.body == %{avatar_url: avatar_url}
     end
 
     test "avatar_url/2" do
@@ -874,7 +874,7 @@ defmodule MatrixSDK.RequestTest do
 
       assert request.method == :get
       assert request.base_url == base_url
-      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url"      
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url"
     end
 
     test "user_profile/2" do
@@ -884,7 +884,7 @@ defmodule MatrixSDK.RequestTest do
 
       assert request.method == :get
       assert request.base_url == base_url
-      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org"      
-    end    
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org"
+    end
   end
 end
