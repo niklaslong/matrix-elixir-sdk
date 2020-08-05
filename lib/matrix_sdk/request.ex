@@ -694,6 +694,84 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to send a state event to a room. 
+
+  ## Example
+
+      iex> state_event = %{
+      ...>                content: %{join_rule: "private"},
+      ...>                room_id: "!someroom:matrix.org",
+      ...>                state_key: "",
+      ...>                type: "m.room.join_rules"
+      ...>              }
+      iex> MatrixSDK.Request.send_state_event("https://matrix.org", "token", state_event)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{join_rule: "private"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :put,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state/m.room.join_rules/",
+        query_params: %{}
+      }
+  """
+  @spec send_state_event(base_url, binary, map) :: t
+  def send_state_event(base_url, token, state_event) do
+    encoded_room_id = URI.encode_www_form(state_event.room_id)
+    encoded_event_type = URI.encode_www_form(state_event.type)
+    encoded_state_key = URI.encode_www_form(state_event.state_key)
+
+    %__MODULE__{
+      method: :put,
+      base_url: base_url,
+      path:
+        "/_matrix/client/r0/rooms/#{encoded_room_id}/state/#{encoded_event_type}/#{
+          encoded_state_key
+        }",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: state_event.content
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to send a room event to a room. 
+
+  ## Example
+
+      iex> room_event = %{
+      ...>                content: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
+      ...>                room_id: "!someroom:matrix.org",
+      ...>                type: "m.room.message",
+      ...>                transaction_id: "transaction_id"
+      ...>              }
+      iex> MatrixSDK.Request.send_room_event("https://matrix.org", "token", room_event)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :put,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/send/m.room.message/transaction_id",
+        query_params: %{}
+      }
+  """
+  @spec send_room_event(base_url, binary, map) :: t
+  def send_room_event(base_url, token, room_event) do
+    encoded_room_id = URI.encode_www_form(room_event.room_id)
+    encoded_event_type = URI.encode_www_form(room_event.type)
+    encoded_transaction_id = URI.encode_www_form(room_event.transaction_id)
+
+    %__MODULE__{
+      method: :put,
+      base_url: base_url,
+      path:
+        "/_matrix/client/r0/rooms/#{encoded_room_id}/send/#{encoded_event_type}/#{
+          encoded_transaction_id
+        }",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: room_event.content
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to create a new room. 
 
   ## Examples

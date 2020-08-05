@@ -352,6 +352,26 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Sends a state event to a room. 
+  """
+  @spec send_state_event(Request.base_url(), binary, map) :: HTTPClient.result()
+  def send_state_event(base_url, token, state_event) do
+    base_url
+    |> Request.send_state_event(token, state_event)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Sends a room event to a room.
+  """
+  @spec send_room_event(Request.base_url(), binary, map) :: HTTPClient.result()
+  def send_room_event(base_url, token, room_event) do
+    base_url
+    |> Request.send_room_event(token, room_event)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Creates a new room. 
 
   ## Examples
