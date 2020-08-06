@@ -772,6 +772,39 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to redact a room event. 
+
+  ## Example
+
+      iex> MatrixSDK.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id", "Indecent material")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{reason: "Indecent material"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :put,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id",
+        query_params: %{}
+      }
+  """
+  @spec redact_room_event(base_url, binary, binary, binary, binary, binary) :: t
+  def redact_room_event(base_url, token, room_id, event_id, transaction_id, reason) do
+    encoded_room_id = URI.encode_www_form(room_id)
+    encoded_event_id = URI.encode_www_form(event_id)
+    encoded_transaction_id = URI.encode_www_form(transaction_id)
+
+    %__MODULE__{
+      method: :put,
+      base_url: base_url,
+      path:
+        "/_matrix/client/r0/rooms/#{encoded_room_id}/redact/#{encoded_event_id}/#{
+          encoded_transaction_id
+        }",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: %{reason: reason}
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to create a new room. 
 
   ## Examples

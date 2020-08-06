@@ -372,6 +372,15 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Redacts a room event with a reason.
+  """
+  def redact_room_event(base_url, token, room_id, event_id, transaction_id, reason) do
+    base_url
+    |> Request.redact_room_event(token, room_id, event_id, transaction_id, reason)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Creates a new room. 
 
   ## Examples

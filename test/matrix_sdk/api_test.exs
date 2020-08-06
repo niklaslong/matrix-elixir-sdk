@@ -388,6 +388,23 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.send_room_event(base_url, token, room_event)
     end
+
+    test "redact_room_event/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      event_id = "event_id"
+      transaction_id = "transaction_id"
+      reason = "Indecent material"
+
+      expected_request =
+        Request.redact_room_event(base_url, token, room_id, event_id, transaction_id, reason)
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.redact_room_event(base_url, token, room_id, event_id, transaction_id, reason)
+    end
   end
 
   describe "room creation:" do
