@@ -578,4 +578,21 @@ defmodule MatrixSDK.API do
     |> Request.public_rooms(token, filter, server)
     |> @http_client.do_request()
   end
+
+  @doc """
+  Searches for users based on search term.
+
+  ## Examples
+
+      MatrixSDK.API.user_directory_search("https://matrix.org", "token", "mickey")
+
+  With options:
+
+      MatrixSDK.API.user_directory_search("https://matrix.org", "token", %{limit: 10, language: "en-US"})
+  """
+  def user_directory_search(base_url, token, search_term, opts \\ %{}) do
+    base_url
+    |> Request.user_directory_search(token, search_term, opts)
+    |> @http_client.do_request()
+  end
 end

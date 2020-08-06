@@ -626,6 +626,33 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "user directory search:" do
+    test "user_directory_search/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      search_term = "mickey"
+
+      expected_request = Request.user_directory_search(base_url, token, search_term)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.user_directory_search(base_url, token, search_term)
+    end
+
+    test "user_directory_search/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      search_term = "mickey"
+      limit = 42
+      language = "en-US"
+      options = %{limit: limit, language: language}
+
+      expected_request = Request.user_directory_search(base_url, token, search_term, options)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.user_directory_search(base_url, token, search_term, options)
+    end
+  end
+
   defp assert_client_mock_got(expected_request) do
     expect(HTTPClientMock, :do_request, fn %Request{} = request ->
       assert Map.equal?(request, expected_request)
