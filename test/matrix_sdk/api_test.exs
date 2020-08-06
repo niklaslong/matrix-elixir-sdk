@@ -653,6 +653,57 @@ defmodule MatrixSDK.APITest do
     end
   end
 
+  describe "user profile:" do
+    test "set_display_name/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      user_id = "@user:matrix.org"
+      display_name = "mickey"
+      expected_request = Request.set_display_name(base_url, token, user_id, display_name)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.set_display_name(base_url, token, user_id, display_name)
+    end
+
+    test "display_name/2" do
+      base_url = "http://test-server.url"
+      user_id = "@user:matrix.org"
+      expected_request = Request.display_name(base_url, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.display_name(base_url, user_id)
+    end
+
+    test "set_avatar_url/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      user_id = "@user:matrix.org"
+      avatar_url = "mxc://matrix.org/wefh34uihSDRGhw34"
+      expected_request = Request.set_avatar_url(base_url, token, user_id, avatar_url)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.set_avatar_url(base_url, token, user_id, avatar_url)
+    end
+
+    test "avatar_url/2" do
+      base_url = "http://test-server.url"
+      user_id = "@user:matrix.org"
+      expected_request = Request.avatar_url(base_url, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.avatar_url(base_url, user_id)
+    end
+
+    test "user_profile/2" do
+      base_url = "http://test-server.url"
+      user_id = "@user:matrix.org"
+      expected_request = Request.user_profile(base_url, user_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.user_profile(base_url, user_id)
+    end
+  end
+
   defp assert_client_mock_got(expected_request) do
     expect(HTTPClientMock, :do_request, fn %Request{} = request ->
       assert Map.equal?(request, expected_request)
