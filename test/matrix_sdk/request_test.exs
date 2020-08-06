@@ -827,4 +827,64 @@ defmodule MatrixSDK.RequestTest do
       assert request.query_params == [server: server]
     end
   end
+
+  describe "user profile:" do
+    test "set_display_name/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      user_id = "@user:matrix.org"
+      display_name = "mickey"
+      request = Request.set_display_name(base_url, token, user_id, display_name)
+
+      assert request.method == :put
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{displayname: display_name}
+    end
+
+    test "display_name/2" do
+      base_url = "http://test-server.url"
+      user_id = "@user:matrix.org"
+      request = Request.display_name(base_url, user_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname"
+    end
+
+    test "set_avatar_url/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      user_id = "@user:matrix.org"
+      avatar_url = "mxc://matrix.org/wefh34uihSDRGhw34"
+      request = Request.set_avatar_url(base_url, token, user_id, avatar_url)
+
+      assert request.method == :put
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{avatar_url: avatar_url}
+    end
+
+    test "avatar_url/2" do
+      base_url = "http://test-server.url"
+      user_id = "@user:matrix.org"
+      request = Request.avatar_url(base_url, user_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url"
+    end
+
+    test "user_profile/2" do
+      base_url = "http://test-server.url"
+      user_id = "@user:matrix.org"
+      request = Request.user_profile(base_url, user_id)
+
+      assert request.method == :get
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org"
+    end
+  end
 end

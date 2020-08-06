@@ -578,4 +578,74 @@ defmodule MatrixSDK.API do
     |> Request.public_rooms(token, filter, server)
     |> @http_client.do_request()
   end
+
+  @doc """
+  Sets the display name for a user.
+
+  ## Examples
+
+      MatrixSDK.API.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
+  """
+  @spec set_display_name(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def set_display_name(base_url, token, user_id, display_name) do
+    base_url
+    |> Request.set_display_name(token, user_id, display_name)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Retrieves the display name for a user.
+
+  ## Examples
+
+      MatrixSDK.API.display_name("https://matrix.org", "@user:matrix.org")
+  """
+  @spec display_name(Request.base_url(), binary) :: HTTPClient.result()
+  def display_name(base_url, user_id) do
+    base_url
+    |> Request.display_name(user_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Sets the avatar url for a user.
+
+  ## Examples
+
+      MatrixSDK.API.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
+  """
+  @spec set_avatar_url(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
+  def set_avatar_url(base_url, token, user_id, avatar_url) do
+    base_url
+    |> Request.set_avatar_url(token, user_id, avatar_url)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Retrieves the avatar url for a user.
+
+  ## Examples
+
+      MatrixSDK.API.avatar_url("https://matrix.org", "@user:matrix.org")
+  """
+  @spec avatar_url(Request.base_url(), binary) :: HTTPClient.result()
+  def avatar_url(base_url, user_id) do
+    base_url
+    |> Request.avatar_url(user_id)
+    |> @http_client.do_request()
+  end
+
+  @doc """
+  Retrieves the user profile for a user.
+
+  ## Examples
+
+      MatrixSDK.API.user_profile("https://matrix.org", "@user:matrix.org")
+  """
+  @spec user_profile(Request.base_url(), binary) :: HTTPClient.result()
+  def user_profile(base_url, user_id) do
+    base_url
+    |> Request.user_profile(user_id)
+    |> @http_client.do_request()
+  end
 end
