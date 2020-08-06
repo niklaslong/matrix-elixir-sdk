@@ -608,7 +608,7 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
-  Retrieves the display name for a user.
+  Sets the avatar url for a user.
 
   ## Examples
 
@@ -636,7 +636,7 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
-  Retrieves the user profile for a given user profile.
+  Retrieves the user profile for a user.
 
   ## Examples
 
