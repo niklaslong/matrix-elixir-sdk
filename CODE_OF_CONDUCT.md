@@ -1,4 +1,3 @@
-
 # Code of Conduct
 
 We are committed to providing a friendly, safe and welcoming environment for all, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
