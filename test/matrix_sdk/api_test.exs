@@ -152,7 +152,8 @@ defmodule MatrixSDK.APITest do
       email = "email@test.url"
       send_attempt = 1
 
-      expected_request = Request.register_email_token(base_url, client_secret, email, send_attempt)
+      expected_request =
+        Request.register_email_token(base_url, client_secret, email, send_attempt)
 
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.register_email_token(base_url, client_secret, email, send_attempt)
@@ -169,7 +170,9 @@ defmodule MatrixSDK.APITest do
         Request.register_email_token(base_url, client_secret, email, send_attempt, opts)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.register_email_token(base_url, client_secret, email, send_attempt, opts)
+
+      assert {:ok, _} =
+               API.register_email_token(base_url, client_secret, email, send_attempt, opts)
     end
 
     test "username_availability/2" do
