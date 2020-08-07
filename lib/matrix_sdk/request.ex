@@ -461,7 +461,18 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  WIP
+  Gets a list of the third party identifiers the homeserver has associated with the user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_3pids("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/account/3pid"
+      }
   """
   @spec account_add_3pid(base_url, Auth.t(), binary, binary, binary) :: t
   def account_add_3pid(base_url, auth, client_secret, sid, token) do
