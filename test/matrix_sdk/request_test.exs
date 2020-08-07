@@ -198,6 +198,41 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.inhibit_login == opts.inhibit_login
     end
 
+    test "register_email/4" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+
+      request = Request.register_email(base_url, client_secret, email, send_attempt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register/email/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.email == email
+      assert request.body.send_attempt == send_attempt
+    end
+
+    test "register_email/5 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+      opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
+
+      request = Request.register_email(base_url, client_secret, email, send_attempt, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register/email/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.email == email
+      assert request.body.send_attempt == send_attempt
+      assert request.body.id_access_token == opts.id_access_token
+      assert request.body.next_link == opts.next_link
+    end
+
     test "username_availability/2" do
       base_url = "http://test-server.url"
       username = "username"
@@ -285,40 +320,7 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.logout_devices == true
     end
 
-    test "register_email/4" do
-      base_url = "http://test-server.url"
-      client_secret = "secret"
-      email = "email@test.url"
-      send_attempt = 1
-
-      request = Request.register_email(base_url, client_secret, email, send_attempt)
-
-      assert request.method == :post
-      assert request.base_url == base_url
-      assert request.path == "/_matrix/client/r0/register/email/requestToken"
-      assert request.body.client_secret == client_secret
-      assert request.body.email == email
-      assert request.body.send_attempt == send_attempt
-    end
-
-    test "register_email/5 with options" do
-      base_url = "http://test-server.url"
-      client_secret = "secret"
-      email = "email@test.url"
-      send_attempt = 1
-      opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
-
-      request = Request.register_email(base_url, client_secret, email, send_attempt, opts)
-
-      assert request.method == :post
-      assert request.base_url == base_url
-      assert request.path == "/_matrix/client/r0/register/email/requestToken"
-      assert request.body.client_secret == client_secret
-      assert request.body.email == email
-      assert request.body.send_attempt == send_attempt
-      assert request.body.id_access_token == opts.id_access_token
-      assert request.body.next_link == opts.next_link
-    end
+    # PASSWORD TOKEN
   end
 
   describe "user contact information:" do
