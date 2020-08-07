@@ -219,7 +219,7 @@ defmodule MatrixSDK.RequestTest do
       client_secret = "secret"
       email = "email@test.url"
       send_attempt = 1
-      opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
+      opts = %{next_link: "nextlink.url"}
 
       request = Request.register_email_token(base_url, client_secret, email, send_attempt, opts)
 
@@ -229,7 +229,6 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.client_secret == client_secret
       assert request.body.email == email
       assert request.body.send_attempt == send_attempt
-      assert request.body.id_access_token == opts.id_access_token
       assert request.body.next_link == opts.next_link
     end
 
@@ -341,7 +340,7 @@ defmodule MatrixSDK.RequestTest do
       client_secret = "secret"
       email = "email@test.url"
       send_attempt = 1
-      opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
+      opts = %{next_link: "nextlink.url"}
 
       request = Request.password_email_token(base_url, client_secret, email, send_attempt, opts)
 
@@ -351,7 +350,6 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.client_secret == client_secret
       assert request.body.email == email
       assert request.body.send_attempt == send_attempt
-      assert request.body.id_access_token == opts.id_access_token
       assert request.body.next_link == opts.next_link
     end
   end

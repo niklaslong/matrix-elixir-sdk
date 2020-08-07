@@ -164,7 +164,7 @@ defmodule MatrixSDK.APITest do
       client_secret = "secret"
       email = "email@test.url"
       send_attempt = 1
-      opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
+      opts = %{next_link: "nextlink.url"}
 
       expected_request =
         Request.register_email_token(base_url, client_secret, email, send_attempt, opts)
@@ -246,7 +246,7 @@ defmodule MatrixSDK.APITest do
       client_secret = "secret"
       email = "email@test.url"
       send_attempt = 1
-      opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
+      opts = %{next_link: "nextlink.url"}
 
       expected_request =
         Request.password_email_token(base_url, client_secret, email, send_attempt, opts)
