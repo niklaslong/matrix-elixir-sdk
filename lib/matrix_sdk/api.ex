@@ -163,13 +163,13 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-        MatrixSDK.API.register_email("https://matrix.org", "secret", "maurice@moss.yay", 1)
+        MatrixSDK.API.register_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
   """
-  @spec register_email(Request.base_url(), binary, binary, pos_integer, map) ::
+  @spec register_email_token(Request.base_url(), binary, binary, pos_integer, map) ::
           HTTPClient.result()
-  def register_email(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+  def register_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
     base_url
-    |> Request.register_email(client_secret, email, send_attempt, opts)
+    |> Request.register_email_token(client_secret, email, send_attempt, opts)
     |> @http_client.do_request()
   end
 

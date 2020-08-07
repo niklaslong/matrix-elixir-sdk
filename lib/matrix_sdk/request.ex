@@ -316,7 +316,7 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.register_email("https://matrix.org", "secret", "maurice@moss.yay", 1)
+      iex> MatrixSDK.Request.register_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{client_secret: "secret", email: "maurice@moss.yay", send_attempt: 1},
@@ -328,7 +328,7 @@ defmodule MatrixSDK.Request do
   With optional parameters:
 
       iex> opts = %{next_link: "nextlink.url", id_access_token: "id_token"}
-      iex> MatrixSDK.Request.register_email("https://matrix.org", "secret", "maurice@moss.yay", opts)
+      iex> MatrixSDK.Request.register_email_token("https://matrix.org", "secret", "maurice@moss.yay", opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
@@ -341,8 +341,8 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/register/email/requestToken"
       }
   """
-  @spec register_email(base_url, binary, binary, pos_integer, map) :: t
-  def register_email(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+  @spec register_email_token(base_url, binary, binary, pos_integer, map) :: t
+  def register_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
     body =
       %{}
       |> Map.put(:client_secret, client_secret)
