@@ -224,6 +224,32 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.change_password(base_url, new_password, auth, opts)
     end
+
+    test "password_email/4" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+
+      expected_request = Request.password_email(base_url, client_secret, email, send_attempt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.password_email(base_url, client_secret, email, send_attempt)
+    end
+
+    test "password_email/5 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+      opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
+
+      expected_request =
+        Request.password_email(base_url, client_secret, email, send_attempt, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.password_email(base_url, client_secret, email, send_attempt, opts)
+    end
   end
 
   describe "user contact information:" do

@@ -204,6 +204,21 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Request validation tokens when authenticating for `change_password`. 
+
+  ## Examples
+
+      MatrixSDK.Request.password_email("https://matrix.org", "secret", "maurice@moss.yay", 1)
+  """
+  @spec password_email(Request.base_url(), binary, binary, pos_integer, map) ::
+          HTTPClient.result()
+  def password_email(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+    base_url
+    |> Request.password_email(client_secret, email, send_attempt, opts)
+    |> @http_client.do_request
+  end
+
+  @doc """
   Gets a list of the third party identifiers the homeserver has associated with the user's account.
 
   ## Examples
