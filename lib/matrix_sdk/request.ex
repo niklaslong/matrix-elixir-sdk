@@ -1238,7 +1238,7 @@ defmodule MatrixSDK.Request do
     }
   end
 
-  """
+  @doc """
   Returns a `%Request{}` struct used to set the display name for a user.
 
   ## Examples
