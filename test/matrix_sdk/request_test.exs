@@ -320,13 +320,13 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.logout_devices == true
     end
 
-    test "password_email/4" do
+    test "password_email_token/4" do
       base_url = "http://test-server.url"
       client_secret = "secret"
       email = "email@test.url"
       send_attempt = 1
 
-      request = Request.password_email(base_url, client_secret, email, send_attempt)
+      request = Request.password_email_token(base_url, client_secret, email, send_attempt)
 
       assert request.method == :post
       assert request.base_url == base_url
@@ -336,14 +336,14 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.send_attempt == send_attempt
     end
 
-    test "password_email/5 with options" do
+    test "password_email_token/5 with options" do
       base_url = "http://test-server.url"
       client_secret = "secret"
       email = "email@test.url"
       send_attempt = 1
       opts = %{id_access_token: "id_token", next_link: "nextlink.url"}
 
-      request = Request.password_email(base_url, client_secret, email, send_attempt, opts)
+      request = Request.password_email_token(base_url, client_secret, email, send_attempt, opts)
 
       assert request.method == :post
       assert request.base_url == base_url

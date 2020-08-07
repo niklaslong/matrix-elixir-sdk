@@ -208,13 +208,13 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.password_email("https://matrix.org", "secret", "maurice@moss.yay", 1)
+      MatrixSDK.API.password_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
   """
-  @spec password_email(Request.base_url(), binary, binary, pos_integer, map) ::
+  @spec password_email_token(Request.base_url(), binary, binary, pos_integer, map) ::
           HTTPClient.result()
-  def password_email(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+  def password_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
     base_url
-    |> Request.password_email(client_secret, email, send_attempt, opts)
+    |> Request.password_email_token(client_secret, email, send_attempt, opts)
     |> @http_client.do_request
   end
 
