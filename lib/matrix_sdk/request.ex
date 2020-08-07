@@ -324,7 +324,7 @@ defmodule MatrixSDK.Request do
 
   Optional:
   - `next_link`: when the validation is completed, the identity server will redirect the user to this URL. 
-  - `id_server`: (depricated) the hostname of the identity server to communicate with.
+  - `id_server`: (deprecated) the hostname of the identity server to communicate with.
   - `id_access_token`: servers can treat this as optional to distinguish between `r0.5`-compatible clients and this specification version.
 
   ## Examples
