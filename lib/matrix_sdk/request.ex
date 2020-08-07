@@ -1252,7 +1252,6 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname",
       }
   """
-
   @spec set_display_name(base_url, binary, binary, binary) :: t
   def set_display_name(base_url, token, user_id, display_name) do
     encoded_user_id = URI.encode_www_form(user_id)
