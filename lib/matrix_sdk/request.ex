@@ -776,18 +776,31 @@ defmodule MatrixSDK.Request do
 
   ## Example
 
-      iex> MatrixSDK.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id", "Indecent material")
+      iex> MatrixSDK.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :put,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id",
+      }
+
+  With options:
+
+      iex> options = %{reason: "Indecent material"}
+      iex> MatrixSDK.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id", options)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{reason: "Indecent material"},
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id",
-        query_params: %{}
       }
+
+
   """
-  @spec redact_room_event(base_url, binary, binary, binary, binary, binary) :: t
-  def redact_room_event(base_url, token, room_id, event_id, transaction_id, reason) do
+  @spec redact_room_event(base_url, binary, binary, binary, binary, map) :: t
+  def redact_room_event(base_url, token, room_id, event_id, transaction_id, opts \\ %{}) do
     encoded_room_id = URI.encode_www_form(room_id)
     encoded_event_id = URI.encode_www_form(event_id)
     encoded_transaction_id = URI.encode_www_form(transaction_id)
@@ -800,7 +813,7 @@ defmodule MatrixSDK.Request do
           encoded_transaction_id
         }",
       headers: [{"Authorization", "Bearer " <> token}],
-      body: %{reason: reason}
+      body: opts
     }
   end
 

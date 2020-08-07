@@ -546,15 +546,15 @@ defmodule MatrixSDK.RequestTest do
       room_id = "!someroom:matrix.org"
       event_id = "event_id"
       transaction_id = "transaction_id"
-      reason = "Indecent material"
+      options = %{reason: "Indecent material"}
 
       request =
-        Request.redact_room_event(base_url, token, room_id, event_id, transaction_id, reason)
+        Request.redact_room_event(base_url, token, room_id, event_id, transaction_id, options)
 
       assert request.method == :put
       assert request.base_url == base_url
       assert request.headers == [{"Authorization", "Bearer " <> token}]
-      assert request.body == %{reason: reason}
+      assert request.body == %{reason: "Indecent material"}
 
       assert request.path ==
                "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id"
