@@ -208,7 +208,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.Request.password_email("https://matrix.org", "secret", "maurice@moss.yay", 1)
+      MatrixSDK.API.password_email("https://matrix.org", "secret", "maurice@moss.yay", 1)
   """
   @spec password_email(Request.base_url(), binary, binary, pos_integer, map) ::
           HTTPClient.result()
