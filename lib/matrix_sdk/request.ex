@@ -787,8 +787,8 @@ defmodule MatrixSDK.Request do
 
   With options:
 
-      iex> options = %{reason: "Indecent material"}
-      iex> MatrixSDK.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id", options)
+      iex> opt = %{reason: "Indecent material"}
+      iex> MatrixSDK.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id", opt)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{reason: "Indecent material"},
@@ -800,7 +800,7 @@ defmodule MatrixSDK.Request do
 
   """
   @spec redact_room_event(base_url, binary, binary, binary, binary, map) :: t
-  def redact_room_event(base_url, token, room_id, event_id, transaction_id, opts \\ %{}) do
+  def redact_room_event(base_url, token, room_id, event_id, transaction_id, opt \\ %{}) do
     encoded_room_id = URI.encode_www_form(room_id)
     encoded_event_id = URI.encode_www_form(event_id)
     encoded_transaction_id = URI.encode_www_form(transaction_id)
@@ -813,7 +813,7 @@ defmodule MatrixSDK.Request do
           encoded_transaction_id
         }",
       headers: [{"Authorization", "Bearer " <> token}],
-      body: opts
+      body: opt
     }
   end
 

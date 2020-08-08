@@ -540,16 +540,33 @@ defmodule MatrixSDK.RequestTest do
                "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/send/m.room.message/transaction_id"
     end
 
+    test "redact_room_event/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      room_id = "!someroom:matrix.org"
+      event_id = "event_id"
+      transaction_id = "transaction_id"
+
+      request = Request.redact_room_event(base_url, token, room_id, event_id, transaction_id)
+
+      assert request.method == :put
+      assert request.base_url == base_url
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{}
+
+      assert request.path ==
+               "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id"
+    end
+
     test "redact_room_event/6" do
       base_url = "http://test-server.url"
       token = "token"
       room_id = "!someroom:matrix.org"
       event_id = "event_id"
       transaction_id = "transaction_id"
-      options = %{reason: "Indecent material"}
+      opt = %{reason: "Indecent material"}
 
-      request =
-        Request.redact_room_event(base_url, token, room_id, event_id, transaction_id, options)
+      request = Request.redact_room_event(base_url, token, room_id, event_id, transaction_id, opt)
 
       assert request.method == :put
       assert request.base_url == base_url

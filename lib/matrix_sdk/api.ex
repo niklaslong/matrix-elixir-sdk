@@ -376,9 +376,9 @@ defmodule MatrixSDK.API do
   """
   @spec redact_room_event(Request.base_url(), binary, binary, binary, binary, map) ::
           HTTPClient.result()
-  def redact_room_event(base_url, token, room_id, event_id, transaction_id, options \\ %{}) do
+  def redact_room_event(base_url, token, room_id, event_id, transaction_id, opt \\ %{}) do
     base_url
-    |> Request.redact_room_event(token, room_id, event_id, transaction_id, options)
+    |> Request.redact_room_event(token, room_id, event_id, transaction_id, opt)
     |> @http_client.do_request()
   end
 
