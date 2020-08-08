@@ -159,7 +159,7 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
-  Checks the given email address is not already associated with an account on the homeserver.
+  Checks the given email address is not already associated with an account on the homeserver. This should be used to get a token to register an email as part of the initial user registration.
 
   ## Examples
 
@@ -174,7 +174,7 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
-  Checks the given phone number is not already associated with an account on the homeserver.
+  Checks the given phone number is not already associated with an account on the homeserver. This should be used to get a token to register a phone number as part of the initial user registration.
 
   ## Examples
 
