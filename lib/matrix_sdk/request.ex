@@ -328,13 +328,14 @@ defmodule MatrixSDK.Request do
   With optional parameters:
 
       iex> opts = %{next_link: "nextlink.url"}
-      iex> MatrixSDK.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", opts)
+      iex> MatrixSDK.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1, opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
           client_secret: "secret",
           email: "maurice@moss.yay",
-          send_attempt: %{next_link: "nextlink.url"}
+          send_attempt: 1, 
+          next_link: "nextlink.url"
         },
         headers: [],
         method: :post,
