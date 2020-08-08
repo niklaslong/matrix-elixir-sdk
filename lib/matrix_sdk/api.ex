@@ -180,7 +180,7 @@ defmodule MatrixSDK.API do
 
         MatrixSDK.API.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
   """
-  @spec registration_msisdn_token(Request.base_url(), binary, binary, pos_integer, map) ::
+  @spec registration_msisdn_token(Request.base_url(), binary, binary, binary, pos_integer, map) ::
           HTTPClient.result()
   def registration_msisdn_token(
         base_url,
@@ -237,7 +237,7 @@ defmodule MatrixSDK.API do
   def password_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
     base_url
     |> Request.password_email_token(client_secret, email, send_attempt, opts)
-    |> @http_client.do_request
+    |> @http_client.do_request()
   end
 
   @doc """

@@ -532,7 +532,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/account/password/msisdn/requestToken"
       }
   """
-  @spec password_msisdn_token(base_url, binary, binary, pos_integer, map) :: t
+  @spec password_msisdn_token(base_url, binary, binary, binary, pos_integer, map) :: t
   def password_msisdn_token(base_url, client_secret, country, phone, send_attempt, opts \\ %{}) do
     body =
       %{}

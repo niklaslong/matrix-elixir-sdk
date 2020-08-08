@@ -324,12 +324,24 @@ defmodule MatrixSDK.APITest do
       send_attempt = 1
 
       expected_request =
-        Request.password_msisdn_token(base_url, client_secret, country, phone_number, send_attempt)
+        Request.password_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
 
       assert_client_mock_got(expected_request)
 
       assert {:ok, _} =
-               API.password_msisdn_token(base_url, client_secret, country, phone_number, send_attempt)
+               API.password_msisdn_token(
+                 base_url,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt
+               )
     end
 
     test "password_msisdn_token/56 with options" do
@@ -341,7 +353,14 @@ defmodule MatrixSDK.APITest do
       opts = %{next_link: "nextlink.url"}
 
       expected_request =
-        Request.password_msisdn_token(base_url, client_secret, country, phone_number, send_attempt, opts)
+        Request.password_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
 
       assert_client_mock_got(expected_request)
 
