@@ -315,6 +315,46 @@ defmodule MatrixSDK.APITest do
       assert {:ok, _} =
                API.password_email_token(base_url, client_secret, email, send_attempt, opts)
     end
+
+    test "password_msisdn_token/5" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      expected_request =
+        Request.password_msisdn_token(base_url, client_secret, country, phone_number, send_attempt)
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.password_msisdn_token(base_url, client_secret, country, phone_number, send_attempt)
+    end
+
+    test "password_msisdn_token/56 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      expected_request =
+        Request.password_msisdn_token(base_url, client_secret, country, phone_number, send_attempt, opts)
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.password_msisdn_token(
+                 base_url,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt,
+                 opts
+               )
+    end
   end
 
   describe "user contact information:" do

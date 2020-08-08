@@ -519,6 +519,38 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password`. 
+
+  ## Examples
+
+      iex> MatrixSDK.Request.password_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{client_secret: "secret", country: "GB", phone_number: "07700900001", send_attempt: 1},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/account/password/msisdn/requestToken"
+      }
+  """
+  @spec password_msisdn_token(base_url, binary, binary, pos_integer, map) :: t
+  def password_msisdn_token(base_url, client_secret, country, phone, send_attempt, opts \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:country, country)
+      |> Map.put(:phone_number, phone)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/password/msisdn/requestToken",
+      body: body
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get a list of the third party identifiers the homeserver has associated with the user's account.
 
   ## Examples

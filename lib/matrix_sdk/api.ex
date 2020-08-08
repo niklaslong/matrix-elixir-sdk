@@ -241,6 +241,21 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Request validation tokens when authenticating for `change_password`. 
+
+  ## Examples
+
+      MatrixSDK.API.password_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+  """
+  @spec password_msisdn_token(Request.base_url(), binary, binary, binary, pos_integer, map) ::
+          HTTPClient.result()
+  def password_msisdn_token(base_url, client_secret, country, phone, send_attempt, opts \\ %{}) do
+    base_url
+    |> Request.password_msisdn_token(client_secret, country, phone, send_attempt, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets a list of the third party identifiers the homeserver has associated with the user's account.
 
   ## Examples

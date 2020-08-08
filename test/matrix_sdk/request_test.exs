@@ -406,6 +406,59 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.send_attempt == send_attempt
       assert request.body.next_link == opts.next_link
     end
+
+    test "password_msisdn_token/5" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      request =
+        Request.password_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password/msisdn/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.country == country
+      assert request.body.phone_number == phone_number
+      assert request.body.send_attempt == send_attempt
+    end
+
+    test "password_msisdn_token/6 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      request =
+        Request.password_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password/msisdn/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.country == country
+      assert request.body.phone_number == phone_number
+      assert request.body.send_attempt == send_attempt
+      assert request.body.next_link == opts.next_link
+    end
   end
 
   describe "user contact information:" do
