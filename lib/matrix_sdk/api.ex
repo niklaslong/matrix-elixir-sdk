@@ -596,7 +596,7 @@ defmodule MatrixSDK.API do
     |> @http_client.do_request()
   end
 
-  @doc"""
+  @doc """
   Sets the display name for a user.
 
   ## Examples
