@@ -344,7 +344,7 @@ defmodule MatrixSDK.APITest do
                )
     end
 
-    test "password_msisdn_token/56 with options" do
+    test "password_msisdn_token/6 with options" do
       base_url = "http://test-server.url"
       client_secret = "secret"
       country = "GB"
