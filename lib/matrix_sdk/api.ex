@@ -256,6 +256,20 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Deactivates a user's account. 
+
+  ## Example
+
+      MatrixSDK.API.deactivate_account("https://matrix.org", "token")
+  """
+  @spec deactivate_account(Request.base_url(), binary, map) :: HTTPClient.result()
+  def deactivate_account(base_url, token, opts \\ %{}) do
+    base_url
+    |> Request.deactivate_account(token, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Gets a list of the third party identifiers the homeserver has associated with the user's account.
 
   ## Examples

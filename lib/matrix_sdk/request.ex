@@ -551,6 +551,30 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to deactivate a user's account. 
+
+  ## Example
+
+      iex> MatrixSDK.Request.deactivate_account("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/deactivate"
+      }
+  """
+  @spec deactivate_account(base_url, binary, map) :: t
+  def deactivate_account(base_url, token, opts \\ %{}),
+    do: %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/deactivate",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: opts
+    }
+
+  @doc """
   Returns a `%Request{}` struct used to get a list of the third party identifiers the homeserver has associated with the user's account.
 
   ## Examples

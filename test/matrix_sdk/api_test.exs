@@ -374,6 +374,25 @@ defmodule MatrixSDK.APITest do
                  opts
                )
     end
+
+    test "deactivate_account/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      expected_request = Request.deactivate_account(base_url, token)
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.deactivate_account(base_url, token)
+    end
+
+    test "deactivate_account/3 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      opts = %{auth: Auth.login_token(token)}
+
+      expected_request = Request.deactivate_account(base_url, token, opts)
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.deactivate_account(base_url, token, opts)
+    end
   end
 
   describe "user contact information:" do

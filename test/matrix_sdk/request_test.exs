@@ -459,6 +459,32 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.send_attempt == send_attempt
       assert request.body.next_link == opts.next_link
     end
+
+    test "deactivate_account/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      request = Request.deactivate_account(base_url, token)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/deactivate"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "deactivate_account/3 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      opts = %{auth: Auth.login_token(token)}
+
+      request = Request.deactivate_account(base_url, token, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/deactivate"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.auth == opts.auth
+    end
   end
 
   describe "user contact information:" do
