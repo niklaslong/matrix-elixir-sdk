@@ -312,7 +312,7 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to check the given email address is not already associated with an account on the homeserver.
+  Returns a `%Request{}` struct used to check the given email address is not already associated with an account on the homeserver. This should be used to get a token to register an email as part of the initial user registration.
 
   ## Examples
 
