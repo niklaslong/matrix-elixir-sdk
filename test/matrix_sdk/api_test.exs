@@ -175,6 +175,65 @@ defmodule MatrixSDK.APITest do
                API.registration_email_token(base_url, client_secret, email, send_attempt, opts)
     end
 
+    test "registration_msisdn_token/5" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      expected_request =
+        Request.registration_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.registration_msisdn_token(
+                 base_url,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt
+               )
+    end
+
+    test "registration_msisdn_token/6 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      expected_request =
+        Request.registration_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.registration_msisdn_token(
+                 base_url,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt,
+                 opts
+               )
+    end
+
     test "username_availability/2" do
       base_url = "http://test-server.url"
       username = "username"

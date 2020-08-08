@@ -174,6 +174,28 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Checks the given phone number is not already associated with an account on the homeserver.
+
+  ## Examples
+
+        MatrixSDK.API.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+  """
+  @spec registration_msisdn_token(Request.base_url(), binary, binary, pos_integer, map) ::
+          HTTPClient.result()
+  def registration_msisdn_token(
+        base_url,
+        client_secret,
+        country,
+        phone,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    base_url
+    |> Request.registration_msisdn_token(client_secret, country, phone, send_attempt, opts)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Checks if a username is available and valid for the server.
 
   ## Examples
