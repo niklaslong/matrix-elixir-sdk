@@ -796,8 +796,6 @@ defmodule MatrixSDK.Request do
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id",
       }
-
-
   """
   @spec redact_room_event(base_url, binary, binary, binary, binary, map) :: t
   def redact_room_event(base_url, token, room_id, event_id, transaction_id, opt \\ %{}) do
