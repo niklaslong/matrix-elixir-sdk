@@ -603,7 +603,6 @@ defmodule MatrixSDK.API do
 
       MatrixSDK.API.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
   """
-
   @spec set_display_name(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
   def set_display_name(base_url, token, user_id, display_name) do
     base_url
