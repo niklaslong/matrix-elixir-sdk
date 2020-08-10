@@ -9,22 +9,22 @@ defmodule MatrixSDK.RoomEvent do
 
   ## Example
 
-      MatrixSDK.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!")
+      iex> MatrixSDK.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
+      %MatrixSDK.RoomEvent{
+        content: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
+        type: "m.room.message",
+        room_id: "!someroom:matrix.org",
+        transaction_id: "transaction_id"
+      }
+
   """
-  def message(room_id, type, body),
+  def message(room_id, type, body, transaction_id),
     do: %__MODULE__{
       content: content(type, body),
       type: "m.room.message",
       room_id: room_id,
-      transaction_id: transaction_id()
+      transaction_id: transaction_id
     }
 
   defp content(:text, body), do: %{msgtype: "m.text", body: body}
-
-  # In future use incrementing number (startup timestamp + increment), however this does imply state...
-  defp transaction_id(),
-    do:
-      100
-      |> :crypto.strong_rand_bytes()
-      |> Base.url_encode64()
 end
