@@ -590,6 +590,7 @@ defmodule MatrixSDK.API do
 
       MatrixSDK.API.user_directory_search("https://matrix.org", "token", %{limit: 10, language: "en-US"})
   """
+  @spec user_directory_search(Request.base_url(), binary, binary, map) :: HTTPClient.result()
   def user_directory_search(base_url, token, search_term, opts \\ %{}) do
     base_url
     |> Request.user_directory_search(token, search_term, opts)
