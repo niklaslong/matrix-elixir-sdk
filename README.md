@@ -35,7 +35,7 @@ be found at [https://hexdocs.pm/matrix_sdk](https://hexdocs.pm/matrix_sdk).
 
 ## Basic Usage
 
-Here is an example to login with username and password.ikyut
+Here is an example to login with username and password:
 
 ```elxiir
 iex(1)> url = "https://matrix.org"
@@ -72,4 +72,3 @@ iex(4)> {:ok, %{body: %{"consent_uri" => consent_uri}}} = MatrixSDK.API.join_roo
 iex(5)> MatrixSDK.API.join_room(url, token, room_address)
 ...
 ```
-
