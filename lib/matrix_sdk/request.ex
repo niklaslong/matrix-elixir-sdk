@@ -260,7 +260,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.register_user("https://matrix.org", "password")
+      iex> auth = Auth.login_dummy()
+      iex> MatrixSDK.Request.register_user("https://matrix.org", "password", auth)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{auth: %{type: "m.login.dummy"}, password: "password"},
@@ -271,13 +272,14 @@ defmodule MatrixSDK.Request do
 
   With optional parameters:    
 
+      iex> auth = Auth.login_dummy()
       iex> opts = %{
       ...>          username: "maurice_moss",
       ...>          device_id: "id",
       ...>          initial_device_display_name: "THE INTERNET",
       ...>          inhibit_login: true
       ...>        }
-      iex> MatrixSDK.Request.register_user("https://matrix.org", "password", opts)
+      iex> MatrixSDK.Request.register_user("https://matrix.org", "password", auth, opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
@@ -293,12 +295,12 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/register"
       }
   """
-  @spec register_user(base_url, binary, map) :: t
-  def register_user(base_url, password, opts \\ %{}) do
+  @spec register_user(base_url, binary, Auth.t(), map) :: t
+  def register_user(base_url, password, auth, opts \\ %{}) do
     body =
       %{}
       |> Map.put(:password, password)
-      |> Map.put(:auth, Auth.login_dummy())
+      |> Map.put(:auth, auth)
       |> Map.merge(opts)
 
     %__MODULE__{

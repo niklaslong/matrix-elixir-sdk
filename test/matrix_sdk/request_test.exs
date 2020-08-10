@@ -159,11 +159,12 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.initial_device_display_name == opts.initial_device_display_name
     end
 
-    test "register_user/2" do
+    test "register_user/3" do
       base_url = "http://test-server.url"
       password = "password"
+      auth = MatrixSDK.Auth.login_dummy()
 
-      request = Request.register_user(base_url, password)
+      request = Request.register_user(base_url, password, auth)
 
       assert request.method == :post
       assert request.base_url == base_url
@@ -172,9 +173,10 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.password == password
     end
 
-    test "register_user/3 with options" do
+    test "register_user/4 with options" do
       base_url = "http://test-server.url"
       password = "password"
+      auth = MatrixSDK.Auth.login_dummy()
 
       opts = %{
         username: "username",
@@ -183,7 +185,7 @@ defmodule MatrixSDK.RequestTest do
         inhibit_login: true
       }
 
-      request = Request.register_user(base_url, password, opts)
+      request = Request.register_user(base_url, password, auth, opts)
 
       assert request.method == :post
       assert request.base_url == base_url

@@ -118,18 +118,20 @@ defmodule MatrixSDK.APITest do
       assert {:ok, _} = API.register_guest(base_url, opts)
     end
 
-    test "register_user/2 registers a new user" do
+    test "register_user/3 registers a new user" do
       base_url = "http://test.url"
       password = "password"
-      expected_request = Request.register_user(base_url, password)
+      auth = MatrixSDK.Auth.login_dummy()
+      expected_request = Request.register_user(base_url, password, auth)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.register_user(base_url, password)
+      assert {:ok, _} = API.register_user(base_url, password, auth)
     end
 
-    test "register_user/3 registers a new user with options" do
+    test "register_user/4 registers a new user with options" do
       base_url = "http://test.url"
       password = "password"
+      auth = MatrixSDK.Auth.login_dummy()
 
       opts = %{
         username: "username",
@@ -138,10 +140,10 @@ defmodule MatrixSDK.APITest do
         inhibit_login: true
       }
 
-      expected_request = Request.register_user(base_url, password, opts)
+      expected_request = Request.register_user(base_url, password, auth, opts)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.register_user(base_url, password, opts)
+      assert {:ok, _} = API.register_user(base_url, password, auth, opts)
     end
 
     test "username_availability/2" do
