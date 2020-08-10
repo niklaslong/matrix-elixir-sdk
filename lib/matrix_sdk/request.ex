@@ -1177,6 +1177,68 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to search for users.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.user_directory_search("https://matrix.org", "token", "mickey")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{search_term: "mickey"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/user_directory/search",
+      }
+
+  With limit option:
+
+      iex> MatrixSDK.Request.user_directory_search("https://matrix.org", "token", "mickey", %{limit: 42})
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{search_term: "mickey", limit: 42},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/user_directory/search",
+      }
+
+  With language option:
+
+      iex> MatrixSDK.Request.user_directory_search("https://matrix.org", "token", "mickey", %{language: "en-US"})
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{search_term: "mickey"},
+        headers: [{"Authorization", "Bearer token"}, {"Accept-Language", "en-US"}],
+        method: :post,
+        path: "/_matrix/client/r0/user_directory/search",
+      }
+  """
+  @spec user_directory_search(base_url, binary, binary, map) :: t
+  def user_directory_search(base_url, token, search_term, opts \\ %{}) do
+    {headers, body} =
+      case opts do
+        %{language: language, limit: limit} ->
+          {[{"Accept-Language", language}], %{limit: limit}}
+
+        %{language: language} ->
+          {[{"Accept-Language", language}], %{}}
+
+        %{limit: limit} ->
+          {[], %{limit: limit}}
+
+        _ ->
+          {[], %{}}
+      end
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/user_directory/search",
+      headers: [{"Authorization", "Bearer " <> token}] ++ headers,
+      body: Map.put(body, :search_term, search_term)
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to set the display name for a user.
 
   ## Examples

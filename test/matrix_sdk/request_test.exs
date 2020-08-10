@@ -828,6 +828,91 @@ defmodule MatrixSDK.RequestTest do
     end
   end
 
+  describe "user directory search:" do
+    test "user_directory_search/3" do
+      base_url = "http://test-server.url"
+      token = "token"
+      search_term = "mickey"
+      request = Request.user_directory_search(base_url, token, search_term)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/user_directory/search"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{search_term: search_term}
+    end
+
+    test "user_directory_search/4 only language option" do
+      base_url = "http://test-server.url"
+      token = "token"
+      search_term = "mickey"
+      language = "en-US"
+      options = %{language: language}
+      request = Request.user_directory_search(base_url, token, search_term, options)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/user_directory/search"
+
+      assert request.headers == [
+               {"Authorization", "Bearer " <> token},
+               {"Accept-Language", language}
+             ]
+
+      assert request.body == %{search_term: search_term}
+    end
+
+    test "user_directory_search/4 only limit option" do
+      base_url = "http://test-server.url"
+      token = "token"
+      search_term = "mickey"
+      limit = 42
+      options = %{limit: limit}
+      request = Request.user_directory_search(base_url, token, search_term, options)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/user_directory/search"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{search_term: search_term, limit: limit}
+    end
+
+    test "user_directory_search/4 both language and limit options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      search_term = "mickey"
+      limit = 42
+      language = "en-US"
+      options = %{limit: limit, language: language}
+      request = Request.user_directory_search(base_url, token, search_term, options)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/user_directory/search"
+
+      assert request.headers == [
+               {"Authorization", "Bearer " <> token},
+               {"Accept-Language", language}
+             ]
+
+      assert request.body == %{search_term: search_term, limit: limit}
+    end
+
+    test "user_directory_search/4 garbage options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      search_term = "mickey"
+      options = %{foo: "bar", bar: "foo"}
+      request = Request.user_directory_search(base_url, token, search_term, options)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/user_directory/search"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body == %{search_term: search_term}
+    end
+  end
+
   describe "user profile:" do
     test "set_display_name/4" do
       base_url = "http://test-server.url"
