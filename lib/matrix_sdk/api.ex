@@ -372,9 +372,30 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Redacts a room event with a reason.
+
+  ## Examples
+
+      MatrixSDK.API.redact_room_event("https://matrix.org", "token", "!someroom@matrix.org", "event_id", "transaction_id")
+
+  With reason option:
+
+      opt = %{reason: "Indecent material"}
+
+      MatrixSDK.API.redact_room_event("https://matrix.org", "token", "!someroom@matrix.org", "event_id", "transaction_id", opt)
+  """
+  @spec redact_room_event(Request.base_url(), binary, binary, binary, binary, map) ::
+          HTTPClient.result()
+  def redact_room_event(base_url, token, room_id, event_id, transaction_id, opt \\ %{}) do
+    base_url
+    |> Request.redact_room_event(token, room_id, event_id, transaction_id, opt)
+    |> @http_client.do_request()
+  end
+
+  @doc """
   Creates a new room. 
 
-  ## Examples
+  ## Examples
 
       MatrixSDK.API.create_room("https://matrix.org", "token")
 
