@@ -6,8 +6,6 @@ defmodule MatrixSDK.API do
 
   alias MatrixSDK.{Request, HTTPClient, Auth, RoomEvent, StateEvent}
 
-  @http_client Application.get_env(:matrix_sdk, :http_client)
-
   @doc """
   Gets the versions of the Matrix specification supported by the server.  
 
@@ -19,7 +17,7 @@ defmodule MatrixSDK.API do
   def spec_versions(base_url) do
     base_url
     |> Request.spec_versions()
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -33,7 +31,7 @@ defmodule MatrixSDK.API do
   def server_discovery(base_url) do
     base_url
     |> Request.server_discovery()
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -47,7 +45,7 @@ defmodule MatrixSDK.API do
   def server_capabilities(base_url, token) do
     base_url
     |> Request.server_capabilities(token)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -61,7 +59,7 @@ defmodule MatrixSDK.API do
   def login(base_url) do
     base_url
     |> Request.login()
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -85,7 +83,7 @@ defmodule MatrixSDK.API do
   def login(base_url, auth, opts \\ %{}) do
     base_url
     |> Request.login(auth, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -99,7 +97,7 @@ defmodule MatrixSDK.API do
   def logout(base_url, token) do
     base_url
     |> Request.logout(token)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -113,7 +111,7 @@ defmodule MatrixSDK.API do
   def logout_all(base_url, token) do
     base_url
     |> Request.logout_all(token)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -132,7 +130,7 @@ defmodule MatrixSDK.API do
   def register_guest(base_url, opts \\ %{}) do
     base_url
     |> Request.register_guest(opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -157,7 +155,7 @@ defmodule MatrixSDK.API do
   def register_user(base_url, password, auth, opts \\ %{}) do
     base_url
     |> Request.register_user(password, auth, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -171,7 +169,7 @@ defmodule MatrixSDK.API do
   def username_availability(base_url, username) do
     base_url
     |> Request.username_availability(username)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -187,7 +185,7 @@ defmodule MatrixSDK.API do
   def change_password(base_url, new_password, auth, opts \\ %{}) do
     base_url
     |> Request.change_password(new_password, auth, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -201,7 +199,7 @@ defmodule MatrixSDK.API do
   def account_3pids(base_url, token) do
     base_url
     |> Request.account_3pids(token)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -215,7 +213,7 @@ defmodule MatrixSDK.API do
   def whoami(base_url, token) do
     base_url
     |> Request.whoami(token)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -241,7 +239,7 @@ defmodule MatrixSDK.API do
   def sync(base_url, token, opts \\ %{}) do
     base_url
     |> Request.sync(token, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -255,7 +253,7 @@ defmodule MatrixSDK.API do
   def room_event(base_url, token, room_id, event_id) do
     base_url
     |> Request.room_event(token, room_id, event_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -270,7 +268,7 @@ defmodule MatrixSDK.API do
   def room_state_event(base_url, token, room_id, event_type, state_key) do
     base_url
     |> Request.room_state_event(token, room_id, event_type, state_key)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -284,7 +282,7 @@ defmodule MatrixSDK.API do
   def room_state(base_url, token, room_id) do
     base_url
     |> Request.room_state(token, room_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -308,7 +306,7 @@ defmodule MatrixSDK.API do
   def room_members(base_url, token, room_id, opts \\ %{}) do
     base_url
     |> Request.room_members(token, room_id, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -322,7 +320,7 @@ defmodule MatrixSDK.API do
   def room_joined_members(base_url, token, room_id) do
     base_url
     |> Request.room_joined_members(token, room_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -348,7 +346,7 @@ defmodule MatrixSDK.API do
   def room_messages(base_url, token, room_id, from, dir, opts \\ %{}) do
     base_url
     |> Request.room_messages(token, room_id, from, dir, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -358,7 +356,7 @@ defmodule MatrixSDK.API do
   def send_state_event(base_url, token, state_event) do
     base_url
     |> Request.send_state_event(token, state_event)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -368,7 +366,7 @@ defmodule MatrixSDK.API do
   def send_room_event(base_url, token, room_event) do
     base_url
     |> Request.send_room_event(token, room_event)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -389,7 +387,7 @@ defmodule MatrixSDK.API do
   def redact_room_event(base_url, token, room_id, event_id, transaction_id, opt \\ %{}) do
     base_url
     |> Request.redact_room_event(token, room_id, event_id, transaction_id, opt)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -413,7 +411,7 @@ defmodule MatrixSDK.API do
   def create_room(base_url, token, opts \\ %{}) do
     base_url
     |> Request.create_room(token, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -427,7 +425,7 @@ defmodule MatrixSDK.API do
   def joined_rooms(base_url, token) do
     base_url
     |> Request.joined_rooms(token)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -441,7 +439,7 @@ defmodule MatrixSDK.API do
   def room_invite(base_url, token, room_id, user_id) do
     base_url
     |> Request.room_invite(token, room_id, user_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -455,7 +453,7 @@ defmodule MatrixSDK.API do
   def join_room(base_url, token, room_id_or_alias, opts \\ %{}) do
     base_url
     |> Request.join_room(token, room_id_or_alias, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -469,7 +467,7 @@ defmodule MatrixSDK.API do
   def leave_room(base_url, token, room_id) do
     base_url
     |> Request.leave_room(token, room_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -483,7 +481,7 @@ defmodule MatrixSDK.API do
   def forget_room(base_url, token, room_id) do
     base_url
     |> Request.forget_room(token, room_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -501,7 +499,7 @@ defmodule MatrixSDK.API do
   def room_kick(base_url, token, room_id, user_id, opt \\ %{}) do
     base_url
     |> Request.room_kick(token, room_id, user_id, opt)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -519,7 +517,7 @@ defmodule MatrixSDK.API do
   def room_ban(base_url, token, room_id, user_id, opt \\ %{}) do
     base_url
     |> Request.room_ban(token, room_id, user_id, opt)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -533,7 +531,7 @@ defmodule MatrixSDK.API do
   def room_unban(base_url, token, room_id, user_id) do
     base_url
     |> Request.room_unban(token, room_id, user_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -547,7 +545,7 @@ defmodule MatrixSDK.API do
   def room_visibility(base_url, room_id) do
     base_url
     |> Request.room_visibility(room_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -561,7 +559,7 @@ defmodule MatrixSDK.API do
   def room_visibility(base_url, token, room_id, visibility) do
     base_url
     |> Request.room_visibility(token, room_id, visibility)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -579,7 +577,7 @@ defmodule MatrixSDK.API do
   def public_rooms(base_url, opts \\ %{}) do
     base_url
     |> Request.public_rooms(opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -597,7 +595,7 @@ defmodule MatrixSDK.API do
   def public_rooms(base_url, token, filter, server \\ nil) do
     base_url
     |> Request.public_rooms(token, filter, server)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -615,7 +613,7 @@ defmodule MatrixSDK.API do
   def user_directory_search(base_url, token, search_term, opts \\ %{}) do
     base_url
     |> Request.user_directory_search(token, search_term, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -629,7 +627,7 @@ defmodule MatrixSDK.API do
   def set_display_name(base_url, token, user_id, display_name) do
     base_url
     |> Request.set_display_name(token, user_id, display_name)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -643,7 +641,7 @@ defmodule MatrixSDK.API do
   def display_name(base_url, user_id) do
     base_url
     |> Request.display_name(user_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -657,7 +655,7 @@ defmodule MatrixSDK.API do
   def set_avatar_url(base_url, token, user_id, avatar_url) do
     base_url
     |> Request.set_avatar_url(token, user_id, avatar_url)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -671,7 +669,7 @@ defmodule MatrixSDK.API do
   def avatar_url(base_url, user_id) do
     base_url
     |> Request.avatar_url(user_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -685,6 +683,8 @@ defmodule MatrixSDK.API do
   def user_profile(base_url, user_id) do
     base_url
     |> Request.user_profile(user_id)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
+
+  defp http_client(), do: Application.fetch_env!(:matrix_sdk, :http_client)
 end
