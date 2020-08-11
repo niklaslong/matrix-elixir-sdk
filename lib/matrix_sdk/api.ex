@@ -153,10 +153,10 @@ defmodule MatrixSDK.API do
 
       MatrixSDK.API.register_user("https://matrix.org", "password", opts)
   """
-  @spec register_user(Request.base_url(), binary, map) :: HTTPClient.result()
-  def register_user(base_url, password, opts \\ %{}) do
+  @spec register_user(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
+  def register_user(base_url, password, auth, opts \\ %{}) do
     base_url
-    |> Request.register_user(password, opts)
+    |> Request.register_user(password, auth, opts)
     |> @http_client.do_request()
   end
 
