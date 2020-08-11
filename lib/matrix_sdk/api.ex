@@ -6,7 +6,7 @@ defmodule MatrixSDK.API do
 
   alias MatrixSDK.{Request, HTTPClient, Auth, RoomEvent, StateEvent}
 
-  @http_client Application.get_env(:matrix_sdk, :http_client, HTTPClient)
+  @http_client Application.compile_env(:matrix_sdk, :http_client, HTTPClient)
 
   @doc """
   Gets the versions of the Matrix specification supported by the server.  
