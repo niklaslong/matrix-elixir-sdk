@@ -288,13 +288,28 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
+  MatrixSDK.API.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
   """
   @spec account_add_3pid(Request.base_url(), binary, binary, binary, map) ::
           HTTPClient.result()
   def account_add_3pid(base_url, token, client_secret, sid, opts \\ %{}) do
     base_url
     |> Request.account_add_3pid(token, client_secret, sid, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Binds contact information to the user's account through the specified identity server.
+
+  ## Examples
+
+  MatrixSDK.API.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
+  """
+  @spec account_bind_3pid(Request.base_url(), binary, binary, binary, binary, binary) ::
+          HTTPClient.result()
+  def account_bind_3pid(base_url, token, client_secret, id_server, id_access_token, sid) do
+    base_url
+    |> Request.account_bind_3pid(token, client_secret, id_server, id_access_token, sid)
     |> http_client().do_request()
   end
 

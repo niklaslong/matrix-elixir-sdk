@@ -533,6 +533,27 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.sid == sid
       assert request.body.auth == auth
     end
+
+    test "account_bind_3pid/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+      id_server = "example.org"
+      id_access_token = "abc123"
+
+      request =
+        Request.account_bind_3pid(base_url, token, client_secret, id_server, id_access_token, sid)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/bind"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.sid == sid
+      assert request.body.id_server == id_server
+      assert request.body.id_access_token == id_access_token
+    end
   end
 
   describe "current account information:" do

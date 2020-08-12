@@ -632,6 +632,43 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to bind contact information to the user's account through the specified identity server.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          sid: "sid",
+          id_server: "example.org",
+          id_access_token: "abc123"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/bind"
+      }
+  """
+  @spec account_bind_3pid(base_url, binary, binary, binary, binary, binary) :: t
+  def account_bind_3pid(base_url, token, client_secret, id_server, id_access_token, sid) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:sid, sid)
+      |> Map.put(:id_server, id_server)
+      |> Map.put(:id_access_token, id_access_token)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/bind",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
 
   ## Examples
