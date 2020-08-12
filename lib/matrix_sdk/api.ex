@@ -320,6 +320,8 @@ defmodule MatrixSDK.API do
 
   MatrixSDK.API.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
   """
+  @spec account_delete_3pid(Request.base_url(), binary, binary, binary, map) ::
+          HTTPClient.result()
   def account_delete_3pid(base_url, token, medium, address, opt \\ %{}) do
     base_url
     |> Request.account_delete_3pid(token, medium, address, opt)
@@ -333,9 +335,39 @@ defmodule MatrixSDK.API do
 
   MatrixSDK.API.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org")
   """
+  @spec account_unbind_3pid(Request.base_url(), binary, binary, binary, map) ::
+          HTTPClient.result()
   def account_unbind_3pid(base_url, token, medium, address, opt \\ %{}) do
     base_url
     |> Request.account_unbind_3pid(token, medium, address, opt)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Requests a validation token when adding an email to a user's account.
+
+  ## Examples
+
+  MatrixSDK.API.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org")
+  """
+  @spec account_email_3pid_request_token(
+          Request.base_url(),
+          binary,
+          binary,
+          binary,
+          pos_integer,
+          map
+        ) :: HTTPClient.result()
+  def account_email_3pid_request_token(
+        base_url,
+        token,
+        client_secret,
+        email,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    base_url
+    |> Request.account_email_3pid_request_token(token, client_secret, email, send_attempt, opts)
     |> http_client().do_request()
   end
 

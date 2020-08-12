@@ -764,7 +764,68 @@ defmodule MatrixSDK.Request do
       body: body,
       headers: [{"Authorization", "Bearer " <> token}]
     }
-  end  
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to request a validation token when adding an email to a user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          email: "example@example.org",
+          send_attempt: 1
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/email/requestToken"
+      }
+
+  With optional id_server parameter:
+      iex> options = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+      iex> MatrixSDK.Request.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, options)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          email: "example@example.org",
+          next_link: "test-site.url",
+          id_server: "id.example.org",
+          id_access_token: "abc123",
+          send_attempt: 1
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/email/requestToken"
+      }
+  """
+  @spec account_email_3pid_request_token(base_url, binary, binary, binary, pos_integer, map) :: t
+  def account_email_3pid_request_token(
+        base_url,
+        token,
+        client_secret,
+        email,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:email, email)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/email/requestToken",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
 
   @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
