@@ -453,6 +453,32 @@ defmodule MatrixSDK.APITest do
                  sid
                )
     end
+
+    test "account_delete_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+
+      expected_request = Request.account_delete_3pid(base_url, token, medium, address)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_delete_3pid(base_url, token, medium, address)
+    end
+
+    test "account_delete_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+      id_server = "example.org"
+      opt = %{id_server: id_server}
+
+      expected_request = Request.account_delete_3pid(base_url, token, medium, address, opt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_delete_3pid(base_url, token, medium, address, opt)
+    end
   end
 
   describe "current account information:" do

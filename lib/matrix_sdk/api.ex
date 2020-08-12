@@ -314,6 +314,19 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Deletes contact information from the user's account.
+
+  ## Examples
+
+  MatrixSDK.API.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
+  """
+  def account_delete_3pid(base_url, token, medium, address, opt \\ %{}) do
+    base_url
+    |> Request.account_delete_3pid(token, medium, address, opt)
+    |> http_client().do_request()
+  end
+
+  @doc """
   Gets information about the owner of a given access token.
 
   ## Examples

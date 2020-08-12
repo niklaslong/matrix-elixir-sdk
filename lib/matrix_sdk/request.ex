@@ -669,6 +669,55 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to delete contact information from the user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          medium: "email",
+          address: "example@example.org"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/delete"
+      }
+
+  With optional id_server parameter:
+
+      iex> MatrixSDK.Request.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "example.org"})
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          medium: "email",
+          address: "example@example.org",
+          id_server: "example.org"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/delete"
+      }  
+  """
+  @spec account_delete_3pid(base_url, binary, binary, binary, map) :: t
+  def account_delete_3pid(base_url, token, medium, address, opt \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:medium, medium)
+      |> Map.put(:address, address)
+      |> Map.merge(opt)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/delete",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
 
   ## Examples
