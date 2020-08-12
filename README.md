@@ -46,11 +46,11 @@ iex(2)> auth = MatrixSDK.Auth.login_user("mickey", "supersecret")
   password: "supersecret",
   type: "m.login.password"
 }
-iex(3)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.API.login(url, auth)
+iex(3)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.Client.login(url, auth)
 ...
-iex(4)> MatrixSDK.API.joined_rooms(url, token)
+iex(4)> MatrixSDK.Client.joined_rooms(url, token)
 ...
-iex(5)> MatrixSDK.API.logout(url, token)
+iex(5)> MatrixSDK.Client.logout(url, token)
 ...
 ```
 
@@ -63,12 +63,12 @@ We will keep the room address open until it is deemed unnecessary or being abuse
 ```elixir
 iex(1)> url = "https://matrix.org"
 "https://matrix.org"
-iex(2)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.API.register_guest(url)
+iex(2)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.Client.register_guest(url)
 ...
 iex(3)> room_address = "#elixirsdktest:matrix.org"
 "#elixirsdktest:matrix.org"
-iex(4)> {:ok, %{body: %{"consent_uri" => consent_uri}}} = MatrixSDK.API.join_room(url, token, room_address)
+iex(4)> {:ok, %{body: %{"consent_uri" => consent_uri}}} = MatrixSDK.Client.join_room(url, token, room_address)
 *Open this link with your browser*
-iex(5)> MatrixSDK.API.join_room(url, token, room_address)
+iex(5)> MatrixSDK.Client.join_room(url, token, room_address)
 ...
 ```

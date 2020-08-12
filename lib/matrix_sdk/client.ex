@@ -1,4 +1,4 @@
-defmodule MatrixSDK.API do
+defmodule MatrixSDK.Client do
   @moduledoc """
   Provides functions to make HTTP requests to a Matrix homeserver using the
   `MatrixSDK.Request` and `MatrixSDK.HTTPClient` modules.
@@ -11,7 +11,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.spec_versions("https://matrix.org")
+      MatrixSDK.Client.spec_versions("https://matrix.org")
   """
   @spec spec_versions(Request.base_url()) :: HTTPClient.result()
   def spec_versions(base_url) do
@@ -25,7 +25,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.server_discovery("https://matrix.org")
+      MatrixSDK.Client.server_discovery("https://matrix.org")
   """
   @spec server_discovery(Request.base_url()) :: HTTPClient.result()
   def server_discovery(base_url) do
@@ -39,7 +39,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.server_capabilities("https://matrix.org", "token")
+      MatrixSDK.Client.server_capabilities("https://matrix.org", "token")
   """
   @spec server_capabilities(Request.base_url(), binary) :: HTTPClient.result()
   def server_capabilities(base_url, token) do
@@ -53,7 +53,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.login("https://matrix.org")
+      MatrixSDK.Client.login("https://matrix.org")
   """
   @spec login(Request.base_url()) :: HTTPClient.result()
   def login(base_url) do
@@ -70,14 +70,14 @@ defmodule MatrixSDK.API do
   Token authentication:
 
       auth = MatrixSDK.Auth.login_token("token")
-      MatrixSDK.API.login("https://matrix.org", auth)
+      MatrixSDK.Client.login("https://matrix.org", auth)
 
   User and password authentication with optional parameters:
 
       auth = MatrixSDK.Auth.login_user("maurice_moss", "password")
       opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
 
-      MatrixSDK.API.login("https://matrix.org", auth, opts)
+      MatrixSDK.Client.login("https://matrix.org", auth, opts)
   """
   @spec login(Request.base_url(), Auth.t(), opts :: map) :: HTTPClient.result()
   def login(base_url, auth, opts \\ %{}) do
@@ -91,7 +91,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.logout("https://matrix.org", "token")
+      MatrixSDK.Client.logout("https://matrix.org", "token")
   """
   @spec logout(Request.base_url(), binary) :: HTTPClient.result()
   def logout(base_url, token) do
@@ -105,7 +105,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.logout_all("https://matrix.org", "token")
+      MatrixSDK.Client.logout_all("https://matrix.org", "token")
   """
   @spec logout_all(Request.base_url(), binary) :: HTTPClient.result()
   def logout_all(base_url, token) do
@@ -119,12 +119,12 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.register_guest("https://matrix.org")
+      MatrixSDK.Client.register_guest("https://matrix.org")
 
   Specifiying a display name for the device:    
 
       opts = %{initial_device_display_name: "THE INTERNET"}
-      MatrixSDK.API.register_guest("https://matrix.org", opts)
+      MatrixSDK.Client.register_guest("https://matrix.org", opts)
   """
   @spec register_guest(Request.base_url(), map) :: HTTPClient.result()
   def register_guest(base_url, opts \\ %{}) do
@@ -138,7 +138,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.register_user("https://matrix.org", "password")
+      MatrixSDK.Client.register_user("https://matrix.org", "password")
 
   With optional parameters:    
 
@@ -149,7 +149,7 @@ defmodule MatrixSDK.API do
                 inhibit_login: true
               }
 
-      MatrixSDK.API.register_user("https://matrix.org", "password", opts)
+      MatrixSDK.Client.register_user("https://matrix.org", "password", opts)
   """
   @spec register_user(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
   def register_user(base_url, password, auth, opts \\ %{}) do
@@ -163,7 +163,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-        MatrixSDK.API.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
+        MatrixSDK.Client.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
   """
   @spec registration_email_token(Request.base_url(), binary, binary, pos_integer, map) ::
           HTTPClient.result()
@@ -178,7 +178,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-        MatrixSDK.API.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+        MatrixSDK.Client.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
   """
   @spec registration_msisdn_token(Request.base_url(), binary, binary, binary, pos_integer, map) ::
           HTTPClient.result()
@@ -200,7 +200,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-       MatrixSDK.API.username_availability("https://matrix.org", "maurice_moss")
+       MatrixSDK.Client.username_availability("https://matrix.org", "maurice_moss")
   """
   @spec username_availability(Request.base_url(), binary) :: HTTPClient.result()
   def username_availability(base_url, username) do
@@ -215,7 +215,7 @@ defmodule MatrixSDK.API do
   ## Examples 
 
       auth = MatrixSDK.Auth.login_token("token")
-      MatrixSDK.API.change_password("https://matrix.org", "new_password", auth)
+      MatrixSDK.Client.change_password("https://matrix.org", "new_password", auth)
   """
   @spec change_password(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
   # REVIEW: This requires m.login.email.identity 
@@ -230,7 +230,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.password_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
+      MatrixSDK.Client.password_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
   """
   @spec password_email_token(Request.base_url(), binary, binary, pos_integer, map) ::
           HTTPClient.result()
@@ -245,7 +245,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.password_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+      MatrixSDK.Client.password_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
   """
   @spec password_msisdn_token(Request.base_url(), binary, binary, binary, pos_integer, map) ::
           HTTPClient.result()
@@ -260,7 +260,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.API.deactivate_account("https://matrix.org", "token")
+      MatrixSDK.Client.deactivate_account("https://matrix.org", "token")
   """
   @spec deactivate_account(Request.base_url(), binary, map) :: HTTPClient.result()
   def deactivate_account(base_url, token, opts \\ %{}) do
@@ -274,7 +274,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.account_3pids("https://matrix.org", "token")
+      MatrixSDK.Client.account_3pids("https://matrix.org", "token")
   """
   @spec account_3pids(Request.base_url(), binary) :: HTTPClient.result()
   def account_3pids(base_url, token) do
@@ -288,7 +288,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
+      MatrixSDK.Client.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
   """
   @spec account_add_3pid(Request.base_url(), binary, binary, binary, map) ::
           HTTPClient.result()
@@ -433,7 +433,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.whoami("https://matrix.org", "token")
+      MatrixSDK.Client.whoami("https://matrix.org", "token")
   """
   @spec whoami(Request.base_url(), binary) :: HTTPClient.result()
   def whoami(base_url, token) do
@@ -447,7 +447,7 @@ defmodule MatrixSDK.API do
 
   ## Examples 
       
-      MatrixSDK.API.sync("https://matrix.org", "token")
+      MatrixSDK.Client.sync("https://matrix.org", "token")
 
   With optional parameters:
 
@@ -459,7 +459,7 @@ defmodule MatrixSDK.API do
                 timeout: 1000
               }
 
-      MatrixSDK.API.sync("https://matrix.org", "token", opts)
+      MatrixSDK.Client.sync("https://matrix.org", "token", opts)
   """
   @spec sync(Request.base_url(), binary, map) :: HTTPClient.result()
   def sync(base_url, token, opts \\ %{}) do
@@ -473,7 +473,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.API.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
+      MatrixSDK.Client.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
   """
   @spec room_event(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
   def room_event(base_url, token, room_id, event_id) do
@@ -487,7 +487,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.API.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
+      MatrixSDK.Client.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
   """
   @spec room_state_event(Request.base_url(), binary, binary, binary, binary) ::
           HTTPClient.result()
@@ -502,7 +502,7 @@ defmodule MatrixSDK.API do
 
   ## Example 
 
-      MatrixSDK.API.room_state("https://matrix.org", "token", "!someroom:matrix.org")
+      MatrixSDK.Client.room_state("https://matrix.org", "token", "!someroom:matrix.org")
   """
   @spec room_state(Request.base_url(), binary, binary) :: HTTPClient.result()
   def room_state(base_url, token, room_id) do
@@ -516,7 +516,7 @@ defmodule MatrixSDK.API do
 
   ## Example 
 
-      MatrixSDK.API.room_members("https://matrix.org", "token", "!someroom:matrix.org")
+      MatrixSDK.Client.room_members("https://matrix.org", "token", "!someroom:matrix.org")
 
   With optional parameters:
 
@@ -526,7 +526,7 @@ defmodule MatrixSDK.API do
                 not_membership: "invite"
               }
 
-      MatrixSDK.API.room_members("https://matrix.org", "token", "!someroom:matrix.org", opts)
+      MatrixSDK.Client.room_members("https://matrix.org", "token", "!someroom:matrix.org", opts)
   """
   @spec room_members(Request.base_url(), binary, binary, map) :: HTTPClient.result()
   def room_members(base_url, token, room_id, opts \\ %{}) do
@@ -540,7 +540,7 @@ defmodule MatrixSDK.API do
 
   ## Example 
 
-      MatrixSDK.API.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
+      MatrixSDK.Client.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
   """
   @spec room_joined_members(Request.base_url(), binary, binary) :: HTTPClient.result()
   def room_joined_members(base_url, token, room_id) do
@@ -555,7 +555,7 @@ defmodule MatrixSDK.API do
 
   ## Example 
 
-      MatrixSDK.API.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
+      MatrixSDK.Client.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
 
   With optional parameters:
 
@@ -565,7 +565,7 @@ defmodule MatrixSDK.API do
                 filter: "filter"
               }
 
-      MatrixSDK.API.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
+      MatrixSDK.Client.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
   """
   @spec room_messages(Request.base_url(), binary, binary, binary, binary, map) ::
           HTTPClient.result()
@@ -600,13 +600,13 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.redact_room_event("https://matrix.org", "token", "!someroom@matrix.org", "event_id", "transaction_id")
+      MatrixSDK.Client.redact_room_event("https://matrix.org", "token", "!someroom@matrix.org", "event_id", "transaction_id")
 
   With reason option:
 
       opt = %{reason: "Indecent material"}
 
-      MatrixSDK.API.redact_room_event("https://matrix.org", "token", "!someroom@matrix.org", "event_id", "transaction_id", opt)
+      MatrixSDK.Client.redact_room_event("https://matrix.org", "token", "!someroom@matrix.org", "event_id", "transaction_id", opt)
   """
   @spec redact_room_event(Request.base_url(), binary, binary, binary, binary, map) ::
           HTTPClient.result()
@@ -621,7 +621,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.create_room("https://matrix.org", "token")
+      MatrixSDK.Client.create_room("https://matrix.org", "token")
 
   With options:
 
@@ -631,7 +631,7 @@ defmodule MatrixSDK.API do
         topic: "Some cool stuff about chocolate."
       }
       
-      MatrixSDK.API.create_room("https://matrix.org", "token", opts)
+      MatrixSDK.Client.create_room("https://matrix.org", "token", opts)
   """
   @spec create_room(Request.base_url(), binary, map) :: HTTPClient.result()
   def create_room(base_url, token, opts \\ %{}) do
@@ -645,7 +645,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.API.joined_rooms("https://matrix.org", "token")
+      MatrixSDK.Client.joined_rooms("https://matrix.org", "token")
   """
   @spec joined_rooms(Request.base_url(), binary) :: HTTPClient.result()
   def joined_rooms(base_url, token) do
@@ -659,7 +659,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.API.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      MatrixSDK.Client.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
   """
   @spec room_invite(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
   def room_invite(base_url, token, room_id, user_id) do
@@ -673,7 +673,7 @@ defmodule MatrixSDK.API do
 
   ## Example 
 
-      MatrixSDK.API.join_room("https://matrix.org", "token", "!someroom:matrix.org")
+      MatrixSDK.Client.join_room("https://matrix.org", "token", "!someroom:matrix.org")
   """
   @spec join_room(Request.base_url(), binary, binary, map) :: HTTPClient.result()
   def join_room(base_url, token, room_id_or_alias, opts \\ %{}) do
@@ -687,7 +687,7 @@ defmodule MatrixSDK.API do
 
   ## Example 
 
-      MatrixSDK.API.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
+      MatrixSDK.Client.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
   """
   @spec leave_room(Request.base_url(), binary, binary) :: HTTPClient.result()
   def leave_room(base_url, token, room_id) do
@@ -701,7 +701,7 @@ defmodule MatrixSDK.API do
 
   ## Example 
 
-      MatrixSDK.API.forget_room("https://matrix.org", "token", "!someroom:matrix.org")
+      MatrixSDK.Client.forget_room("https://matrix.org", "token", "!someroom:matrix.org")
   """
   @spec forget_room(Request.base_url(), binary, binary) :: HTTPClient.result()
   def forget_room(base_url, token, room_id) do
@@ -715,11 +715,11 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      MatrixSDK.Client.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
 
   With option: 
 
-      MatrixSDK.API.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+      MatrixSDK.Client.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
   """
   @spec room_kick(Request.base_url(), binary, binary, binary, map) :: HTTPClient.result()
   def room_kick(base_url, token, room_id, user_id, opt \\ %{}) do
@@ -733,11 +733,11 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      MatrixSDK.Client.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
 
   With option: 
 
-      MatrixSDK.API.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+      MatrixSDK.Client.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
   """
   @spec room_ban(Request.base_url(), binary, binary, binary, map) :: HTTPClient.result()
   def room_ban(base_url, token, room_id, user_id, opt \\ %{}) do
@@ -751,7 +751,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      MatrixSDK.Client.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
   """
   @spec room_unban(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
   def room_unban(base_url, token, room_id, user_id) do
@@ -765,7 +765,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.API.room_visibility("https://matrix.org", "!someroom:matrix.org")
+      MatrixSDK.Client.room_visibility("https://matrix.org", "!someroom:matrix.org")
   """
   @spec room_visibility(Request.base_url(), binary) :: HTTPClient.result()
   def room_visibility(base_url, room_id) do
@@ -779,7 +779,7 @@ defmodule MatrixSDK.API do
 
   ## Example
 
-      MatrixSDK.API.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
+      MatrixSDK.Client.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
   """
   @spec room_visibility(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
   def room_visibility(base_url, token, room_id, visibility) do
@@ -793,11 +793,11 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.public_rooms("https://matrix.org")
+      MatrixSDK.Client.public_rooms("https://matrix.org")
 
   With optional parameters:   
 
-      MatrixSDK.API.public_rooms("https://matrix.org", %{limit: 10})
+      MatrixSDK.Client.public_rooms("https://matrix.org", %{limit: 10})
   """
   @spec public_rooms(Request.base_url(), map) :: HTTPClient.result()
   def public_rooms(base_url, opts \\ %{}) do
@@ -811,11 +811,11 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.public_rooms("https://matrix.org", "token", %{limit: 10})
+      MatrixSDK.Client.public_rooms("https://matrix.org", "token", %{limit: 10})
 
   With optional parameter:
 
-      MatrixSDK.API.public_rooms("https://matrix.org", "token", %{limit: 10}, "server")
+      MatrixSDK.Client.public_rooms("https://matrix.org", "token", %{limit: 10}, "server")
   """
   @spec public_rooms(Request.base_url(), binary, map, binary) :: HTTPClient.result()
   def public_rooms(base_url, token, filter, server \\ nil) do
@@ -829,11 +829,11 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.user_directory_search("https://matrix.org", "token", "mickey")
+      MatrixSDK.Client.user_directory_search("https://matrix.org", "token", "mickey")
 
   With options:
 
-      MatrixSDK.API.user_directory_search("https://matrix.org", "token", %{limit: 10, language: "en-US"})
+      MatrixSDK.Client.user_directory_search("https://matrix.org", "token", %{limit: 10, language: "en-US"})
   """
   @spec user_directory_search(Request.base_url(), binary, binary, map) :: HTTPClient.result()
   def user_directory_search(base_url, token, search_term, opts \\ %{}) do
@@ -847,7 +847,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
+      MatrixSDK.Client.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
   """
   @spec set_display_name(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
   def set_display_name(base_url, token, user_id, display_name) do
@@ -861,7 +861,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.display_name("https://matrix.org", "@user:matrix.org")
+      MatrixSDK.Client.display_name("https://matrix.org", "@user:matrix.org")
   """
   @spec display_name(Request.base_url(), binary) :: HTTPClient.result()
   def display_name(base_url, user_id) do
@@ -875,7 +875,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
+      MatrixSDK.Client.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
   """
   @spec set_avatar_url(Request.base_url(), binary, binary, binary) :: HTTPClient.result()
   def set_avatar_url(base_url, token, user_id, avatar_url) do
@@ -889,7 +889,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.avatar_url("https://matrix.org", "@user:matrix.org")
+      MatrixSDK.Client.avatar_url("https://matrix.org", "@user:matrix.org")
   """
   @spec avatar_url(Request.base_url(), binary) :: HTTPClient.result()
   def avatar_url(base_url, user_id) do
@@ -903,7 +903,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.user_profile("https://matrix.org", "@user:matrix.org")
+      MatrixSDK.Client.user_profile("https://matrix.org", "@user:matrix.org")
   """
   @spec user_profile(Request.base_url(), binary) :: HTTPClient.result()
   def user_profile(base_url, user_id) do
