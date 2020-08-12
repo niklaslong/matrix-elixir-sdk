@@ -146,6 +146,94 @@ defmodule MatrixSDK.APITest do
       assert {:ok, _} = API.register_user(base_url, password, auth, opts)
     end
 
+    test "registration_email_token/4" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+
+      expected_request =
+        Request.registration_email_token(base_url, client_secret, email, send_attempt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.registration_email_token(base_url, client_secret, email, send_attempt)
+    end
+
+    test "registration_email_token/5 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      expected_request =
+        Request.registration_email_token(base_url, client_secret, email, send_attempt, opts)
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.registration_email_token(base_url, client_secret, email, send_attempt, opts)
+    end
+
+    test "registration_msisdn_token/5" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      expected_request =
+        Request.registration_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.registration_msisdn_token(
+                 base_url,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt
+               )
+    end
+
+    test "registration_msisdn_token/6 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      expected_request =
+        Request.registration_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.registration_msisdn_token(
+                 base_url,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt,
+                 opts
+               )
+    end
+
     test "username_availability/2" do
       base_url = "http://test-server.url"
       username = "username"
@@ -198,6 +286,113 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.change_password(base_url, new_password, auth, opts)
     end
+
+    test "password_email_token/4" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+
+      expected_request =
+        Request.password_email_token(base_url, client_secret, email, send_attempt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.password_email_token(base_url, client_secret, email, send_attempt)
+    end
+
+    test "password_email_token/5 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      expected_request =
+        Request.password_email_token(base_url, client_secret, email, send_attempt, opts)
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.password_email_token(base_url, client_secret, email, send_attempt, opts)
+    end
+
+    test "password_msisdn_token/5" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      expected_request =
+        Request.password_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.password_msisdn_token(
+                 base_url,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt
+               )
+    end
+
+    test "password_msisdn_token/6 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      expected_request =
+        Request.password_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.password_msisdn_token(
+                 base_url,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt,
+                 opts
+               )
+    end
+
+    test "deactivate_account/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      expected_request = Request.deactivate_account(base_url, token)
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.deactivate_account(base_url, token)
+    end
+
+    test "deactivate_account/3 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      opts = %{auth: Auth.login_token(token)}
+
+      expected_request = Request.deactivate_account(base_url, token, opts)
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.deactivate_account(base_url, token, opts)
+    end
   end
 
   describe "user contact information:" do
@@ -208,6 +403,31 @@ defmodule MatrixSDK.APITest do
 
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.account_3pids(base_url, token)
+    end
+
+    test "account_add_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+
+      expected_request = Request.account_add_3pid(base_url, token, client_secret, sid)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_add_3pid(base_url, token, client_secret, sid)
+    end
+
+    test "account_add_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+      opts = %{auth: Auth.login_token(token)}
+
+      expected_request = Request.account_add_3pid(base_url, token, client_secret, sid, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_add_3pid(base_url, token, client_secret, sid, opts)
     end
   end
 

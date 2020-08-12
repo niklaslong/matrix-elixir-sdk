@@ -159,6 +159,43 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Checks the given email address is not already associated with an account on the homeserver. This should be used to get a token to register an email as part of the initial user registration.
+
+  ## Examples
+
+        MatrixSDK.API.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
+  """
+  @spec registration_email_token(Request.base_url(), binary, binary, pos_integer, map) ::
+          HTTPClient.result()
+  def registration_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+    base_url
+    |> Request.registration_email_token(client_secret, email, send_attempt, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Checks the given phone number is not already associated with an account on the homeserver. This should be used to get a token to register a phone number as part of the initial user registration.
+
+  ## Examples
+
+        MatrixSDK.API.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+  """
+  @spec registration_msisdn_token(Request.base_url(), binary, binary, binary, pos_integer, map) ::
+          HTTPClient.result()
+  def registration_msisdn_token(
+        base_url,
+        client_secret,
+        country,
+        phone,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    base_url
+    |> Request.registration_msisdn_token(client_secret, country, phone, send_attempt, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
   Checks if a username is available and valid for the server.
 
   ## Examples
@@ -189,6 +226,50 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Request validation tokens when authenticating for `change_password`. 
+
+  ## Examples
+
+      MatrixSDK.API.password_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
+  """
+  @spec password_email_token(Request.base_url(), binary, binary, pos_integer, map) ::
+          HTTPClient.result()
+  def password_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+    base_url
+    |> Request.password_email_token(client_secret, email, send_attempt, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Request validation tokens when authenticating for `change_password`. 
+
+  ## Examples
+
+      MatrixSDK.API.password_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+  """
+  @spec password_msisdn_token(Request.base_url(), binary, binary, binary, pos_integer, map) ::
+          HTTPClient.result()
+  def password_msisdn_token(base_url, client_secret, country, phone, send_attempt, opts \\ %{}) do
+    base_url
+    |> Request.password_msisdn_token(client_secret, country, phone, send_attempt, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Deactivates a user's account. 
+
+  ## Example
+
+      MatrixSDK.API.deactivate_account("https://matrix.org", "token")
+  """
+  @spec deactivate_account(Request.base_url(), binary, map) :: HTTPClient.result()
+  def deactivate_account(base_url, token, opts \\ %{}) do
+    base_url
+    |> Request.deactivate_account(token, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
   Gets a list of the third party identifiers the homeserver has associated with the user's account.
 
   ## Examples
@@ -199,6 +280,21 @@ defmodule MatrixSDK.API do
   def account_3pids(base_url, token) do
     base_url
     |> Request.account_3pids(token)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Adds contact information to the user's account.
+
+  ## Examples
+
+      MatrixSDK.API.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
+  """
+  @spec account_add_3pid(Request.base_url(), binary, binary, binary, map) ::
+          HTTPClient.result()
+  def account_add_3pid(base_url, token, client_secret, sid, opts \\ %{}) do
+    base_url
+    |> Request.account_add_3pid(token, client_secret, sid, opts)
     |> http_client().do_request()
   end
 

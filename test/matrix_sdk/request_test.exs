@@ -198,6 +198,94 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.inhibit_login == opts.inhibit_login
     end
 
+    test "registration_email_token/4" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+
+      request = Request.registration_email_token(base_url, client_secret, email, send_attempt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register/email/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.email == email
+      assert request.body.send_attempt == send_attempt
+    end
+
+    test "registration_email_token/5 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      request =
+        Request.registration_email_token(base_url, client_secret, email, send_attempt, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register/email/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.email == email
+      assert request.body.send_attempt == send_attempt
+      assert request.body.next_link == opts.next_link
+    end
+
+    test "registration_msisdn_token/5" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      request =
+        Request.registration_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register/msisdn/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.country == country
+      assert request.body.phone_number == phone_number
+      assert request.body.send_attempt == send_attempt
+    end
+
+    test "registration_msisdn_token/6 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      request =
+        Request.registration_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/register/msisdn/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.country == country
+      assert request.body.phone_number == phone_number
+      assert request.body.send_attempt == send_attempt
+      assert request.body.next_link == opts.next_link
+    end
+
     test "username_availability/2" do
       base_url = "http://test-server.url"
       username = "username"
@@ -284,6 +372,119 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.auth.password == password
       assert request.body.logout_devices == true
     end
+
+    test "password_email_token/4" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+
+      request = Request.password_email_token(base_url, client_secret, email, send_attempt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password/email/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.email == email
+      assert request.body.send_attempt == send_attempt
+    end
+
+    test "password_email_token/5 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      email = "email@test.url"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      request = Request.password_email_token(base_url, client_secret, email, send_attempt, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password/email/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.email == email
+      assert request.body.send_attempt == send_attempt
+      assert request.body.next_link == opts.next_link
+    end
+
+    test "password_msisdn_token/5" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      request =
+        Request.password_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password/msisdn/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.country == country
+      assert request.body.phone_number == phone_number
+      assert request.body.send_attempt == send_attempt
+    end
+
+    test "password_msisdn_token/6 with options" do
+      base_url = "http://test-server.url"
+      client_secret = "secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      opts = %{next_link: "nextlink.url"}
+
+      request =
+        Request.password_msisdn_token(
+          base_url,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/password/msisdn/requestToken"
+      assert request.body.client_secret == client_secret
+      assert request.body.country == country
+      assert request.body.phone_number == phone_number
+      assert request.body.send_attempt == send_attempt
+      assert request.body.next_link == opts.next_link
+    end
+
+    test "deactivate_account/2" do
+      base_url = "http://test-server.url"
+      token = "token"
+
+      request = Request.deactivate_account(base_url, token)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/deactivate"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "deactivate_account/3 with options" do
+      base_url = "http://test-server.url"
+      token = "token"
+      opts = %{auth: Auth.login_token(token)}
+
+      request = Request.deactivate_account(base_url, token, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/deactivate"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.auth == opts.auth
+    end
   end
 
   describe "user contact information:" do
@@ -297,6 +498,40 @@ defmodule MatrixSDK.RequestTest do
       assert request.base_url == base_url
       assert request.path == "/_matrix/client/r0/account/3pid"
       assert request.headers == [{"Authorization", "Bearer " <> token}]
+    end
+
+    test "account_add_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+
+      request = Request.account_add_3pid(base_url, token, client_secret, sid)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/add"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.sid == sid
+    end
+
+    test "account_add_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+      opts = %{auth: auth = Auth.login_token(token)}
+
+      request = Request.account_add_3pid(base_url, token, client_secret, sid, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/add"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.sid == sid
+      assert request.body.auth == auth
     end
   end
 

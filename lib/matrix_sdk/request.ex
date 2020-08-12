@@ -312,6 +312,116 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to check the given email address is not already associated with an account on the homeserver. This should be used to get a token to register an email as part of the initial user registration.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{client_secret: "secret", email: "maurice@moss.yay", send_attempt: 1},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register/email/requestToken"
+      }
+
+  With optional parameters:
+
+      iex> opts = %{next_link: "nextlink.url"}
+      iex> MatrixSDK.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1, opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "secret",
+          email: "maurice@moss.yay",
+          send_attempt: 1, 
+          next_link: "nextlink.url"
+        },
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register/email/requestToken"
+      }
+  """
+  @spec registration_email_token(base_url, binary, binary, pos_integer, map) :: t
+  def registration_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:email, email)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/register/email/requestToken",
+      body: body
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to check the given phone number is not already associated with an account on the homeserver. This should be used to get a token to register a phone number as part of the initial user registration.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "secret", 
+          country: "GB", 
+          phone_number: "07700900001", 
+          send_attempt: 1
+        },
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register/msisdn/requestToken"
+      }
+
+  With optional parameters:
+
+      iex> opts = %{next_link: "nextlink.url"}
+      iex> MatrixSDK.Request.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1, opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "secret",
+          country: "GB", 
+          phone_number: "07700900001",
+          send_attempt: 1, 
+          next_link: "nextlink.url"
+        },
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/register/msisdn/requestToken"
+      }
+  """
+  @spec registration_msisdn_token(base_url, binary, binary, binary, pos_integer, map) :: t
+  def registration_msisdn_token(
+        base_url,
+        client_secret,
+        country,
+        phone,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:country, country)
+      |> Map.put(:phone_number, phone)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/register/msisdn/requestToken",
+      body: body
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to check if a username is available and valid for the server.
 
   ## Examples
@@ -378,6 +488,93 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password`. 
+
+  ## Examples
+
+      iex> MatrixSDK.Request.password_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{client_secret: "secret", email: "maurice@moss.yay", send_attempt: 1},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/account/password/email/requestToken"
+      }
+  """
+  @spec password_email_token(base_url, binary, binary, pos_integer, map) :: t
+  def password_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:email, email)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/password/email/requestToken",
+      body: body
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password`. 
+
+  ## Examples
+
+      iex> MatrixSDK.Request.password_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{client_secret: "secret", country: "GB", phone_number: "07700900001", send_attempt: 1},
+        headers: [],
+        method: :post,
+        path: "/_matrix/client/r0/account/password/msisdn/requestToken"
+      }
+  """
+  @spec password_msisdn_token(base_url, binary, binary, binary, pos_integer, map) :: t
+  def password_msisdn_token(base_url, client_secret, country, phone, send_attempt, opts \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:country, country)
+      |> Map.put(:phone_number, phone)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/password/msisdn/requestToken",
+      body: body
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to deactivate a user's account. 
+
+  ## Example
+
+      iex> MatrixSDK.Request.deactivate_account("https://matrix.org", "token")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/deactivate"
+      }
+  """
+  @spec deactivate_account(base_url, binary, map) :: t
+  def deactivate_account(base_url, token, opts \\ %{}),
+    do: %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/deactivate",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: opts
+    }
+
+  @doc """
   Returns a `%Request{}` struct used to get a list of the third party identifiers the homeserver has associated with the user's account.
 
   ## Examples
@@ -399,6 +596,40 @@ defmodule MatrixSDK.Request do
       path: "/_matrix/client/r0/account/3pid",
       headers: [{"Authorization", "Bearer " <> token}]
     }
+
+  @doc """
+  Returns a `%Request{}` struct used to add contact information to the user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          sid: "sid"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/add"
+      }
+  """
+  @spec account_add_3pid(base_url, binary, binary, binary, map) :: t
+  def account_add_3pid(base_url, token, client_secret, sid, opts \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:sid, sid)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/add",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
 
   @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
