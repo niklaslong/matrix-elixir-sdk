@@ -348,7 +348,7 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-  MatrixSDK.API.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org")
+  MatrixSDK.API.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
   """
   @spec account_email_3pid_request_token(
           Request.base_url(),
@@ -368,6 +368,43 @@ defmodule MatrixSDK.API do
       ) do
     base_url
     |> Request.account_email_3pid_request_token(token, client_secret, email, send_attempt, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Requests a validation token when adding a phone number to a user's account.
+
+  ## Examples
+
+  MatrixSDK.API.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
+  """
+  @spec account_msisdn_3pid_request_token(
+          Request.base_url(),
+          binary,
+          binary,
+          binary,
+          binary,
+          pos_integer,
+          map
+        ) :: HTTPClient.result()
+  def account_msisdn_3pid_request_token(
+        base_url,
+        token,
+        client_secret,
+        country,
+        phone_number,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    base_url
+    |> Request.account_msisdn_3pid_request_token(
+      token,
+      client_secret,
+      country,
+      phone_number,
+      send_attempt,
+      opts
+    )
     |> http_client().do_request()
   end
 

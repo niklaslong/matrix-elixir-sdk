@@ -567,6 +567,74 @@ defmodule MatrixSDK.APITest do
                  opts
                )
     end
+
+    test "account_msisdn_3pid_request_token/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      expected_request =
+        Request.account_msisdn_3pid_request_token(
+          base_url,
+          token,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.account_msisdn_3pid_request_token(
+                 base_url,
+                 token,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt
+               )
+    end
+
+    test "account_msisdn_3pid_request_token/7" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      next_link = "test-site.url"
+      id_server = "id.example.org"
+      id_access_token = "abc123"
+      opts = %{next_link: next_link, id_server: id_server, id_access_token: id_access_token}
+
+      expected_request =
+        Request.account_msisdn_3pid_request_token(
+          base_url,
+          token,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.account_msisdn_3pid_request_token(
+                 base_url,
+                 token,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt,
+                 opts
+               )
+    end
   end
 
   describe "current account information:" do

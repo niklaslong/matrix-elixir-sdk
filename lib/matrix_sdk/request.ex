@@ -828,6 +828,79 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to request a validation token when adding a phone number to a user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_msisdn_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          country: "GB",
+          phone_number: "07700900001",
+          send_attempt: 1
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/msisdn/requestToken"
+      }
+
+  With optional id_server parameter:
+      iex> options = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+      iex> MatrixSDK.Request.account_msisdn_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, options)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          country: "GB",
+          phone_number: "07700900001",
+          next_link: "test-site.url",
+          id_server: "id.example.org",
+          id_access_token: "abc123",
+          send_attempt: 1
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/msisdn/requestToken"
+      }
+  """
+  @spec account_msisdn_3pid_request_token(
+          base_url,
+          binary,
+          binary,
+          binary,
+          binary,
+          pos_integer,
+          map
+        ) :: t
+  def account_msisdn_3pid_request_token(
+        base_url,
+        token,
+        client_secret,
+        country,
+        phone_number,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:country, country)
+      |> Map.put(:phone_number, phone_number)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/msisdn/requestToken",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
 
   ## Examples
