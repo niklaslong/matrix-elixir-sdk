@@ -785,8 +785,8 @@ defmodule MatrixSDK.Request do
       }
 
   With optional id_server parameter:
-      iex> options = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
-      iex> MatrixSDK.Request.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, options)
+      iex> opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+      iex> MatrixSDK.Request.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
@@ -847,8 +847,8 @@ defmodule MatrixSDK.Request do
       }
 
   With optional id_server parameter:
-      iex> options = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
-      iex> MatrixSDK.Request.account_msisdn_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, options)
+      iex> opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+      iex> MatrixSDK.Request.account_msisdn_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
