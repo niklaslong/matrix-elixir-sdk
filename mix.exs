@@ -17,7 +17,6 @@ defmodule MatrixSDK.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {MatrixSDK.Application, []},
       env: [http_client: MatrixSDK.HTTPClient]
     ]
   end
