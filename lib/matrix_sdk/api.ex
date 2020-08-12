@@ -283,6 +283,13 @@ defmodule MatrixSDK.API do
     |> http_client().do_request()
   end
 
+  @doc """
+  Adds contact information to the user's account.
+
+  ## Examples
+
+      MatrixSDK.API.account_3pids("https://matrix.org", "token")
+  """
   @spec account_add_3pid(Request.base_url(), Auth.t(), binary, binary, binary) ::
           HTTPClient.result()
   def account_add_3pid(base_url, auth, client_secret, sid, token) do

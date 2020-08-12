@@ -598,7 +598,7 @@ defmodule MatrixSDK.Request do
     }
 
   @doc """
-  Gets a list of the third party identifiers the homeserver has associated with the user's account.
+  Returns a `%Request{}` struct used to add contact information to the user's account.
 
   ## Examples
 
