@@ -589,6 +589,41 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.address == address
       assert request.body.id_server == id_server
     end
+
+    test "account_unbind_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+
+      request = Request.account_unbind_3pid(base_url, token, medium, address)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/unbind"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.medium == medium
+      assert request.body.address == address
+    end
+
+    test "account_unbind_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+      id_server = "example.org"
+      opt = %{id_server: id_server}
+
+      request = Request.account_unbind_3pid(base_url, token, medium, address, opt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/unbind"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.medium == medium
+      assert request.body.address == address
+      assert request.body.id_server == id_server
+    end
   end
 
   describe "current account information:" do
