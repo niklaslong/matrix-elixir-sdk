@@ -2,7 +2,7 @@ defmodule MatrixSDK.Client.RequestTest do
   use ExUnit.Case, async: true
   alias MatrixSDK.Client.{Request, Auth}
 
-  doctest MatrixSDK.Client.Request
+  doctest Request
 
   describe "server administration:" do
     test "spec_versions/1" do
