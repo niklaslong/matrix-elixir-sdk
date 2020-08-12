@@ -170,7 +170,7 @@ defmodule MatrixSDK.API do
   def registration_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
     base_url
     |> Request.registration_email_token(client_secret, email, send_attempt, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -192,7 +192,7 @@ defmodule MatrixSDK.API do
       ) do
     base_url
     |> Request.registration_msisdn_token(client_secret, country, phone, send_attempt, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -237,7 +237,7 @@ defmodule MatrixSDK.API do
   def password_email_token(base_url, client_secret, email, send_attempt, opts \\ %{}) do
     base_url
     |> Request.password_email_token(client_secret, email, send_attempt, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -252,7 +252,7 @@ defmodule MatrixSDK.API do
   def password_msisdn_token(base_url, client_secret, country, phone, send_attempt, opts \\ %{}) do
     base_url
     |> Request.password_msisdn_token(client_secret, country, phone, send_attempt, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -266,7 +266,7 @@ defmodule MatrixSDK.API do
   def deactivate_account(base_url, token, opts \\ %{}) do
     base_url
     |> Request.deactivate_account(token, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
@@ -295,7 +295,7 @@ defmodule MatrixSDK.API do
   def account_add_3pid(base_url, token, client_secret, sid, opts \\ %{}) do
     base_url
     |> Request.account_add_3pid(token, client_secret, sid, opts)
-    |> @http_client.do_request()
+    |> http_client().do_request()
   end
 
   @doc """
