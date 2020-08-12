@@ -1,10 +1,10 @@
-defmodule MatrixSDK.Request do
+defmodule MatrixSDK.Client.Request do
   @moduledoc """
   Provides functions which return a struct containing the data necessary for
   each HTTP request.
   """
 
-  alias MatrixSDK.{Auth, RoomEvent, StateEvent}
+  alias MatrixSDK.Client.{Auth, RoomEvent, StateEvent}
 
   @enforce_keys [:method, :base_url, :path]
   defstruct([:method, :base_url, :path, query_params: %{}, headers: [], body: %{}])
@@ -29,8 +29,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.spec_versions("https://matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.spec_versions("https://matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [],
@@ -47,8 +47,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.server_discovery("https://matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.server_discovery("https://matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [],
@@ -66,8 +66,8 @@ defmodule MatrixSDK.Request do
   ## Examples
 
       iex> token = "token"
-      iex> MatrixSDK.Request.server_capabilities("https://matrix.org", token)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.server_capabilities("https://matrix.org", token)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -89,8 +89,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.login("https://matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.login("https://matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [],
@@ -110,7 +110,7 @@ defmodule MatrixSDK.Request do
 
   Required:
   - `base_url`: the base URL for the homeserver 
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Auth`
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`
 
   Optional:
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
@@ -120,9 +120,9 @@ defmodule MatrixSDK.Request do
   ## Examples
       
   Token authentication:
-      iex> auth = MatrixSDK.Auth.login_token("token")
-      iex> MatrixSDK.Request.login("https://matrix.org", auth)
-      %MatrixSDK.Request{
+      iex> auth = MatrixSDK.Client.Auth.login_token("token")
+      iex> MatrixSDK.Client.Request.login("https://matrix.org", auth)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{token: "token", type: "m.login.token"},
         headers: [],
@@ -132,10 +132,10 @@ defmodule MatrixSDK.Request do
 
   User and password authentication with optional parameters:
 
-      iex> auth = MatrixSDK.Auth.login_user("maurice_moss", "password")
+      iex> auth = MatrixSDK.Client.Auth.login_user("maurice_moss", "password")
       iex> opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
-      iex> MatrixSDK.Request.login("https://matrix.org", auth, opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.login("https://matrix.org", auth, opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
           identifier: %{type: "m.id.user", user: "maurice_moss"},
@@ -163,8 +163,8 @@ defmodule MatrixSDK.Request do
   Returns a `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
 
   ## Examples
-      iex> MatrixSDK.Request.logout("https://matrix.org", "token")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.logout("https://matrix.org", "token")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -188,8 +188,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.logout_all("https://matrix.org", "token")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.logout_all("https://matrix.org", "token")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -213,8 +213,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.register_guest("https://matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.register_guest("https://matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [],
@@ -225,8 +225,8 @@ defmodule MatrixSDK.Request do
   Specifiying a display name for the device:    
 
       iex> opts = %{initial_device_display_name: "THE INTERNET"}
-      iex> MatrixSDK.Request.register_guest("https://matrix.org", opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.register_guest("https://matrix.org", opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{initial_device_display_name: "THE INTERNET"},
         headers: [],
@@ -261,8 +261,8 @@ defmodule MatrixSDK.Request do
   ## Examples
 
       iex> auth = Auth.login_dummy()
-      iex> MatrixSDK.Request.register_user("https://matrix.org", "password", auth)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.register_user("https://matrix.org", "password", auth)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{auth: %{type: "m.login.dummy"}, password: "password"},
         headers: [],
@@ -279,8 +279,8 @@ defmodule MatrixSDK.Request do
       ...>          initial_device_display_name: "THE INTERNET",
       ...>          inhibit_login: true
       ...>        }
-      iex> MatrixSDK.Request.register_user("https://matrix.org", "password", auth, opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.register_user("https://matrix.org", "password", auth, opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
           auth: %{type: "m.login.dummy"},
@@ -316,8 +316,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{client_secret: "secret", email: "maurice@moss.yay", send_attempt: 1},
         headers: [],
@@ -328,8 +328,8 @@ defmodule MatrixSDK.Request do
   With optional parameters:
 
       iex> opts = %{next_link: "nextlink.url"}
-      iex> MatrixSDK.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1, opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1, opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
           client_secret: "secret",
@@ -364,8 +364,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
           client_secret: "secret", 
@@ -381,8 +381,8 @@ defmodule MatrixSDK.Request do
   With optional parameters:
 
       iex> opts = %{next_link: "nextlink.url"}
-      iex> MatrixSDK.Request.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1, opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1, opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
           client_secret: "secret",
@@ -426,8 +426,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-       iex> MatrixSDK.Request.username_availability("https://matrix.org", "maurice_moss")
-       %MatrixSDK.Request{
+       iex> MatrixSDK.Client.Request.username_availability("https://matrix.org", "maurice_moss")
+       %MatrixSDK.Client.Request{
          base_url: "https://matrix.org",
          body: %{},
          headers: [],
@@ -451,16 +451,16 @@ defmodule MatrixSDK.Request do
   Required:
   - `base_url`: the base URL for the homeserver 
   - `new_password`: the desired password for the account
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Auth`
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`
 
   Optional: 
   - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds
 
   ## Examples 
 
-      iex> auth = MatrixSDK.Auth.login_token("token")
-      iex> MatrixSDK.Request.change_password("https://matrix.org", "new_password", auth)
-      %MatrixSDK.Request{
+      iex> auth = MatrixSDK.Client.Auth.login_token("token")
+      iex> MatrixSDK.Client.Request.change_password("https://matrix.org", "new_password", auth)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
           auth: %{token: "token", type: "m.login.token"},
@@ -492,8 +492,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.password_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.password_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{client_secret: "secret", email: "maurice@moss.yay", send_attempt: 1},
         headers: [],
@@ -523,8 +523,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.password_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.password_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{client_secret: "secret", country: "GB", phone_number: "07700900001", send_attempt: 1},
         headers: [],
@@ -555,8 +555,8 @@ defmodule MatrixSDK.Request do
 
   ## Example
 
-      iex> MatrixSDK.Request.deactivate_account("https://matrix.org", "token")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.deactivate_account("https://matrix.org", "token")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -579,8 +579,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.account_3pids("https://matrix.org", "token")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.account_3pids("https://matrix.org", "token")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -602,8 +602,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
           client_secret: "client_secret",
@@ -905,8 +905,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.whoami("https://matrix.org", "token")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.whoami("https://matrix.org", "token")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -941,8 +941,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.sync("https://matrix.org", "token")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.sync("https://matrix.org", "token")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -960,8 +960,8 @@ defmodule MatrixSDK.Request do
       ...>          set_presence: "online",
       ...>          timeout: 1000
       ...>         }
-      iex> MatrixSDK.Request.sync("https://matrix.org", "token", opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.sync("https://matrix.org", "token", opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -991,8 +991,8 @@ defmodule MatrixSDK.Request do
 
   ## Example
 
-      iex> MatrixSDK.Request.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1019,8 +1019,8 @@ defmodule MatrixSDK.Request do
 
   ## Example
 
-      iex> MatrixSDK.Request.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1048,8 +1048,8 @@ defmodule MatrixSDK.Request do
 
   ## Example 
 
-      iex> MatrixSDK.Request.room_state("https://matrix.org", "token", "!someroom:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_state("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1075,8 +1075,8 @@ defmodule MatrixSDK.Request do
 
   ## Example 
 
-      iex> MatrixSDK.Request.room_members("https://matrix.org", "token", "!someroom:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_members("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1092,8 +1092,8 @@ defmodule MatrixSDK.Request do
       ...>          membership: "join",
       ...>          not_membership: "invite"
       ...>        }
-      iex> MatrixSDK.Request.room_members("https://matrix.org", "token", "!someroom:matrix.org", opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_members("https://matrix.org", "token", "!someroom:matrix.org", opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1120,8 +1120,8 @@ defmodule MatrixSDK.Request do
 
   ## Example 
 
-      iex> MatrixSDK.Request.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1148,8 +1148,8 @@ defmodule MatrixSDK.Request do
 
   ## Example 
 
-      iex> MatrixSDK.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1165,8 +1165,8 @@ defmodule MatrixSDK.Request do
       ...>          limit: 10,
       ...>          filter: "filter"
       ...>        }
-      iex> MatrixSDK.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f", opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1206,8 +1206,8 @@ defmodule MatrixSDK.Request do
       ...>                state_key: "",
       ...>                type: "m.room.join_rules"
       ...>              }
-      iex> MatrixSDK.Request.send_state_event("https://matrix.org", "token", state_event)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.send_state_event("https://matrix.org", "token", state_event)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{join_rule: "private"},
         headers: [{"Authorization", "Bearer token"}],
@@ -1245,8 +1245,8 @@ defmodule MatrixSDK.Request do
       ...>                type: "m.room.message",
       ...>                transaction_id: "transaction_id"
       ...>              }
-      iex> MatrixSDK.Request.send_room_event("https://matrix.org", "token", room_event)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.send_room_event("https://matrix.org", "token", room_event)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
         headers: [{"Authorization", "Bearer token"}],
@@ -1278,8 +1278,8 @@ defmodule MatrixSDK.Request do
 
   ## Example
 
-      iex> MatrixSDK.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1290,8 +1290,8 @@ defmodule MatrixSDK.Request do
   With options:
 
       iex> opt = %{reason: "Indecent material"}
-      iex> MatrixSDK.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id", opt)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id", opt)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{reason: "Indecent material"},
         headers: [{"Authorization", "Bearer token"}],
@@ -1322,8 +1322,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.create_room("https://matrix.org", "token")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.create_room("https://matrix.org", "token")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
@@ -1338,8 +1338,8 @@ defmodule MatrixSDK.Request do
       ...>          room_alias_name: "chocolate",
       ...>          topic: "Some cool stuff about chocolate."
       ...>        }
-      iex> MatrixSDK.Request.create_room("https://matrix.org", "token", opts)
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.create_room("https://matrix.org", "token", opts)
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{room_alias_name: "chocolate", topic: "Some cool stuff about chocolate.", visibility: "public"},
         headers: [{"Authorization", "Bearer token"}],
@@ -1362,8 +1362,8 @@ defmodule MatrixSDK.Request do
 
   ## Example
 
-        iex> MatrixSDK.Request.joined_rooms("https://matrix.org", "token")
-        %MatrixSDK.Request{
+        iex> MatrixSDK.Client.Request.joined_rooms("https://matrix.org", "token")
+        %MatrixSDK.Client.Request{
           base_url: "https://matrix.org",
           body: %{},
           headers: [{"Authorization", "Bearer token"}],
@@ -1385,8 +1385,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{user_id: "@user:matrix.org"},
         headers: [{"Authorization", "Bearer token"}],
@@ -1412,8 +1412,8 @@ defmodule MatrixSDK.Request do
 
   ## Example 
 
-      iex> MatrixSDK.Request.join_room("https://matrix.org", "token", "!someroom:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.join_room("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
@@ -1440,8 +1440,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
@@ -1465,8 +1465,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.forget_room("https://matrix.org", "token", "!someroom:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.forget_room("https://matrix.org", "token", "!someroom:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
@@ -1490,8 +1490,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
@@ -1499,8 +1499,8 @@ defmodule MatrixSDK.Request do
         body: %{user_id: "@user:matrix.org"}
       }
 
-      iex> MatrixSDK.Request.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
@@ -1531,8 +1531,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
@@ -1540,8 +1540,8 @@ defmodule MatrixSDK.Request do
         body: %{user_id: "@user:matrix.org"}
       }
 
-      iex> MatrixSDK.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
@@ -1572,8 +1572,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
@@ -1599,8 +1599,8 @@ defmodule MatrixSDK.Request do
 
   ## Example
 
-      iex> MatrixSDK.Request.room_visibility("https://matrix.org", "!someroom:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_visibility("https://matrix.org", "!someroom:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         method: :get,
@@ -1623,8 +1623,8 @@ defmodule MatrixSDK.Request do
 
   ## Example
 
-      iex> MatrixSDK.Request.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{visibility: "private"},
         headers: [{"Authorization", "Bearer token"}],
@@ -1650,8 +1650,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.public_rooms("https://matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.public_rooms("https://matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [],
@@ -1662,8 +1662,8 @@ defmodule MatrixSDK.Request do
 
   With optional parameters:   
 
-      iex> MatrixSDK.Request.public_rooms("https://matrix.org", %{limit: 10})
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.public_rooms("https://matrix.org", %{limit: 10})
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [],
@@ -1686,8 +1686,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.public_rooms("https://matrix.org", "token", %{limit: 10})
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.public_rooms("https://matrix.org", "token", %{limit: 10})
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{limit: 10},
         headers: [{"Authorization", "Bearer token"}],
@@ -1698,8 +1698,8 @@ defmodule MatrixSDK.Request do
 
   With optional parameter:
 
-      iex> MatrixSDK.Request.public_rooms("https://matrix.org", "token", %{limit: 10}, "server")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.public_rooms("https://matrix.org", "token", %{limit: 10}, "server")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{limit: 10},
         headers: [{"Authorization", "Bearer token"}],
@@ -1727,8 +1727,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.user_directory_search("https://matrix.org", "token", "mickey")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.user_directory_search("https://matrix.org", "token", "mickey")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{search_term: "mickey"},
         headers: [{"Authorization", "Bearer token"}],
@@ -1738,8 +1738,8 @@ defmodule MatrixSDK.Request do
 
   With limit option:
 
-      iex> MatrixSDK.Request.user_directory_search("https://matrix.org", "token", "mickey", %{limit: 42})
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.user_directory_search("https://matrix.org", "token", "mickey", %{limit: 42})
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{search_term: "mickey", limit: 42},
         headers: [{"Authorization", "Bearer token"}],
@@ -1749,8 +1749,8 @@ defmodule MatrixSDK.Request do
 
   With language option:
 
-      iex> MatrixSDK.Request.user_directory_search("https://matrix.org", "token", "mickey", %{language: "en-US"})
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.user_directory_search("https://matrix.org", "token", "mickey", %{language: "en-US"})
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{search_term: "mickey"},
         headers: [{"Authorization", "Bearer token"}, {"Accept-Language", "en-US"}],
@@ -1789,8 +1789,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{displayname: "mickey"},
         headers: [{"Authorization", "Bearer token"}],
@@ -1816,8 +1816,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.display_name("https://matrix.org", "@user:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.display_name("https://matrix.org", "@user:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname",
@@ -1839,8 +1839,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         method: :put,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url",
@@ -1866,8 +1866,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.avatar_url("https://matrix.org", "@user:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.avatar_url("https://matrix.org", "@user:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url",
@@ -1889,8 +1889,8 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.user_profile("https://matrix.org", "@user:matrix.org")
-      %MatrixSDK.Request{
+      iex> MatrixSDK.Client.Request.user_profile("https://matrix.org", "@user:matrix.org")
+      %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org",

@@ -1,7 +1,8 @@
 defmodule MatrixSDK.HTTPClientTest do
   use ExUnit.Case, async: true
 
-  alias MatrixSDK.{Request, HTTPClient}
+  alias MatrixSDK.HTTPClient
+  alias MatrixSDK.Client.Request
   alias Tesla
 
   setup do

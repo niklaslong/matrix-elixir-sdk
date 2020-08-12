@@ -1,10 +1,11 @@
 defmodule MatrixSDK.Client do
   @moduledoc """
   Provides functions to make HTTP requests to a Matrix homeserver using the
-  `MatrixSDK.Request` and `MatrixSDK.HTTPClient` modules.
+  `MatrixSDK.Client.Request` and `MatrixSDK.HTTPClient` modules.
   """
 
-  alias MatrixSDK.{Request, HTTPClient, Auth, RoomEvent, StateEvent}
+  alias MatrixSDK.HTTPClient
+  alias MatrixSDK.Client.{Request, Auth, RoomEvent, StateEvent}
 
   @doc """
   Gets the versions of the Matrix specification supported by the server.  
@@ -69,12 +70,12 @@ defmodule MatrixSDK.Client do
 
   Token authentication:
 
-      auth = MatrixSDK.Auth.login_token("token")
+      auth = MatrixSDK.Client.Auth.login_token("token")
       MatrixSDK.Client.login("https://matrix.org", auth)
 
   User and password authentication with optional parameters:
 
-      auth = MatrixSDK.Auth.login_user("maurice_moss", "password")
+      auth = MatrixSDK.Client.Auth.login_user("maurice_moss", "password")
       opts = %{device_id: "id", initial_device_display_name: "THE INTERNET"}
 
       MatrixSDK.Client.login("https://matrix.org", auth, opts)
@@ -214,7 +215,7 @@ defmodule MatrixSDK.Client do
 
   ## Examples 
 
-      auth = MatrixSDK.Auth.login_token("token")
+      auth = MatrixSDK.Client.Auth.login_token("token")
       MatrixSDK.Client.change_password("https://matrix.org", "new_password", auth)
   """
   @spec change_password(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()

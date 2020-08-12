@@ -40,7 +40,7 @@ Here is an example to login with username and password:
 ```elxiir
 iex(1)> url = "https://matrix.org"
 "https://matrix.org"
-iex(2)> auth = MatrixSDK.Auth.login_user("mickey", "supersecret")
+iex(2)> auth = MatrixSDK.Client.Auth.login_user("mickey", "supersecret")
 %{
   identifier: %{type: "m.id.user", user: "mickey"},
   password: "supersecret",

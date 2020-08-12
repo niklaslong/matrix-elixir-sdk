@@ -1,8 +1,8 @@
-defmodule MatrixSDK.RoomEventTest do
+defmodule MatrixSDK.Client.RoomEventTest do
   use ExUnit.Case, async: true
-  alias MatrixSDK.RoomEvent
+  alias MatrixSDK.Client.RoomEvent
 
-  doctest MatrixSDK.RoomEvent
+  doctest RoomEvent
 
   describe "message/3 with type:" do
     test "m.text" do

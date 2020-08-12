@@ -2,7 +2,8 @@ defmodule MatrixSDK.ClientTest do
   use ExUnit.Case, async: true
   import Mox
 
-  alias MatrixSDK.{Client, Request, Auth, HTTPClientMock}
+  alias MatrixSDK.{Client, HTTPClientMock}
+  alias MatrixSDK.Client.{Request, Auth}
   alias Tesla
 
   setup :verify_on_exit!
@@ -121,7 +122,7 @@ defmodule MatrixSDK.ClientTest do
     test "register_user/3 registers a new user" do
       base_url = "http://test.url"
       password = "password"
-      auth = MatrixSDK.Auth.login_dummy()
+      auth = MatrixSDK.Client.Auth.login_dummy()
       expected_request = Request.register_user(base_url, password, auth)
 
       assert_client_mock_got(expected_request)
@@ -131,7 +132,7 @@ defmodule MatrixSDK.ClientTest do
     test "register_user/4 registers a new user with options" do
       base_url = "http://test.url"
       password = "password"
-      auth = MatrixSDK.Auth.login_dummy()
+      auth = MatrixSDK.Client.Auth.login_dummy()
 
       opts = %{
         username: "username",

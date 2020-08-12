@@ -1,8 +1,8 @@
-defmodule MatrixSDK.RequestTest do
+defmodule MatrixSDK.Client.RequestTest do
   use ExUnit.Case, async: true
-  alias MatrixSDK.{Request, Auth}
+  alias MatrixSDK.Client.{Request, Auth}
 
-  doctest MatrixSDK.Request
+  doctest MatrixSDK.Client.Request
 
   describe "server administration:" do
     test "spec_versions/1" do
@@ -162,7 +162,7 @@ defmodule MatrixSDK.RequestTest do
     test "register_user/3" do
       base_url = "http://test-server.url"
       password = "password"
-      auth = MatrixSDK.Auth.login_dummy()
+      auth = Auth.login_dummy()
 
       request = Request.register_user(base_url, password, auth)
 
@@ -176,7 +176,7 @@ defmodule MatrixSDK.RequestTest do
     test "register_user/4 with options" do
       base_url = "http://test-server.url"
       password = "password"
-      auth = MatrixSDK.Auth.login_dummy()
+      auth = Auth.login_dummy()
 
       opts = %{
         username: "username",
