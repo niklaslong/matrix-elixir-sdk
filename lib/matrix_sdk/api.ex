@@ -288,13 +288,13 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.account_3pids("https://matrix.org", "token")
+      MatrixSDK.API.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
   """
-  @spec account_add_3pid(Request.base_url(), Auth.t(), binary, binary, binary) ::
+  @spec account_add_3pid(Request.base_url(), binary, binary, binary, map) ::
           HTTPClient.result()
-  def account_add_3pid(base_url, auth, client_secret, sid, token) do
+  def account_add_3pid(base_url, token, client_secret, sid, opts \\ %{}) do
     base_url
-    |> Request.account_add_3pid(auth, client_secret, sid, token)
+    |> Request.account_add_3pid(token, client_secret, sid, opts)
     |> @http_client.do_request()
   end
 

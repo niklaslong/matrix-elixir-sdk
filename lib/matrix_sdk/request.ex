@@ -602,22 +602,25 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.account_3pids("https://matrix.org", "token")
+      iex> MatrixSDK.Request.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
-        body: %{},
+        body: %{
+          client_secret: "client_secret",
+          sid: "sid"
+        },
         headers: [{"Authorization", "Bearer token"}],
-        method: :get,
-        path: "/_matrix/client/r0/account/3pid"
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/add"
       }
   """
-  @spec account_add_3pid(base_url, Auth.t(), binary, binary, binary) :: t
-  def account_add_3pid(base_url, auth, client_secret, sid, token) do
+  @spec account_add_3pid(base_url, binary, binary, binary, map) :: t
+  def account_add_3pid(base_url, token, client_secret, sid, opts \\ %{}) do
     body =
       %{}
       |> Map.put(:client_secret, client_secret)
       |> Map.put(:sid, sid)
-      |> Map.put(:auth, auth)
+      |> Map.merge(opts)
 
     %__MODULE__{
       method: :post,

@@ -499,6 +499,40 @@ defmodule MatrixSDK.RequestTest do
       assert request.path == "/_matrix/client/r0/account/3pid"
       assert request.headers == [{"Authorization", "Bearer " <> token}]
     end
+
+    test "account_add_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+
+      request = Request.account_add_3pid(base_url, token, client_secret, sid)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/add"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.sid == sid
+    end
+
+    test "account_add_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+      opts = %{auth: auth = Auth.login_token(token)}
+
+      request = Request.account_add_3pid(base_url, token, client_secret, sid, opts)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/add"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.sid == sid
+      assert request.body.auth == auth
+    end
   end
 
   describe "current account information:" do

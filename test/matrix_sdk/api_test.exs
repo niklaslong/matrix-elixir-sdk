@@ -404,6 +404,31 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.account_3pids(base_url, token)
     end
+
+    test "account_add_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+
+      expected_request = Request.account_add_3pid(base_url, token, client_secret, sid)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_add_3pid(base_url, token, client_secret, sid)
+    end
+
+    test "account_add_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+      opts = %{auth: Auth.login_token(token)}
+
+      expected_request = Request.account_add_3pid(base_url, token, client_secret, sid, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_add_3pid(base_url, token, client_secret, sid, opts)
+    end
   end
 
   describe "current account information:" do
