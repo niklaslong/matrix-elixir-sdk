@@ -360,7 +360,7 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to check the given address phone is not already associated with an account on the homeserver. This should be used to get a token to register a phone number as part of the initial user registration.
+  Returns a `%Request{}` struct used to check the given phone number is not already associated with an account on the homeserver. This should be used to get a token to register a phone number as part of the initial user registration.
 
   ## Examples
 
