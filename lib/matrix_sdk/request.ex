@@ -803,7 +803,7 @@ defmodule MatrixSDK.Request do
       }
   """
   @spec account_email_token(base_url, binary, binary, binary, pos_integer, map) :: t
-  def account_email_3pid_request_token(
+  def account_email_token(
         base_url,
         token,
         client_secret,
@@ -832,7 +832,7 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.account_msisdn_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
+      iex> MatrixSDK.Request.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
@@ -848,7 +848,7 @@ defmodule MatrixSDK.Request do
 
   With optional id_server parameter:
       iex> opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
-      iex> MatrixSDK.Request.account_msisdn_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
+      iex> MatrixSDK.Request.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
@@ -865,7 +865,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/account/3pid/msisdn/requestToken"
       }
   """
-  @spec account_msisdn_3pid_request_token(
+  @spec account_msisdn_token(
           base_url,
           binary,
           binary,
@@ -874,12 +874,12 @@ defmodule MatrixSDK.Request do
           pos_integer,
           map
         ) :: t
-  def account_msisdn_3pid_request_token(
+  def account_msisdn_token(
         base_url,
         token,
         client_secret,
         country,
-        phone_number,
+        phone,
         send_attempt,
         opts \\ %{}
       ) do
@@ -887,7 +887,7 @@ defmodule MatrixSDK.Request do
       %{}
       |> Map.put(:client_secret, client_secret)
       |> Map.put(:country, country)
-      |> Map.put(:phone_number, phone_number)
+      |> Map.put(:phone_number, phone)
       |> Map.put(:send_attempt, send_attempt)
       |> Map.merge(opts)
 

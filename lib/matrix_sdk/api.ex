@@ -390,15 +390,15 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.account_msisdn_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
+      MatrixSDK.API.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
 
   With optional paramters:
 
       opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
 
-      MatrixSDK.API.account_msisdn_3pid_request_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
+      MatrixSDK.API.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
   """
-  @spec account_msisdn_3pid_request_token(
+  @spec account_msisdn_token(
           Request.base_url(),
           binary,
           binary,
@@ -407,21 +407,21 @@ defmodule MatrixSDK.API do
           pos_integer,
           map
         ) :: HTTPClient.result()
-  def account_msisdn_3pid_request_token(
+  def account_msisdn_token(
         base_url,
         token,
         client_secret,
         country,
-        phone_number,
+        phone,
         send_attempt,
         opts \\ %{}
       ) do
     base_url
-    |> Request.account_msisdn_3pid_request_token(
+    |> Request.account_msisdn_token(
       token,
       client_secret,
       country,
-      phone_number,
+      phone,
       send_attempt,
       opts
     )

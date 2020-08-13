@@ -565,7 +565,7 @@ defmodule MatrixSDK.APITest do
                )
     end
 
-    test "account_msisdn_3pid_request_token/6" do
+    test "account_msisdn_token/6" do
       base_url = "http://test-server.url"
       token = "token"
       client_secret = "client_secret"
@@ -574,7 +574,7 @@ defmodule MatrixSDK.APITest do
       send_attempt = 1
 
       expected_request =
-        Request.account_msisdn_3pid_request_token(
+        Request.account_msisdn_token(
           base_url,
           token,
           client_secret,
@@ -586,7 +586,7 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
 
       assert {:ok, _} =
-               API.account_msisdn_3pid_request_token(
+               API.account_msisdn_token(
                  base_url,
                  token,
                  client_secret,
@@ -596,7 +596,7 @@ defmodule MatrixSDK.APITest do
                )
     end
 
-    test "account_msisdn_3pid_request_token/7" do
+    test "account_msisdn_token/7" do
       base_url = "http://test-server.url"
       token = "token"
       client_secret = "client_secret"
@@ -609,7 +609,7 @@ defmodule MatrixSDK.APITest do
       opts = %{next_link: next_link, id_server: id_server, id_access_token: id_access_token}
 
       expected_request =
-        Request.account_msisdn_3pid_request_token(
+        Request.account_msisdn_token(
           base_url,
           token,
           client_secret,
@@ -622,7 +622,7 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
 
       assert {:ok, _} =
-               API.account_msisdn_3pid_request_token(
+               API.account_msisdn_token(
                  base_url,
                  token,
                  client_secret,
