@@ -471,8 +471,7 @@ defmodule MatrixSDK.APITest do
       token = "token"
       medium = "email"
       address = "example@example.org"
-      id_server = "example.org"
-      opt = %{id_server: id_server}
+      opt = %{id_server: "example.org"}
 
       expected_request = Request.account_delete_3pid(base_url, token, medium, address, opt)
 
@@ -497,8 +496,7 @@ defmodule MatrixSDK.APITest do
       token = "token"
       medium = "email"
       address = "example@example.org"
-      id_server = "example.org"
-      opt = %{id_server: id_server}
+      opt = %{id_server: "example.org"}
 
       expected_request = Request.account_unbind_3pid(base_url, token, medium, address, opt)
 
@@ -603,10 +601,7 @@ defmodule MatrixSDK.APITest do
       country = "GB"
       phone_number = "07700900001"
       send_attempt = 1
-      next_link = "test-site.url"
-      id_server = "id.example.org"
-      id_access_token = "abc123"
-      opts = %{next_link: next_link, id_server: id_server, id_access_token: id_access_token}
+      opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
 
       expected_request =
         Request.account_msisdn_token(
