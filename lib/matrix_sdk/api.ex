@@ -356,15 +356,15 @@ defmodule MatrixSDK.API do
 
   ## Examples
 
-      MatrixSDK.API.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
+      MatrixSDK.API.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
 
   With optional parameters:
 
       opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
 
-      MatrixSDK.API.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
+      MatrixSDK.API.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
   """
-  @spec account_email_3pid_request_token(
+  @spec account_email_token(
           Request.base_url(),
           binary,
           binary,
@@ -372,7 +372,7 @@ defmodule MatrixSDK.API do
           pos_integer,
           map
         ) :: HTTPClient.result()
-  def account_email_3pid_request_token(
+  def account_email_token(
         base_url,
         token,
         client_secret,
@@ -381,7 +381,7 @@ defmodule MatrixSDK.API do
         opts \\ %{}
       ) do
     base_url
-    |> Request.account_email_3pid_request_token(token, client_secret, email, send_attempt, opts)
+    |> Request.account_email_token(token, client_secret, email, send_attempt, opts)
     |> http_client().do_request()
   end
 

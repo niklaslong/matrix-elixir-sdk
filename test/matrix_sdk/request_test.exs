@@ -625,7 +625,7 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.id_server == id_server
     end
 
-    test "account_email_3pid_request_token/5" do
+    test "account_email_token/5" do
       base_url = "http://test-server.url"
       token = "token"
       client_secret = "client_secret"
@@ -633,7 +633,7 @@ defmodule MatrixSDK.RequestTest do
       send_attempt = 1
 
       request =
-        Request.account_email_3pid_request_token(
+        Request.account_email_token(
           base_url,
           token,
           client_secret,
@@ -650,7 +650,7 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.send_attempt == send_attempt
     end
 
-    test "account_email_3pid_request_token/6" do
+    test "account_email_token/6" do
       base_url = "http://test-server.url"
       token = "token"
       client_secret = "client_secret"
@@ -662,7 +662,7 @@ defmodule MatrixSDK.RequestTest do
       opts = %{next_link: next_link, id_server: id_server, id_access_token: id_access_token}
 
       request =
-        Request.account_email_3pid_request_token(
+        Request.account_email_token(
           base_url,
           token,
           client_secret,

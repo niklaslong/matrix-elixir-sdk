@@ -771,7 +771,7 @@ defmodule MatrixSDK.Request do
 
   ## Examples
 
-      iex> MatrixSDK.Request.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
+      iex> MatrixSDK.Request.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
@@ -786,7 +786,7 @@ defmodule MatrixSDK.Request do
 
   With optional id_server parameter:
       iex> opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
-      iex> MatrixSDK.Request.account_email_3pid_request_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
+      iex> MatrixSDK.Request.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
       %MatrixSDK.Request{
         base_url: "https://matrix.org",
         body: %{
@@ -802,7 +802,7 @@ defmodule MatrixSDK.Request do
         path: "/_matrix/client/r0/account/3pid/email/requestToken"
       }
   """
-  @spec account_email_3pid_request_token(base_url, binary, binary, binary, pos_integer, map) :: t
+  @spec account_email_token(base_url, binary, binary, binary, pos_integer, map) :: t
   def account_email_3pid_request_token(
         base_url,
         token,
