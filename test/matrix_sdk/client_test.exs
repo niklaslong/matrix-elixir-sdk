@@ -447,7 +447,7 @@ defmodule MatrixSDK.ClientTest do
       assert_client_mock_got(expected_request)
 
       assert {:ok, _} =
-               API.account_bind_3pid(
+               Client.account_bind_3pid(
                  base_url,
                  token,
                  client_secret,
@@ -466,7 +466,7 @@ defmodule MatrixSDK.ClientTest do
       expected_request = Request.account_delete_3pid(base_url, token, medium, address)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.account_delete_3pid(base_url, token, medium, address)
+      assert {:ok, _} = Client.account_delete_3pid(base_url, token, medium, address)
     end
 
     test "account_delete_3pid/5" do
@@ -479,7 +479,7 @@ defmodule MatrixSDK.ClientTest do
       expected_request = Request.account_delete_3pid(base_url, token, medium, address, opt)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.account_delete_3pid(base_url, token, medium, address, opt)
+      assert {:ok, _} = Client.account_delete_3pid(base_url, token, medium, address, opt)
     end
 
     test "account_unbind_3pid/4" do
@@ -491,7 +491,7 @@ defmodule MatrixSDK.ClientTest do
       expected_request = Request.account_unbind_3pid(base_url, token, medium, address)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.account_unbind_3pid(base_url, token, medium, address)
+      assert {:ok, _} = Client.account_unbind_3pid(base_url, token, medium, address)
     end
 
     test "account_unbind_3pid/5" do
@@ -504,7 +504,7 @@ defmodule MatrixSDK.ClientTest do
       expected_request = Request.account_unbind_3pid(base_url, token, medium, address, opt)
 
       assert_client_mock_got(expected_request)
-      assert {:ok, _} = API.account_unbind_3pid(base_url, token, medium, address, opt)
+      assert {:ok, _} = Client.account_unbind_3pid(base_url, token, medium, address, opt)
     end
 
     test "account_email_token/5" do
@@ -526,7 +526,7 @@ defmodule MatrixSDK.ClientTest do
       assert_client_mock_got(expected_request)
 
       assert {:ok, _} =
-               API.account_email_token(
+               Client.account_email_token(
                  base_url,
                  token,
                  client_secret,
@@ -556,7 +556,7 @@ defmodule MatrixSDK.ClientTest do
       assert_client_mock_got(expected_request)
 
       assert {:ok, _} =
-               API.account_email_token(
+               Client.account_email_token(
                  base_url,
                  token,
                  client_secret,
@@ -587,7 +587,7 @@ defmodule MatrixSDK.ClientTest do
       assert_client_mock_got(expected_request)
 
       assert {:ok, _} =
-               API.account_msisdn_token(
+               Client.account_msisdn_token(
                  base_url,
                  token,
                  client_secret,
@@ -620,7 +620,7 @@ defmodule MatrixSDK.ClientTest do
       assert_client_mock_got(expected_request)
 
       assert {:ok, _} =
-               API.account_msisdn_token(
+               Client.account_msisdn_token(
                  base_url,
                  token,
                  client_secret,

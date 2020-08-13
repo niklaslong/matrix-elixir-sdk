@@ -304,7 +304,7 @@ defmodule MatrixSDK.Client do
 
   ## Examples
 
-      MatrixSDK.API.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
+      MatrixSDK.Client.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
   """
   @spec account_bind_3pid(Request.base_url(), binary, binary, binary, binary, binary) ::
           HTTPClient.result()
@@ -319,11 +319,11 @@ defmodule MatrixSDK.Client do
 
   ## Examples
 
-      MatrixSDK.API.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
+      MatrixSDK.Client.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
 
   With id_server option:
 
-      MatrixSDK.API.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "id.example.org")
+      MatrixSDK.Client.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "id.example.org")
   """
   @spec account_delete_3pid(Request.base_url(), binary, binary, binary, map) ::
           HTTPClient.result()
@@ -338,11 +338,11 @@ defmodule MatrixSDK.Client do
 
   ## Examples
 
-      MatrixSDK.API.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org")
+      MatrixSDK.Client.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org")
 
   With id_server option:
 
-      MatrixSDK.API.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "id.example.org"})
+      MatrixSDK.Client.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "id.example.org"})
   """
   @spec account_unbind_3pid(Request.base_url(), binary, binary, binary, map) ::
           HTTPClient.result()
@@ -357,13 +357,13 @@ defmodule MatrixSDK.Client do
 
   ## Examples
 
-      MatrixSDK.API.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
+      MatrixSDK.Client.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
 
   With optional parameters:
 
       opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
 
-      MatrixSDK.API.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
+      MatrixSDK.Client.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
   """
   @spec account_email_token(
           Request.base_url(),
@@ -391,13 +391,13 @@ defmodule MatrixSDK.Client do
 
   ## Examples
 
-      MatrixSDK.API.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
+      MatrixSDK.Client.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
 
   With optional paramters:
 
       opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
 
-      MatrixSDK.API.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
+      MatrixSDK.Client.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
   """
   @spec account_msisdn_token(
           Request.base_url(),
