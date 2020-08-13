@@ -299,6 +299,136 @@ defmodule MatrixSDK.API do
   end
 
   @doc """
+  Binds contact information to the user's account through the specified identity server.
+
+  ## Examples
+
+      MatrixSDK.API.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
+  """
+  @spec account_bind_3pid(Request.base_url(), binary, binary, binary, binary, binary) ::
+          HTTPClient.result()
+  def account_bind_3pid(base_url, token, client_secret, id_server, id_access_token, sid) do
+    base_url
+    |> Request.account_bind_3pid(token, client_secret, id_server, id_access_token, sid)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Deletes contact information from the user's account.
+
+  ## Examples
+
+      MatrixSDK.API.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
+
+  With id_server option:
+
+      MatrixSDK.API.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "id.example.org")
+  """
+  @spec account_delete_3pid(Request.base_url(), binary, binary, binary, map) ::
+          HTTPClient.result()
+  def account_delete_3pid(base_url, token, medium, address, opt \\ %{}) do
+    base_url
+    |> Request.account_delete_3pid(token, medium, address, opt)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Unbinds contact information from the user's account without deleting it from the homeserver.
+
+  ## Examples
+
+      MatrixSDK.API.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org")
+
+  With id_server option:
+
+      MatrixSDK.API.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "id.example.org"})
+  """
+  @spec account_unbind_3pid(Request.base_url(), binary, binary, binary, map) ::
+          HTTPClient.result()
+  def account_unbind_3pid(base_url, token, medium, address, opt \\ %{}) do
+    base_url
+    |> Request.account_unbind_3pid(token, medium, address, opt)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Requests a validation token when adding an email to a user's account.
+
+  ## Examples
+
+      MatrixSDK.API.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
+
+  With optional parameters:
+
+      opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+
+      MatrixSDK.API.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
+  """
+  @spec account_email_token(
+          Request.base_url(),
+          binary,
+          binary,
+          binary,
+          pos_integer,
+          map
+        ) :: HTTPClient.result()
+  def account_email_token(
+        base_url,
+        token,
+        client_secret,
+        email,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    base_url
+    |> Request.account_email_token(token, client_secret, email, send_attempt, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Requests a validation token when adding a phone number to a user's account.
+
+  ## Examples
+
+      MatrixSDK.API.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
+
+  With optional paramters:
+
+      opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+
+      MatrixSDK.API.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
+  """
+  @spec account_msisdn_token(
+          Request.base_url(),
+          binary,
+          binary,
+          binary,
+          binary,
+          pos_integer,
+          map
+        ) :: HTTPClient.result()
+  def account_msisdn_token(
+        base_url,
+        token,
+        client_secret,
+        country,
+        phone,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    base_url
+    |> Request.account_msisdn_token(
+      token,
+      client_secret,
+      country,
+      phone,
+      send_attempt,
+      opts
+    )
+    |> http_client().do_request()
+  end
+
+  @doc """
   Gets information about the owner of a given access token.
 
   ## Examples

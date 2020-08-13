@@ -533,6 +533,219 @@ defmodule MatrixSDK.RequestTest do
       assert request.body.sid == sid
       assert request.body.auth == auth
     end
+
+    test "account_bind_3pid/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+      id_server = "example.org"
+      id_access_token = "abc123"
+
+      request =
+        Request.account_bind_3pid(base_url, token, client_secret, id_server, id_access_token, sid)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/bind"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.sid == sid
+      assert request.body.id_server == id_server
+      assert request.body.id_access_token == id_access_token
+    end
+
+    test "account_delete_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+
+      request = Request.account_delete_3pid(base_url, token, medium, address)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/delete"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.medium == medium
+      assert request.body.address == address
+    end
+
+    test "account_delete_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+      id_server = "example.org"
+      opt = %{id_server: id_server}
+
+      request = Request.account_delete_3pid(base_url, token, medium, address, opt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/delete"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.medium == medium
+      assert request.body.address == address
+      assert request.body.id_server == id_server
+    end
+
+    test "account_unbind_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+
+      request = Request.account_unbind_3pid(base_url, token, medium, address)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/unbind"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.medium == medium
+      assert request.body.address == address
+    end
+
+    test "account_unbind_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+      id_server = "example.org"
+      opt = %{id_server: id_server}
+
+      request = Request.account_unbind_3pid(base_url, token, medium, address, opt)
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/unbind"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.medium == medium
+      assert request.body.address == address
+      assert request.body.id_server == id_server
+    end
+
+    test "account_email_token/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      email = "example@example.org"
+      send_attempt = 1
+
+      request =
+        Request.account_email_token(
+          base_url,
+          token,
+          client_secret,
+          email,
+          send_attempt
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/email/requestToken"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.email == email
+      assert request.body.send_attempt == send_attempt
+    end
+
+    test "account_email_token/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      email = "example@example.org"
+      send_attempt = 1
+      next_link = "test-site.url"
+      id_server = "id.example.org"
+      id_access_token = "abc123"
+      opts = %{next_link: next_link, id_server: id_server, id_access_token: id_access_token}
+
+      request =
+        Request.account_email_token(
+          base_url,
+          token,
+          client_secret,
+          email,
+          send_attempt,
+          opts
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/email/requestToken"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.email == email
+      assert request.body.send_attempt == send_attempt
+      assert request.body.id_server == id_server
+      assert request.body.id_access_token == id_access_token
+      assert request.body.next_link == next_link
+    end
+
+    test "account_msisdn_token/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      request =
+        Request.account_msisdn_token(
+          base_url,
+          token,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/msisdn/requestToken"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.country == country
+      assert request.body.phone_number == phone_number
+      assert request.body.send_attempt == send_attempt
+    end
+
+    test "account_msisdn_token/7" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      next_link = "test-site.url"
+      id_server = "id.example.org"
+      id_access_token = "abc123"
+      opts = %{next_link: next_link, id_server: id_server, id_access_token: id_access_token}
+
+      request =
+        Request.account_msisdn_token(
+          base_url,
+          token,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert request.method == :post
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/account/3pid/msisdn/requestToken"
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.body.client_secret == client_secret
+      assert request.body.country == country
+      assert request.body.phone_number == phone_number
+      assert request.body.send_attempt == send_attempt
+      assert request.body.id_server == id_server
+      assert request.body.id_access_token == id_access_token
+      assert request.body.next_link == next_link
+    end
   end
 
   describe "current account information:" do

@@ -632,6 +632,275 @@ defmodule MatrixSDK.Request do
   end
 
   @doc """
+  Returns a `%Request{}` struct used to bind contact information to the user's account through the specified identity server.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          sid: "sid",
+          id_server: "example.org",
+          id_access_token: "abc123"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/bind"
+      }
+  """
+  @spec account_bind_3pid(base_url, binary, binary, binary, binary, binary) :: t
+  def account_bind_3pid(base_url, token, client_secret, id_server, id_access_token, sid) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:sid, sid)
+      |> Map.put(:id_server, id_server)
+      |> Map.put(:id_access_token, id_access_token)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/bind",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to delete contact information from the user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          medium: "email",
+          address: "example@example.org"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/delete"
+      }
+
+  With optional id_server parameter:
+
+      iex> MatrixSDK.Request.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "example.org"})
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          medium: "email",
+          address: "example@example.org",
+          id_server: "example.org"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/delete"
+      }  
+  """
+  @spec account_delete_3pid(base_url, binary, binary, binary, map) :: t
+  def account_delete_3pid(base_url, token, medium, address, opt \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:medium, medium)
+      |> Map.put(:address, address)
+      |> Map.merge(opt)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/delete",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to unbind contact information from the user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org")
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          medium: "email",
+          address: "example@example.org"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/unbind"
+      }
+
+  With optional id_server parameter:
+
+      iex> MatrixSDK.Request.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "example.org"})
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          medium: "email",
+          address: "example@example.org",
+          id_server: "example.org"
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/unbind"
+      }  
+  """
+  @spec account_unbind_3pid(base_url, binary, binary, binary, map) :: t
+  def account_unbind_3pid(base_url, token, medium, address, opt \\ %{}) do
+    body =
+      %{}
+      |> Map.put(:medium, medium)
+      |> Map.put(:address, address)
+      |> Map.merge(opt)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/unbind",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to request a validation token when adding an email to a user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          email: "example@example.org",
+          send_attempt: 1
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/email/requestToken"
+      }
+
+  With optional id_server parameter:
+      iex> opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+      iex> MatrixSDK.Request.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          email: "example@example.org",
+          next_link: "test-site.url",
+          id_server: "id.example.org",
+          id_access_token: "abc123",
+          send_attempt: 1
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/email/requestToken"
+      }
+  """
+  @spec account_email_token(base_url, binary, binary, binary, pos_integer, map) :: t
+  def account_email_token(
+        base_url,
+        token,
+        client_secret,
+        email,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:email, email)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/email/requestToken",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
+  Returns a `%Request{}` struct used to request a validation token when adding a phone number to a user's account.
+
+  ## Examples
+
+      iex> MatrixSDK.Request.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          country: "GB",
+          phone_number: "07700900001",
+          send_attempt: 1
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/msisdn/requestToken"
+      }
+
+  With optional id_server parameter:
+      iex> opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+      iex> MatrixSDK.Request.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
+      %MatrixSDK.Request{
+        base_url: "https://matrix.org",
+        body: %{
+          client_secret: "client_secret",
+          country: "GB",
+          phone_number: "07700900001",
+          next_link: "test-site.url",
+          id_server: "id.example.org",
+          id_access_token: "abc123",
+          send_attempt: 1
+        },
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/account/3pid/msisdn/requestToken"
+      }
+  """
+  @spec account_msisdn_token(
+          base_url,
+          binary,
+          binary,
+          binary,
+          binary,
+          pos_integer,
+          map
+        ) :: t
+  def account_msisdn_token(
+        base_url,
+        token,
+        client_secret,
+        country,
+        phone,
+        send_attempt,
+        opts \\ %{}
+      ) do
+    body =
+      %{}
+      |> Map.put(:client_secret, client_secret)
+      |> Map.put(:country, country)
+      |> Map.put(:phone_number, phone)
+      |> Map.put(:send_attempt, send_attempt)
+      |> Map.merge(opts)
+
+    %__MODULE__{
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/account/3pid/msisdn/requestToken",
+      body: body,
+      headers: [{"Authorization", "Bearer " <> token}]
+    }
+  end
+
+  @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
 
   ## Examples

@@ -429,6 +429,204 @@ defmodule MatrixSDK.APITest do
       assert_client_mock_got(expected_request)
       assert {:ok, _} = API.account_add_3pid(base_url, token, client_secret, sid, opts)
     end
+
+    test "account_bind_3pid/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      sid = "sid"
+      id_server = "example.org"
+      id_access_token = "abc123"
+
+      expected_request =
+        Request.account_bind_3pid(base_url, token, client_secret, id_server, id_access_token, sid)
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.account_bind_3pid(
+                 base_url,
+                 token,
+                 client_secret,
+                 id_server,
+                 id_access_token,
+                 sid
+               )
+    end
+
+    test "account_delete_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+
+      expected_request = Request.account_delete_3pid(base_url, token, medium, address)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_delete_3pid(base_url, token, medium, address)
+    end
+
+    test "account_delete_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+      opt = %{id_server: "example.org"}
+
+      expected_request = Request.account_delete_3pid(base_url, token, medium, address, opt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_delete_3pid(base_url, token, medium, address, opt)
+    end
+
+    test "account_unbind_3pid/4" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+
+      expected_request = Request.account_unbind_3pid(base_url, token, medium, address)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_unbind_3pid(base_url, token, medium, address)
+    end
+
+    test "account_unbind_3pid/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      medium = "email"
+      address = "example@example.org"
+      opt = %{id_server: "example.org"}
+
+      expected_request = Request.account_unbind_3pid(base_url, token, medium, address, opt)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = API.account_unbind_3pid(base_url, token, medium, address, opt)
+    end
+
+    test "account_email_token/5" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      email = "example@example.org"
+      send_attempt = 1
+
+      expected_request =
+        Request.account_email_token(
+          base_url,
+          token,
+          client_secret,
+          email,
+          send_attempt
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.account_email_token(
+                 base_url,
+                 token,
+                 client_secret,
+                 email,
+                 send_attempt
+               )
+    end
+
+    test "account_email_token/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      email = "example@example.org"
+      send_attempt = 1
+      opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+
+      expected_request =
+        Request.account_email_token(
+          base_url,
+          token,
+          client_secret,
+          email,
+          send_attempt,
+          opts
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.account_email_token(
+                 base_url,
+                 token,
+                 client_secret,
+                 email,
+                 send_attempt,
+                 opts
+               )
+    end
+
+    test "account_msisdn_token/6" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+
+      expected_request =
+        Request.account_msisdn_token(
+          base_url,
+          token,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.account_msisdn_token(
+                 base_url,
+                 token,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt
+               )
+    end
+
+    test "account_msisdn_token/7" do
+      base_url = "http://test-server.url"
+      token = "token"
+      client_secret = "client_secret"
+      country = "GB"
+      phone_number = "07700900001"
+      send_attempt = 1
+      opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
+
+      expected_request =
+        Request.account_msisdn_token(
+          base_url,
+          token,
+          client_secret,
+          country,
+          phone_number,
+          send_attempt,
+          opts
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               API.account_msisdn_token(
+                 base_url,
+                 token,
+                 client_secret,
+                 country,
+                 phone_number,
+                 send_attempt,
+                 opts
+               )
+    end
   end
 
   describe "current account information:" do
