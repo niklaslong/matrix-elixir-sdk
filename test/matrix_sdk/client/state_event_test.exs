@@ -1,6 +1,6 @@
-defmodule MatrixSDK.StateEventTest do
+defmodule MatrixSDK.Client.StateEventTest do
   use ExUnit.Case, async: true
-  alias MatrixSDK.StateEvent
+  alias MatrixSDK.Client.StateEvent
 
   test "join_rules/2" do
     room_id = "!someroom:matrix.org"

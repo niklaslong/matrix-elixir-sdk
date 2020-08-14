@@ -1,4 +1,4 @@
-defmodule MatrixSDK.StateEvent do
+defmodule MatrixSDK.Client.StateEvent do
   @enforce_keys [:content, :type, :room_id, :state_key]
   defstruct [:content, :type, :room_id, state_key: ""]
 
@@ -9,7 +9,7 @@ defmodule MatrixSDK.StateEvent do
 
   ## Example
 
-      MatrixSDK.StateEvent.join_rules("!someroom:matrix.org". "public")
+      MatrixSDK.Client.StateEvent.join_rules("!someroom:matrix.org". "public")
   """
   def join_rules(room_id, body),
     do: %__MODULE__{

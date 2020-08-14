@@ -1,4 +1,4 @@
-defmodule MatrixSDK.RoomEvent do
+defmodule MatrixSDK.Client.RoomEvent do
   @enforce_keys [:content, :type, :transaction_id, :room_id]
   defstruct [:content, :type, :room_id, :transaction_id]
 
@@ -9,8 +9,8 @@ defmodule MatrixSDK.RoomEvent do
 
   ## Example
 
-      iex> MatrixSDK.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
-      %MatrixSDK.RoomEvent{
+      iex> MatrixSDK.Client.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
+      %MatrixSDK.Client.RoomEvent{
         content: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
         type: "m.room.message",
         room_id: "!someroom:matrix.org",

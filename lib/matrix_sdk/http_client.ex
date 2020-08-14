@@ -4,7 +4,7 @@ defmodule MatrixSDK.HTTPClient do
   """
 
   use Tesla, docs: false
-  alias MatrixSDK.Request
+  alias MatrixSDK.Client.Request
 
   @type result :: Tesla.Env.result()
 
