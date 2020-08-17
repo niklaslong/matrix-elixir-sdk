@@ -291,30 +291,32 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
-  - `password`: the desired password for the account
+  - `base_url`: the base URL for the homeserver. 
+  - `password`: the desired password for the account.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
 
   Optional: 
   - `username`: the basis for the localpart of the desired Matrix ID. If omitted, the homeserver will generate a Matrix ID local part.
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
-  - `initial_device_display_name`: a display name to assign to the newly-created device
-  - `inhibit_login`: if true, an `access_token` and `device_id` will not be returned from this call, therefore preventing an automatic login
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
+  - `inhibit_login`: if true, an `access_token` and `device_id` will not be returned from this call, therefore preventing an automatic login.
 
   ## Examples
 
-      iex> auth = Auth.login_dummy()
+      iex> auth = MatrixSDK.Client.Auth.login_dummy()
       iex> MatrixSDK.Client.Request.register_user("https://matrix.org", "password", auth)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{auth: %{type: "m.login.dummy"}, password: "password"},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register"
+        path: "/_matrix/client/r0/register",
+        query_params: %{}
       }
 
   With optional parameters:    
 
-      iex> auth = Auth.login_dummy()
+      iex> auth = MatrixSDK.Client.Auth.login_dummy()
       iex> opts = %{
       ...>          username: "maurice_moss",
       ...>          device_id: "id",
@@ -334,7 +336,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register"
+        path: "/_matrix/client/r0/register",
+        query_params: %{}
       }
   """
   @spec register_user(base_url, binary, Auth.t(), map) :: t

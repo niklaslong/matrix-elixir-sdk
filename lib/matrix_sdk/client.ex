@@ -159,7 +159,7 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Registers a guest account on the homeserver. Returns an access token which can be used to authenticate subsequent requests. 
+  Registers a guest account on the homeserver and returns an access token which can be used to authenticate subsequent requests. 
 
   ## Args
 
@@ -186,14 +186,27 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Registers a user account on the homeserver. 
+  Registers a user account on the homeserver.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `password`: the desired password for the account.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  Optional: 
+  - `username`: the basis for the localpart of the desired Matrix ID. If omitted, the homeserver will generate a Matrix ID local part.
+  - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
+  - `inhibit_login`: if true, an `access_token` and `device_id` will not be returned from this call, therefore preventing an automatic login.
 
   ## Examples
 
-      MatrixSDK.Client.register_user("https://matrix.org", "password")
+      MatrixSDK.Client.Request.register_user("https://matrix.org", "password", auth)
 
   With optional parameters:    
-
+      auth = MatrixSDK.Client.Auth.login_dummy()
       opts = %{
                 username: "maurice_moss",
                 device_id: "id",
@@ -201,7 +214,7 @@ defmodule MatrixSDK.Client do
                 inhibit_login: true
               }
 
-      MatrixSDK.Client.register_user("https://matrix.org", "password", opts)
+      MatrixSDK.Client.Request.register_user("https://matrix.org", "password", auth, opts)
   """
   @spec register_user(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
   def register_user(base_url, password, auth, opts \\ %{}) do
