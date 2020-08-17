@@ -27,6 +27,11 @@ defmodule MatrixSDK.Client.Request do
   Returns a `%Request{}` struct used to get the versions of the Matrix specification
   supported by the server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.spec_versions("https://matrix.org")
@@ -35,7 +40,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [],
         method: :get,
-        path: "/_matrix/client/versions"
+        path: "/_matrix/client/versions",
+        query_params: %{}
       }
   """
   @spec spec_versions(base_url) :: t
@@ -43,7 +49,12 @@ defmodule MatrixSDK.Client.Request do
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
   @doc """
-  Returns a `%Request{}` struct used to get discovery information about the domain. 
+  Returns a `%Request{}` struct used to get discovery information about the domain.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
 
   ## Examples
 
@@ -53,7 +64,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [],
         method: :get,
-        path: "/.well-known/matrix/client"
+        path: "/.well-known/matrix/client",
+        query_params: %{}
       }
   """
   @spec server_discovery(base_url) :: t

@@ -8,7 +8,12 @@ defmodule MatrixSDK.Client do
   alias MatrixSDK.Client.{Request, Auth, RoomEvent, StateEvent}
 
   @doc """
-  Gets the versions of the Matrix specification supported by the server.  
+  Gets the versions of the Matrix specification supported by the server. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
 
   ## Examples
 
@@ -23,6 +28,11 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Gets discovery information about the domain. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver 
 
   ## Examples
 
