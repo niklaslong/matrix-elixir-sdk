@@ -292,6 +292,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Checks if a username is available and valid for the server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `username`: the basis for the localpart of the desired Matrix ID.
+
   ## Examples
 
        MatrixSDK.Client.username_availability("https://matrix.org", "maurice_moss")

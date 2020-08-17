@@ -500,6 +500,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to check if a username is available and valid for the server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `username`: the basis for the localpart of the desired Matrix ID. 
+
   ## Examples
 
        iex> MatrixSDK.Client.Request.username_availability("https://matrix.org", "maurice_moss")
@@ -508,7 +514,8 @@ defmodule MatrixSDK.Client.Request do
          body: %{},
          headers: [],
          method: :get,
-         path: "/_matrix/client/r0/register/available?username=maurice_moss"
+         path: "/_matrix/client/r0/register/available?username=maurice_moss",
+         query_params: %{}
        }
   """
   @spec username_availability(base_url, binary) :: t
