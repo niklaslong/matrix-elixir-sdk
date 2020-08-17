@@ -219,6 +219,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to invalidate all existing access tokens, so that they can no longer be used for authorization.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.logout_all("https://matrix.org", "token")
@@ -227,7 +233,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/logout/all"
+        path: "/_matrix/client/r0/logout/all",
+        query_params: %{}
       }
   """
   @spec logout_all(base_url, binary) :: t

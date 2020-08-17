@@ -141,6 +141,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Invalidates all existing access tokens, so that they can no longer be used for authorization.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       MatrixSDK.Client.logout_all("https://matrix.org", "token")
