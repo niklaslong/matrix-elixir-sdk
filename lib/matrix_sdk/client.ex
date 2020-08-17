@@ -48,6 +48,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets information about the server's supported feature set and other relevant capabilities.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       MatrixSDK.Client.server_capabilities("https://matrix.org", "token")
