@@ -87,6 +87,16 @@ defmodule MatrixSDK.Client do
   @doc """
   Authenticates the user, and issues an access token they can use to authorize themself in subsequent requests.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  Optional:
+  - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
+
   ## Examples
 
   Token authentication:

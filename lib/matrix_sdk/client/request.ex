@@ -133,12 +133,12 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`
+  - `base_url`: the base URL for the homeserver. 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
 
   Optional:
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
-  - `initial_device_display_name`: a display name to assign to the newly-created device
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
 
 
   ## Examples
@@ -151,7 +151,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{token: "token", type: "m.login.token"},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/login"
+        path: "/_matrix/client/r0/login",
+        query_params: %{}
       }
 
   User and password authentication with optional parameters:
@@ -170,7 +171,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/login"
+        path: "/_matrix/client/r0/login",
+        query_params: %{}
       }
   """
   @spec login(base_url, Auth.t(), opts :: map) :: t
