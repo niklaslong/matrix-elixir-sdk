@@ -1419,8 +1419,6 @@ defmodule MatrixSDK.Client.Request do
         method: :post,
         path: "/_matrix/client/r0/join/%21someroom%3Amatrix.org",
       }
-
-  TODO: add example for 3pids
   """
   @spec join_room(base_url, binary, binary, map) :: t
   def join_room(base_url, token, room_id_or_alias, opts \\ %{}) do
