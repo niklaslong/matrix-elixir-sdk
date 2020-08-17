@@ -68,6 +68,11 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets the homeserver's supported login types to authenticate users. 
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver.
+
   ## Examples
 
       MatrixSDK.Client.login("https://matrix.org")

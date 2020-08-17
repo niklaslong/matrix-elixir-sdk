@@ -103,7 +103,12 @@ defmodule MatrixSDK.Client.Request do
     }
 
   @doc """
-  Returns a `%Request{}` struct used to get the homeserver's supported login types to authenticate users. 
+  Returns a `%Request{}` struct used to get the homeserver's supported login types to authenticate users.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver.
 
   ## Examples
 
@@ -113,7 +118,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [],
         method: :get,
-        path: "/_matrix/client/r0/login"
+        path: "/_matrix/client/r0/login",
+        query_params: %{}
       }
   """
   @spec login(base_url) :: t
