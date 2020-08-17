@@ -159,7 +159,15 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Registers a guest account on the homeserver. 
+  Registers a guest account on the homeserver. Returns an access token which can be used to authenticate subsequent requests. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+
+  Optional: 
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
 
   ## Examples
 

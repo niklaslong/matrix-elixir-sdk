@@ -241,15 +241,15 @@ defmodule MatrixSDK.Client.Request do
   def logout_all(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout/all", token)
 
   @doc """
-  Returns a `%Request{}` struct used to register a guest account on the homeserver. 
+  Returns a `%Request{}` struct used to register a guest account on the homeserver and returns an access token which can be used to authenticate subsequent requests. 
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
+  - `base_url`: the base URL for the homeserver. 
 
   Optional: 
-  - `initial_device_display_name`: a display name to assign to the newly-created device
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
 
   ## Examples
 
@@ -259,7 +259,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register?kind=guest"
+        path: "/_matrix/client/r0/register?kind=guest",
+        query_params: %{}
       }   
 
   Specifiying a display name for the device:    
@@ -271,7 +272,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{initial_device_display_name: "THE INTERNET"},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register?kind=guest"
+        path: "/_matrix/client/r0/register?kind=guest",
+        query_params: %{}
       }
   """
   @spec register_guest(base_url, map) :: t
