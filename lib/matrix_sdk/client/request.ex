@@ -30,7 +30,7 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
+  - `base_url`: the base URL for the homeserver.
 
   ## Examples
 
@@ -54,7 +54,7 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
+  - `base_url`: the base URL for the homeserver. 
 
   ## Examples
 
