@@ -37,7 +37,7 @@ be found at [https://hexdocs.pm/matrix_sdk](https://hexdocs.pm/matrix_sdk).
 
 Here is an example to login with username and password:
 
-```elxiir
+```elixir
 iex(1)> url = "https://matrix.org"
 "https://matrix.org"
 iex(2)> auth = MatrixSDK.Client.Auth.login_user("mickey", "supersecret")
@@ -68,7 +68,7 @@ iex(2)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.Client.register_g
 iex(3)> room_address = "#elixirsdktest:matrix.org"
 "#elixirsdktest:matrix.org"
 iex(4)> {:ok, %{body: %{"consent_uri" => consent_uri}}} = MatrixSDK.Client.join_room(url, token, room_address)
-*Open this link with your browser*
+# Open this link with your browser
 iex(5)> MatrixSDK.Client.join_room(url, token, room_address)
 ...
 ```
