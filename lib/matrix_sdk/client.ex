@@ -394,7 +394,16 @@ defmodule MatrixSDK.Client do
   @doc """
   Deactivates a user's account. 
 
-  ## Example
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
+  Optional: 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  ## Examples
 
       MatrixSDK.Client.deactivate_account("https://matrix.org", "token")
   """

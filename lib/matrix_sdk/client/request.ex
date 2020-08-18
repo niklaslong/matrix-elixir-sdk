@@ -669,7 +669,16 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to deactivate a user's account. 
 
-  ## Example
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
+  Optional: 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  ## Examples
 
       iex> MatrixSDK.Client.Request.deactivate_account("https://matrix.org", "token")
       %MatrixSDK.Client.Request{
@@ -677,7 +686,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/deactivate"
+        path: "/_matrix/client/r0/account/deactivate",
+        query_params: []
       }
   """
   @spec deactivate_account(base_url, binary, map) :: t
