@@ -527,31 +527,35 @@ defmodule MatrixSDK.Client.Request do
     }
 
   @doc """
-  Returns a `%Request{}` struct used to change the password for an account on the homeserver.
+  Returns a `%Request{}` struct used to change the password for an account on the homeserver. This request needs to be authenticated with `m.login.email.identity` or `m.login.msisdn.identity`. For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
-  - `new_password`: the desired password for the account
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`
+  - `base_url`: the base URL for the homeserver.   
+  - `new_password`: the desired password for the account.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
 
   Optional: 
-  - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds
+  - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds.
 
   ## Examples 
 
-      iex> auth = MatrixSDK.Client.Auth.login_token("token")
+      iex> auth = MatrixSDK.Client.Auth.login_email_identity("sid", "client_secret")
       iex> MatrixSDK.Client.Request.change_password("https://matrix.org", "new_password", auth)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
-          auth: %{token: "token", type: "m.login.token"},
+          auth: %{
+            type: "m.login.email.identity", 
+            threepidCreds: [%{client_secret: "client_secret", sid: "sid"}]
+          },
           new_password: "new_password"
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/account/password"
+        path: "/_matrix/client/r0/account/password",
+        query_params: []
       }
   """
   @spec change_password(base_url, binary, Auth.t(), map) :: t

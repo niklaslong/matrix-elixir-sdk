@@ -310,15 +310,24 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Changes the password for an account on the homeserver.
+  Changes the password for an account on the homeserver. This request will need to be authenticated with `m.login.email.identity` or `m.login.msisdn.identity`. For more info see _3PID API flows_ section above. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.   
+  - `new_password`: the desired password for the account.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  Optional: 
+  - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds.
 
   ## Examples 
-
-      auth = MatrixSDK.Client.Auth.login_token("token")
-      MatrixSDK.Client.change_password("https://matrix.org", "new_password", auth)
+      
+      auth = MatrixSDK.Client.Auth.login_email_identity("sid", "client_secret")
+      MatrixSDK.Client.Request.change_password("https://matrix.org", "new_password", auth)
   """
   @spec change_password(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
-  # REVIEW: This requires m.login.email.identity 
   def change_password(base_url, new_password, auth, opts \\ %{}) do
     base_url
     |> Request.change_password(new_password, auth, opts)
@@ -587,7 +596,7 @@ defmodule MatrixSDK.Client do
 
   ## Example
 
-      MatrixSDK.Client.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
+      MatrixSDK.Client.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org") 
   """
   @spec room_state_event(Request.base_url(), binary, binary, binary, binary) ::
           HTTPClient.result()
