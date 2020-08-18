@@ -7,7 +7,7 @@ defmodule MatrixSDK.Client.Request do
   alias MatrixSDK.Client.{Auth, RoomEvent, StateEvent}
 
   @enforce_keys [:method, :base_url, :path]
-  defstruct([:method, :base_url, :path, query_params: %{}, headers: [], body: %{}])
+  defstruct([:method, :base_url, :path, query_params: [], headers: [], body: %{}])
 
   @type method :: :head | :get | :delete | :trace | :options | :post | :put | :patch
   @type base_url :: binary
@@ -41,7 +41,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :get,
         path: "/_matrix/client/versions",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec spec_versions(base_url) :: t
@@ -65,7 +65,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :get,
         path: "/.well-known/matrix/client",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec server_discovery(base_url) :: t
@@ -90,7 +90,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/capabilities",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec server_capabilities(base_url, binary) :: t
@@ -119,7 +119,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :get,
         path: "/_matrix/client/r0/login",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec login(base_url) :: t
@@ -152,7 +152,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/login",
-        query_params: %{}
+        query_params: []
       }
 
   User and password authentication with optional parameters:
@@ -172,7 +172,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/login",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec login(base_url, Auth.t(), opts :: map) :: t
@@ -202,7 +202,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/logout",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec logout(base_url, binary) :: t
@@ -234,7 +234,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/logout/all",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec logout_all(base_url, binary) :: t
@@ -260,7 +260,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register?kind=guest",
-        query_params: %{}
+        query_params: []
       }   
 
   Specifiying a display name for the device:    
@@ -273,7 +273,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register?kind=guest",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec register_guest(base_url, map) :: t
@@ -311,7 +311,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register",
-        query_params: %{}
+        query_params: []
       }
 
   With optional parameters:    
@@ -337,7 +337,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec register_user(base_url, binary, Auth.t(), map) :: t
@@ -381,7 +381,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register/email/requestToken",
-        query_params: %{}
+        query_params: []
       }
 
   With optional parameters:
@@ -399,7 +399,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register/email/requestToken",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec registration_email_token(base_url, binary, binary, pos_integer, map) :: t
@@ -450,7 +450,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register/msisdn/requestToken",
-        query_params: %{}
+        query_params: []
       }
 
   With optional parameters:
@@ -469,7 +469,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [],
         method: :post,
         path: "/_matrix/client/r0/register/msisdn/requestToken",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec registration_msisdn_token(base_url, binary, binary, binary, pos_integer, map) :: t
@@ -515,7 +515,7 @@ defmodule MatrixSDK.Client.Request do
          headers: [],
          method: :get,
          path: "/_matrix/client/r0/register/available?username=maurice_moss",
-         query_params: %{}
+         query_params: []
        }
   """
   @spec username_availability(base_url, binary) :: t
@@ -1081,7 +1081,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/event/%24someevent",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec room_event(base_url, binary, binary, binary) :: t
@@ -1109,7 +1109,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state/m.room.member/%40user%3Amatrix.org",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec room_state_event(base_url, binary, binary, binary, binary) :: t
@@ -1138,7 +1138,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec room_state(base_url, binary, binary) :: t
@@ -1210,7 +1210,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/joined_members",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec room_joined_members(base_url, binary, binary) :: t
@@ -1296,7 +1296,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state/m.room.join_rules/",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec send_state_event(base_url, binary, StateEvent.t()) :: t
@@ -1335,7 +1335,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/send/m.room.message/transaction_id",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec send_room_event(base_url, binary, RoomEvent.t()) :: t
