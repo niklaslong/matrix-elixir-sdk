@@ -465,6 +465,18 @@ defmodule MatrixSDK.Client do
   @doc """
   Binds contact information to the user's account through the specified identity server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: the client secret used in the session with the identity server.
+  - `id_server`: the identity server to use.
+  - `id_access_token`: an access token previously registered with the identity server.
+  - `sid`: he session ID given by the identity server.
+
+  For more info see _3PID API flows_ section above.
+
   ## Examples
 
       MatrixSDK.Client.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")

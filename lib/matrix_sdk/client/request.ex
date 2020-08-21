@@ -781,6 +781,18 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to bind contact information to the user's account through the specified identity server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: the client secret used in the session with the identity server.
+  - `id_server`: the identity server to use.
+  - `id_access_token`: an access token previously registered with the identity server.
+  - `sid`: he session ID given by the identity server.
+
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
@@ -794,7 +806,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/bind"
+        path: "/_matrix/client/r0/account/3pid/bind",
+        query_params: []
       }
   """
   @spec account_bind_3pid(base_url, binary, binary, binary, binary, binary) :: t
