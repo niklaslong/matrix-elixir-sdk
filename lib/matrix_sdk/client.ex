@@ -905,6 +905,18 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Sends a room event to a room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_event`: a state event as defined in `MatrixSDK.Client.RoomEvent`. 
+
+  ## Example
+
+      room_event = MatrixSDK.Client.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
+      MatrixSDK.Client.Request.send_room_event("https://matrix.org", "token", room_event)
   """
   @spec send_room_event(Request.base_url(), binary, RoomEvent.t()) :: HTTPClient.result()
   def send_room_event(base_url, token, room_event) do

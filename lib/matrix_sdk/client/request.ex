@@ -1522,16 +1522,18 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to send a room event to a room. 
+  Returns a `%Request{}` struct used to send a room event to a room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_event`: a state event as defined in `MatrixSDK.Client.RoomEvent`. 
 
   ## Example
 
-      iex> room_event = %{
-      ...>                content: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
-      ...>                room_id: "!someroom:matrix.org",
-      ...>                type: "m.room.message",
-      ...>                transaction_id: "transaction_id"
-      ...>              }
+      iex> room_event = MatrixSDK.Client.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
       iex> MatrixSDK.Client.Request.send_room_event("https://matrix.org", "token", room_event)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
