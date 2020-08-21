@@ -657,6 +657,13 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets information about the owner of a given access token.
 
+  ## Args
+
+  Required: 
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       MatrixSDK.Client.whoami("https://matrix.org", "token")

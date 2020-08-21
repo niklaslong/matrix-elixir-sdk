@@ -1121,6 +1121,13 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
 
+  ## Args
+
+  Required: 
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.whoami("https://matrix.org", "token")
@@ -1129,7 +1136,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
-        path: "/_matrix/client/r0/account/whoami"
+        path: "/_matrix/client/r0/account/whoami",
+        query_params: []
       }
   """
   @spec whoami(base_url, binary) :: t
