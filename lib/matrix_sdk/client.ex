@@ -717,6 +717,15 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets a single event based on `room_id` and `event_id`.
 
+  ## Args
+
+  Required:
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the ID of the room the event is in. 
+  - `event_id`: the event ID.
+
   ## Example
 
       MatrixSDK.Client.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")

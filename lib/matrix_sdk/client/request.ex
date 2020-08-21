@@ -1215,6 +1215,15 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get a single event based on `room_id` and `event_id`.
 
+  ## Args
+
+  Required:
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the ID of the room the event is in. 
+  - `event_id`: the event ID.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
