@@ -1252,6 +1252,16 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to look up the contents of a state event in a room.
 
+  ## Args
+
+  Required:
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room the state event is in.
+  - `event_type`: the type of the state event.
+  - `state_key`: the key of the state to look up. Often an empty string.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
