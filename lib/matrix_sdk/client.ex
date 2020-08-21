@@ -823,6 +823,13 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets a map of MXIDs to member info objects for members of the room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Example 
 
       MatrixSDK.Client.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
