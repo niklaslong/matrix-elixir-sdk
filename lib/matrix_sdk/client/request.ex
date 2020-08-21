@@ -1415,9 +1415,23 @@ defmodule MatrixSDK.Client.Request do
 
   @doc """
   Returns a `%Request{}` struct used to get message and state events for a room. 
-  It uses pagination query parameters to paginate history in the room.
+  It uses pagination parameters to paginate history in the room.
 
-  ## Example 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID. 
+  - `from`: the pagination token to start returning events from.
+  - `dir`: the direction to return events from. One of: `"b"` or `"f"`.
+
+  Optional: 
+  - `to`: the pagination token to stop returning events at.
+  - `limit`: the maximum number of events to return. 
+  - `filter`: a filter to apply to the returned events. 
+
+  ## Examples 
 
       iex> MatrixSDK.Client.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
       %MatrixSDK.Client.Request{
