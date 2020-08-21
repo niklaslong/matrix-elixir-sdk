@@ -1481,16 +1481,18 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to send a state event to a room. 
+  Returns a `%Request{}` struct used to send a state event to a room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `state_event`: a state event as defined in `MatrixSDK.Client.StateEvent`. 
 
   ## Example
 
-      iex> state_event = %{
-      ...>                content: %{join_rule: "private"},
-      ...>                room_id: "!someroom:matrix.org",
-      ...>                state_key: "",
-      ...>                type: "m.room.join_rules"
-      ...>              }
+      iex> state_event = MatrixSDK.Client.StateEvent.join_rules("!someroom:matrix.org", "private")
       iex> MatrixSDK.Client.Request.send_state_event("https://matrix.org", "token", state_event)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",

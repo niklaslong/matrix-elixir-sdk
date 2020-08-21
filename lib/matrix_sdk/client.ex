@@ -883,6 +883,18 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Sends a state event to a room. 
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `state_event`: a state event as defined in `MatrixSDK.Client.StateEvent`.
+
+  ## Example
+
+      state_event = MatrixSDK.Client.StateEvent.join_rules("!someroom:matrix.org", "private")
+      MatrixSDK.Client.Request.send_state_event("https://matrix.org", "token", state_event)
   """
   @spec send_state_event(Request.base_url(), binary, StateEvent.t()) :: HTTPClient.result()
   def send_state_event(base_url, token, state_event) do
