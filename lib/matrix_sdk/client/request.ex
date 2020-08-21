@@ -841,7 +841,7 @@ defmodule MatrixSDK.Client.Request do
 
   Optional: 
 
-  `id_server`: the identity server to unbind from.
+  - `id_server`: the identity server to unbind from.
 
   ## Examples
 
@@ -858,7 +858,7 @@ defmodule MatrixSDK.Client.Request do
         query_params: []
       }
 
-  With optional id_server parameter:
+  With optional `id_server` parameter:
 
       iex> MatrixSDK.Client.Request.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "example.org"})
       %MatrixSDK.Client.Request{
@@ -892,7 +892,18 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to unbind contact information from the user's account.
+  Returns a `%Request{}` struct used to unbind contact information from the user's account without deleting it from the homeserver.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `medium`: the medium of the third party identifier being removed. One of: `"email"` or `"msisdn"`.
+  - `address`: the third party address being removed. 
+
+  Optional:
+  - `id_server`: the identity server to unbind from.
 
   ## Examples
 
@@ -905,10 +916,11 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/unbind"
+        path: "/_matrix/client/r0/account/3pid/unbind",
+        query_params: []
       }
 
-  With optional id_server parameter:
+  With optional `id_server` parameter:
 
       iex> MatrixSDK.Client.Request.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "example.org"})
       %MatrixSDK.Client.Request{
@@ -920,7 +932,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/unbind"
+        path: "/_matrix/client/r0/account/3pid/unbind",
+        query_params: []
       }  
   """
   @spec account_unbind_3pid(base_url, binary, binary, binary, map) :: t
