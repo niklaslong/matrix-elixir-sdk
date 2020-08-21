@@ -437,6 +437,19 @@ defmodule MatrixSDK.Client do
   @doc """
   Adds contact information to the user's account.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: the client secret used in the session with the homeserver.
+  - `sid`: the session ID give by the homeserver. 
+
+  Optional:
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  For more info see _3PID API flows_ section above.
+
   ## Examples
 
       MatrixSDK.Client.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")

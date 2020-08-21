@@ -733,6 +733,19 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to add contact information to the user's account.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: the client secret used in the session with the homeserver.
+  - `sid`: the session ID give by the homeserver. 
+
+  Optional:
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
@@ -744,7 +757,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/add"
+        path: "/_matrix/client/r0/account/3pid/add",
+        query_params: []
       }
   """
   @spec account_add_3pid(base_url, binary, binary, binary, map) :: t
