@@ -492,6 +492,18 @@ defmodule MatrixSDK.Client do
   @doc """
   Deletes contact information from the user's account.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `medium`: the medium of the third party identifier being removed. One of: `"email"` or `"msisdn"`.
+  - `address`: the third party address being removed.
+
+  Optional: 
+
+  `id_server`: the identity server to unbind from.
+
   ## Examples
 
       MatrixSDK.Client.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
