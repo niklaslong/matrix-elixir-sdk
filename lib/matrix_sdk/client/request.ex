@@ -1155,15 +1155,15 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
-  - `token`: the authentication token returned from user login 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: the authentication token returned from user login. 
 
   Optional:
-  - `filter`: the ID of a filter created using the filter API or a filter JSON object encoded as a string
-  - `since`: a point in time to continue a sync from (usuall the `next_batch` value from last sync)
-  - `full_state`: controls whether to include the full state for all rooms the user is a member of
-  - `set_presence`: controls whether the client is automatically marked as online by polling this API
-  - `timeout`: the maximum time to wait, in milliseconds, before returning this request
+  - `filter`: the ID of a filter created using the filter API or a filter JSON object encoded as a string.
+  - `since`: a point in time to continue a sync from (usuall the `next_batch` value from last sync).
+  - `full_state`: controls whether to include the full state for all rooms the user is a member of.
+  - `set_presence`: controls whether the client is automatically marked as online by polling this API.
+  - `timeout`: the maximum time to wait, in milliseconds, before returning this request.
 
   ## Examples
 
