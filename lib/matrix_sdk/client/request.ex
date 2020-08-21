@@ -703,6 +703,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get a list of the third party identifiers the homeserver has associated with the user's account.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_3pids("https://matrix.org", "token")
@@ -711,7 +717,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
-        path: "/_matrix/client/r0/account/3pid"
+        path: "/_matrix/client/r0/account/3pid",
+        query_params: []
       }
   """
   @spec account_3pids(base_url, binary) :: t

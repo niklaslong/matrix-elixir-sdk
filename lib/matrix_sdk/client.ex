@@ -417,6 +417,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets a list of the third party identifiers the homeserver has associated with the user's account.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       MatrixSDK.Client.account_3pids("https://matrix.org", "token")
