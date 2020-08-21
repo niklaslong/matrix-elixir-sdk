@@ -1325,7 +1325,19 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the list of members for this room.
 
-  ## Example 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
+  Optional: 
+  - `at`: the point in time (pagination token) to return members for in the room.
+  - `membership`: the kind of membership to filter for. Defaults to no filtering if unspecified.
+  - `not_membership`: the kind of membership to exclude from the results. Defaults to no filtering if unspecified. One of: `"join"`, `"invite"`, `"leave"`, `"ban"`.
+
+  ## Examples
 
       iex> MatrixSDK.Client.Request.room_members("https://matrix.org", "token", "!someroom:matrix.org")
       %MatrixSDK.Client.Request{
