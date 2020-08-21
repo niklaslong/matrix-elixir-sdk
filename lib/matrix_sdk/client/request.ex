@@ -1289,7 +1289,14 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-    Returns a `%Request{}` struct used to get the state events for the current state of a room.
+  Returns a `%Request{}` struct used to get the state events for the current state of a room.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room the events are in. 
 
   ## Example 
 

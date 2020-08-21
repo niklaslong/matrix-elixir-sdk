@@ -765,7 +765,15 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets the state events for the current state of a room.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room the events are in. 
+
   ## Example 
+
 
       MatrixSDK.Client.room_state("https://matrix.org", "token", "!someroom:matrix.org")
   """
