@@ -1113,6 +1113,17 @@ defmodule MatrixSDK.Client do
   @doc """
   Kicks a user from a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to kick from the room.
+
+  Optional: 
+  - `reason`: the reason the user has been kicked.
+
   ## Examples
 
       MatrixSDK.Client.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
