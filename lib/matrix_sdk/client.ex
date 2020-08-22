@@ -1092,6 +1092,13 @@ defmodule MatrixSDK.Client do
   @doc """
   Lets a user forget a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Example 
 
       MatrixSDK.Client.forget_room("https://matrix.org", "token", "!someroom:matrix.org")
