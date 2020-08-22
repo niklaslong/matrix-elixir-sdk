@@ -1213,6 +1213,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Sets the visibility of a given room in the server's public room directory.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `visibility`: the new visibility setting for the room.  One of: `"private"` or `"public"`.
+
   ## Example
 
       MatrixSDK.Client.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")

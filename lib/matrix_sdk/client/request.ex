@@ -2033,6 +2033,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to set the visibility of a given room in the server's public room directory.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `visibility`: the new visibility setting for the room.  One of: `"private"` or `"public"`.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
@@ -2042,6 +2050,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/directory/list/room/%21someroom%3Amatrix.org",
+        query_params: []
       }
   """
   @spec room_visibility(base_url, binary, binary, binary) :: t
