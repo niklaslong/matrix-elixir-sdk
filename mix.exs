@@ -44,7 +44,7 @@ defmodule MatrixSDK.MixProject do
       source_url: "https://github.com/niklaslong/matrix-sdk",
       extras: ["README.md"],
       groups_for_modules: [
-        "Client APIs": [
+        "Client-Server API": [
           MatrixSDK.Client.Request,
           MatrixSDK.Client.Auth,
           MatrixSDK.Client.RoomEvent,
