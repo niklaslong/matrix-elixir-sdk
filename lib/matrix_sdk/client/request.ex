@@ -1565,6 +1565,18 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to redact a room event. 
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID. 
+  - `event_id`: the event ID.
+  - `transaction_id`: the transaction ID for this event. Clients should generate a unique ID; it will be used by the server to ensure idempotency of requests.
+
+  Optional: 
+  - `reason`: the reason for the event being redacted.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id")
@@ -1574,6 +1586,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id",
+        query_params: []
       }
 
   With options:
@@ -1586,6 +1599,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id",
+        query_params: []
       }
   """
   @spec redact_room_event(base_url, binary, binary, binary, binary, map) :: t

@@ -928,6 +928,18 @@ defmodule MatrixSDK.Client do
   @doc """
   Redacts a room event with a reason.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID. 
+  - `event_id`: the event ID.
+  - `transaction_id`: the transaction ID for this event. Clients should generate a unique ID; it will be used by the server to ensure idempotency of requests.
+
+  Optional: 
+  - `reason`: the reason for the event being redacted.
+
   ## Examples
 
       MatrixSDK.Client.redact_room_event("https://matrix.org", "token", "!someroom@matrix.org", "event_id", "transaction_id")
