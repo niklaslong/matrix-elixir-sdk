@@ -1910,6 +1910,17 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to ban a user from a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to ban from the room.
+
+  Optional: 
+  - `reason`: the reason the user has been banned.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
@@ -1918,8 +1929,11 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban",
-        body: %{user_id: "@user:matrix.org"}
+        body: %{user_id: "@user:matrix.org"},
+        query_params: []
       }
+
+  With optional parameter:
 
       iex> MatrixSDK.Client.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
       %MatrixSDK.Client.Request{
@@ -1927,7 +1941,8 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban",
-        body: %{user_id: "@user:matrix.org", reason: "Ate all the chocolate"}
+        body: %{user_id: "@user:matrix.org", reason: "Ate all the chocolate"},
+        query_params: []
       }
   """
   @spec room_ban(base_url, binary, binary, binary, map) :: t
