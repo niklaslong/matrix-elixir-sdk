@@ -1788,6 +1788,13 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to leave a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
@@ -1796,6 +1803,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/leave",
+        query_params: []
       }
   """
   @spec leave_room(base_url, binary, binary) :: t

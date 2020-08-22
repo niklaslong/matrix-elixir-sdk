@@ -1071,6 +1071,13 @@ defmodule MatrixSDK.Client do
   @doc """
   Lets a user leave a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Example 
 
       MatrixSDK.Client.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
