@@ -1389,6 +1389,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Retrieves the avatar url for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
+
   ## Examples
 
       MatrixSDK.Client.avatar_url("https://matrix.org", "@user:matrix.org")
