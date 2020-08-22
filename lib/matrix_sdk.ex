@@ -1,5 +1,3 @@
 defmodule MatrixSDK do
-  @moduledoc """
-  Documentation for `MatrixSDK`.
-  """
+  @moduledoc false
 end
