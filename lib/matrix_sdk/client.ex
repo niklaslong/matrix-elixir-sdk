@@ -1263,6 +1263,21 @@ defmodule MatrixSDK.Client do
   @doc """
   Lists the public rooms on the server with more advanced filtering options. 
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - filters: 
+    - `limit`: limit the number of results returned.
+    - `since`: a pagination token from a previous request, allowing clients to get the next (or previous) batch of rooms.
+    - `filter`: a string to search for in the room metadata, e.g. name, topic, canonical alias, etc...
+    - `include_all_networks`: boolean, whether or not to include all known networks/protocols from application services on the homeserver. 
+    - `third_party_instance_id`: the specific third party network/protocol to request from the homeserver. Can only be used if `include_all_networks` is false.
+
+  Optional: 
+  - `server`: the server to fetch the public room lists from.
+
   ## Examples
 
       MatrixSDK.Client.public_rooms("https://matrix.org", "token", %{limit: 10})
