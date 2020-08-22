@@ -2069,6 +2069,16 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to list the public rooms on the server with basic filtering.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+
+  Optional: 
+  - `limit`: limit the number of results returned.
+  - `since`: a pagination token from a previous request, allowing clients to get the next (or previous) batch of rooms.
+  - `server`: the server to fetch the public room lists from.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.public_rooms("https://matrix.org")
