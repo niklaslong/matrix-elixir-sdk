@@ -1193,6 +1193,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets the visibility of a given room on the server's public room directory.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `room_id`: the room ID.
+
   ## Example
 
       MatrixSDK.Client.room_visibility("https://matrix.org", "!someroom:matrix.org")

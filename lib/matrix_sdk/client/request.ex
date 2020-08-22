@@ -2002,6 +2002,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the visibility of a given room on the server's public room directory.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `room_id`: the room ID.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.room_visibility("https://matrix.org", "!someroom:matrix.org")
@@ -2010,6 +2016,7 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         method: :get,
         path: "/_matrix/client/r0/directory/list/room/%21someroom%3Amatrix.org",
+        query_params: []
       }
   """
   @spec room_visibility(base_url, binary) :: t
