@@ -961,6 +961,26 @@ defmodule MatrixSDK.Client do
   @doc """
   Creates a new room. 
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
+  Optional: 
+  - `visibility`: controls the presence of the room on the room list. One of: `"public"` or `"private"`.
+  - `room_alias_name`: the desired room alias local part. 
+  - `name`: if this is included, an `m.room.name` event will be sent into the room to indicate the name of the room. 
+  - `topic`: if this is included, an `m.room.topic` event will be sent into the room to indicate the topic for the room.
+  - `invite`: a list of user IDs to invite to the room.
+  - `invite_3pid`: a list of objects representing third party IDs to invite into the room.
+  - `room_version`: the room version to set for the room.
+  - `creation_content`: extra keys, such as m.federate, to be added to the content of the `m.room.create` event.
+  - `initial_state`: a list of state events to set in the new room.
+  - `preset`: convenience parameter for setting various default state events based on a preset.
+  - `is_direct`: boolean flag. 
+  - `power_level_content_override`: the power level content to override in the default power level event. 
+
   ## Examples
 
       MatrixSDK.Client.create_room("https://matrix.org", "token")
