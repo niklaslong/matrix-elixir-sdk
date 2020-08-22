@@ -2283,13 +2283,22 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the display name for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.display_name("https://matrix.org", "@user:matrix.org")
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname",
+        query_params: []
       }
   """
   @spec display_name(base_url, binary) :: t
