@@ -1409,6 +1409,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Retrieves the user profile for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
+
   ## Examples
 
       MatrixSDK.Client.user_profile("https://matrix.org", "@user:matrix.org")

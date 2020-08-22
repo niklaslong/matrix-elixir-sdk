@@ -2383,13 +2383,22 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the user profile for a given user id.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.user_profile("https://matrix.org", "@user:matrix.org")
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org",
+        query_params: []
       }
   """
   @spec user_profile(base_url, binary) :: t
