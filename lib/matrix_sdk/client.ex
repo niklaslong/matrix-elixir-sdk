@@ -1047,6 +1047,16 @@ defmodule MatrixSDK.Client do
   @doc """
   Lets a user join a room.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id_or_alias`: the room ID or room alias.
+
+  Optional: 
+  - `third_party_signed`: a signature of an `m.third_party_invite` token to prove that this user owns a third party identity which has been invited to the room.
+
   ## Example 
 
       MatrixSDK.Client.join_room("https://matrix.org", "token", "!someroom:matrix.org")

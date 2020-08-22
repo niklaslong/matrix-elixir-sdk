@@ -1732,6 +1732,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/invite",
+        query_params: []
       }
   """
   @spec room_invite(base_url, binary, binary, binary) :: t
@@ -1750,6 +1751,16 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used by a user to join a room.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id_or_alias`: the room ID or room alias.
+
+  Optional: 
+  - `third_party_signed`: a signature of an `m.third_party_invite` token to prove that this user owns a third party identity which has been invited to the room.
+
   ## Example 
 
       iex> MatrixSDK.Client.Request.join_room("https://matrix.org", "token", "!someroom:matrix.org")
@@ -1758,6 +1769,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/join/%21someroom%3Amatrix.org",
+        query_params: []
       }
   """
   @spec join_room(base_url, binary, binary, map) :: t
