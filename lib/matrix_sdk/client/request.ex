@@ -2247,6 +2247,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to set the display name for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `user_id`: the user ID.
+  - `display_name`: new display name.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
@@ -2256,6 +2264,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname",
+        query_params: []
       }
   """
   @spec set_display_name(base_url, binary, binary, binary) :: t

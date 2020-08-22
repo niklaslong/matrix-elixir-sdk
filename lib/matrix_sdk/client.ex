@@ -1325,6 +1325,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Sets the display name for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `user_id`: the user ID.
+  - `display_name`: new display name.
+
   ## Examples
 
       MatrixSDK.Client.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
