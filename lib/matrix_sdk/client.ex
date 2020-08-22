@@ -1296,6 +1296,17 @@ defmodule MatrixSDK.Client do
   @doc """
   Searches for users based on search term.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `search_term`: the term to search for.
+
+  Optional: 
+  - `limit`: limit the number of returned results.
+  - `language`: sets the language header for the request.
+
   ## Examples
 
       MatrixSDK.Client.user_directory_search("https://matrix.org", "token", "mickey")

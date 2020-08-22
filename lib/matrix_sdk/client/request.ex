@@ -2171,6 +2171,17 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to search for users.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `search_term`: the term to search for.
+
+  Optional: 
+  - `limit`: limit the number of returned results.
+  - `language`: sets the language header for the request.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.user_directory_search("https://matrix.org", "token", "mickey")
@@ -2180,6 +2191,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/user_directory/search",
+        query_params: []
       }
 
   With limit option:
@@ -2191,6 +2203,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/user_directory/search",
+        query_params: []
       }
 
   With language option:
@@ -2202,6 +2215,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}, {"Accept-Language", "en-US"}],
         method: :post,
         path: "/_matrix/client/r0/user_directory/search",
+        query_params: []
       }
   """
   @spec user_directory_search(base_url, binary, binary, map) :: t
