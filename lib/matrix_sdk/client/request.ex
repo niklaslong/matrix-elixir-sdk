@@ -1685,6 +1685,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get a list of the user's current rooms.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Example
 
         iex> MatrixSDK.Client.Request.joined_rooms("https://matrix.org", "token")
@@ -1694,6 +1700,7 @@ defmodule MatrixSDK.Client.Request do
           headers: [{"Authorization", "Bearer token"}],
           method: :get,
           path: "/_matrix/client/r0/joined_rooms",
+          query_params: []
         }
   """
   @spec joined_rooms(base_url, binary) :: t

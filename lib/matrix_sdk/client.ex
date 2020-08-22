@@ -1005,6 +1005,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets a list of the user's current rooms.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Example
 
       MatrixSDK.Client.joined_rooms("https://matrix.org", "token")
