@@ -1367,6 +1367,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Sets the avatar url for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `user_id`: the user ID.
+  - `avatar_url`: the new avatar URL for this user.
+
   ## Examples
 
       MatrixSDK.Client.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")

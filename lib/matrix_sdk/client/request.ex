@@ -2315,6 +2315,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to set the avatar url for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `user_id`: the user ID.
+  - `avatar_url`: the new avatar URL for this user.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
@@ -2324,6 +2332,7 @@ defmodule MatrixSDK.Client.Request do
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url",
         body: %{avatar_url: "mxc://matrix.org/wefh34uihSDRGhw34"},
         headers: [{"Authorization", "Bearer token"}],
+        query_params: []
       }
   """
   @spec set_avatar_url(base_url, binary, binary, binary) :: t
