@@ -1171,6 +1171,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Unbans a user from a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to unban from the room.
+
   ## Examples
 
       MatrixSDK.Client.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
