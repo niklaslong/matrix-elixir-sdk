@@ -1715,6 +1715,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to invite a user to participate in a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to invite to the room. 
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")

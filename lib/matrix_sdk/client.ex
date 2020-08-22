@@ -1025,6 +1025,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Invites a user to participate in a particular room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to invite to the room.
+
   ## Example
 
       MatrixSDK.Client.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
