@@ -789,7 +789,7 @@ defmodule MatrixSDK.Client.Request do
   - `client_secret`: the client secret used in the session with the identity server.
   - `id_server`: the identity server to use.
   - `id_access_token`: an access token previously registered with the identity server.
-  - `sid`: he session ID given by the identity server.
+  - `sid`: the session ID given by the identity server.
 
   For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 

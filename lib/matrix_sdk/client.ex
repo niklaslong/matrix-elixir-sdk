@@ -15,7 +15,7 @@ defmodule MatrixSDK.Client do
   1. `account_email_token/5` or `account_msisdn_token/6`
   2. `account_add_3pid/5`
 
-    Flow 3—changing the bind status of a 3PID: this is currently unsupported but will be available once the identity server endpoints are wrapped.
+  Flow 3—changing the bind status of a 3PID: this is currently unsupported but will be available once the identity server endpoints are wrapped.
 
   Flow 4—reset password via email:
   1. `password_email_token/5`
@@ -489,7 +489,7 @@ defmodule MatrixSDK.Client do
   - `client_secret`: the client secret used in the session with the identity server.
   - `id_server`: the identity server to use.
   - `id_access_token`: an access token previously registered with the identity server.
-  - `sid`: he session ID given by the identity server.
+  - `sid`: the session ID given by the identity server.
 
   For more info see _3PID API flows_ section above.
 
@@ -789,7 +789,6 @@ defmodule MatrixSDK.Client do
   - `room_id`: the room the events are in. 
 
   ## Example 
-
 
       MatrixSDK.Client.room_state("https://matrix.org", "token", "!someroom:matrix.org")
   """
