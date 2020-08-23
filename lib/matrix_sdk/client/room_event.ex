@@ -1,4 +1,8 @@
 defmodule MatrixSDK.Client.RoomEvent do
+  @moduledoc """
+  Convenience functions for building room events.
+  """
+
   @enforce_keys [:content, :type, :transaction_id, :room_id]
   defstruct [:content, :type, :room_id, :transaction_id]
 

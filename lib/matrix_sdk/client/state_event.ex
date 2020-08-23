@@ -1,4 +1,8 @@
 defmodule MatrixSDK.Client.StateEvent do
+  @moduledoc """
+  Convenience functions for building state events.
+  """
+
   @enforce_keys [:content, :type, :room_id, :state_key]
   defstruct [:content, :type, :room_id, state_key: ""]
 

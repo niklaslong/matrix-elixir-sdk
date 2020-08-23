@@ -7,7 +7,7 @@ defmodule MatrixSDK.Client.Request do
   alias MatrixSDK.Client.{Auth, RoomEvent, StateEvent}
 
   @enforce_keys [:method, :base_url, :path]
-  defstruct([:method, :base_url, :path, query_params: %{}, headers: [], body: %{}])
+  defstruct([:method, :base_url, :path, query_params: [], headers: [], body: %{}])
 
   @type method :: :head | :get | :delete | :trace | :options | :post | :put | :patch
   @type base_url :: binary
@@ -27,6 +27,11 @@ defmodule MatrixSDK.Client.Request do
   Returns a `%Request{}` struct used to get the versions of the Matrix specification
   supported by the server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.spec_versions("https://matrix.org")
@@ -35,7 +40,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [],
         method: :get,
-        path: "/_matrix/client/versions"
+        path: "/_matrix/client/versions",
+        query_params: []
       }
   """
   @spec spec_versions(base_url) :: t
@@ -43,7 +49,12 @@ defmodule MatrixSDK.Client.Request do
     do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
   @doc """
-  Returns a `%Request{}` struct used to get discovery information about the domain. 
+  Returns a `%Request{}` struct used to get discovery information about the domain.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
 
   ## Examples
 
@@ -53,7 +64,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [],
         method: :get,
-        path: "/.well-known/matrix/client"
+        path: "/.well-known/matrix/client",
+        query_params: []
       }
   """
   @spec server_discovery(base_url) :: t
@@ -63,16 +75,22 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get information about the server's supported feature set and other relevant capabilities.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
-      iex> token = "token"
-      iex> MatrixSDK.Client.Request.server_capabilities("https://matrix.org", token)
+      iex> MatrixSDK.Client.Request.server_capabilities("https://matrix.org", "token")
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
-        path: "/_matrix/client/r0/capabilities"
+        path: "/_matrix/client/r0/capabilities",
+        query_params: []
       }
   """
   @spec server_capabilities(base_url, binary) :: t
@@ -85,7 +103,12 @@ defmodule MatrixSDK.Client.Request do
     }
 
   @doc """
-  Returns a `%Request{}` struct used to get the homeserver's supported login types to authenticate users. 
+  Returns a `%Request{}` struct used to get the homeserver's supported login types to authenticate users.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver.
 
   ## Examples
 
@@ -95,7 +118,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [],
         method: :get,
-        path: "/_matrix/client/r0/login"
+        path: "/_matrix/client/r0/login",
+        query_params: []
       }
   """
   @spec login(base_url) :: t
@@ -109,12 +133,12 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`
+  - `base_url`: the base URL for the homeserver. 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
 
   Optional:
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
-  - `initial_device_display_name`: a display name to assign to the newly-created device
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
 
 
   ## Examples
@@ -127,7 +151,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{token: "token", type: "m.login.token"},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/login"
+        path: "/_matrix/client/r0/login",
+        query_params: []
       }
 
   User and password authentication with optional parameters:
@@ -146,7 +171,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/login"
+        path: "/_matrix/client/r0/login",
+        query_params: []
       }
   """
   @spec login(base_url, Auth.t(), opts :: map) :: t
@@ -162,6 +188,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to invalidate an existing access token, so that it can no longer be used for authorization.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
       iex> MatrixSDK.Client.Request.logout("https://matrix.org", "token")
       %MatrixSDK.Client.Request{
@@ -169,7 +201,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/logout"
+        path: "/_matrix/client/r0/logout",
+        query_params: []
       }
   """
   @spec logout(base_url, binary) :: t
@@ -186,6 +219,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to invalidate all existing access tokens, so that they can no longer be used for authorization.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.logout_all("https://matrix.org", "token")
@@ -194,22 +233,23 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/logout/all"
+        path: "/_matrix/client/r0/logout/all",
+        query_params: []
       }
   """
   @spec logout_all(base_url, binary) :: t
   def logout_all(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout/all", token)
 
   @doc """
-  Returns a `%Request{}` struct used to register a guest account on the homeserver. 
+  Returns a `%Request{}` struct used to register a guest account on the homeserver and returns an access token which can be used to authenticate subsequent requests. 
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
+  - `base_url`: the base URL for the homeserver. 
 
   Optional: 
-  - `initial_device_display_name`: a display name to assign to the newly-created device
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
 
   ## Examples
 
@@ -219,7 +259,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register?kind=guest"
+        path: "/_matrix/client/r0/register?kind=guest",
+        query_params: []
       }   
 
   Specifiying a display name for the device:    
@@ -231,7 +272,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{initial_device_display_name: "THE INTERNET"},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register?kind=guest"
+        path: "/_matrix/client/r0/register?kind=guest",
+        query_params: []
       }
   """
   @spec register_guest(base_url, map) :: t
@@ -249,30 +291,32 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
-  - `password`: the desired password for the account
+  - `base_url`: the base URL for the homeserver. 
+  - `password`: the desired password for the account.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`. This is used to authenticate the registration request, not to define how a user will be authenticated. 
 
   Optional: 
   - `username`: the basis for the localpart of the desired Matrix ID. If omitted, the homeserver will generate a Matrix ID local part.
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
-  - `initial_device_display_name`: a display name to assign to the newly-created device
-  - `inhibit_login`: if true, an `access_token` and `device_id` will not be returned from this call, therefore preventing an automatic login
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
+  - `inhibit_login`: if true, an `access_token` and `device_id` will not be returned from this call, therefore preventing an automatic login.
 
   ## Examples
 
-      iex> auth = Auth.login_dummy()
+      iex> auth = MatrixSDK.Client.Auth.login_dummy()
       iex> MatrixSDK.Client.Request.register_user("https://matrix.org", "password", auth)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{auth: %{type: "m.login.dummy"}, password: "password"},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register"
+        path: "/_matrix/client/r0/register",
+        query_params: []
       }
 
   With optional parameters:    
 
-      iex> auth = Auth.login_dummy()
+      iex> auth = MatrixSDK.Client.Auth.login_dummy()
       iex> opts = %{
       ...>          username: "maurice_moss",
       ...>          device_id: "id",
@@ -292,7 +336,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register"
+        path: "/_matrix/client/r0/register",
+        query_params: []
       }
   """
   @spec register_user(base_url, binary, Auth.t(), map) :: t
@@ -314,6 +359,19 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to check the given email address is not already associated with an account on the homeserver. This should be used to get a token to register an email as part of the initial user registration.
 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `email`: the email address.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.  
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.registration_email_token("https://matrix.org", "secret", "maurice@moss.yay", 1)
@@ -322,7 +380,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{client_secret: "secret", email: "maurice@moss.yay", send_attempt: 1},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register/email/requestToken"
+        path: "/_matrix/client/r0/register/email/requestToken",
+        query_params: []
       }
 
   With optional parameters:
@@ -339,7 +398,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register/email/requestToken"
+        path: "/_matrix/client/r0/register/email/requestToken",
+        query_params: []
       }
   """
   @spec registration_email_token(base_url, binary, binary, pos_integer, map) :: t
@@ -362,6 +422,20 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to check the given phone number is not already associated with an account on the homeserver. This should be used to get a token to register a phone number as part of the initial user registration.
 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
+  - `phone`: the phone number.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL. 
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.registration_msisdn_token("https://matrix.org", "secret", "GB", "07700900001", 1)
@@ -375,7 +449,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register/msisdn/requestToken"
+        path: "/_matrix/client/r0/register/msisdn/requestToken",
+        query_params: []
       }
 
   With optional parameters:
@@ -393,7 +468,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/register/msisdn/requestToken"
+        path: "/_matrix/client/r0/register/msisdn/requestToken",
+        query_params: []
       }
   """
   @spec registration_msisdn_token(base_url, binary, binary, binary, pos_integer, map) :: t
@@ -424,6 +500,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to check if a username is available and valid for the server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `username`: the basis for the localpart of the desired Matrix ID. 
+
   ## Examples
 
        iex> MatrixSDK.Client.Request.username_availability("https://matrix.org", "maurice_moss")
@@ -432,7 +514,8 @@ defmodule MatrixSDK.Client.Request do
          body: %{},
          headers: [],
          method: :get,
-         path: "/_matrix/client/r0/register/available?username=maurice_moss"
+         path: "/_matrix/client/r0/register/available?username=maurice_moss",
+         query_params: []
        }
   """
   @spec username_availability(base_url, binary) :: t
@@ -444,31 +527,35 @@ defmodule MatrixSDK.Client.Request do
     }
 
   @doc """
-  Returns a `%Request{}` struct used to change the password for an account on the homeserver.
+  Returns a `%Request{}` struct used to change the password for an account on the homeserver. This request needs to be authenticated with `m.login.email.identity` or `m.login.msisdn.identity`. For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
-  - `new_password`: the desired password for the account
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`
+  - `base_url`: the base URL for the homeserver.   
+  - `new_password`: the desired password for the account.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
 
   Optional: 
-  - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds
+  - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds.
 
   ## Examples 
 
-      iex> auth = MatrixSDK.Client.Auth.login_token("token")
+      iex> auth = MatrixSDK.Client.Auth.login_email_identity("sid", "client_secret")
       iex> MatrixSDK.Client.Request.change_password("https://matrix.org", "new_password", auth)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
-          auth: %{token: "token", type: "m.login.token"},
+          auth: %{
+            type: "m.login.email.identity", 
+            threepidCreds: [%{client_secret: "client_secret", sid: "sid"}]
+          },
           new_password: "new_password"
         },
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/account/password"
+        path: "/_matrix/client/r0/account/password",
+        query_params: []
       }
   """
   @spec change_password(base_url, binary, Auth.t(), map) :: t
@@ -488,7 +575,20 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password`. 
+  Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password/4`.
+
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `email`: the email address.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.  
 
   ## Examples
 
@@ -498,7 +598,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{client_secret: "secret", email: "maurice@moss.yay", send_attempt: 1},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/account/password/email/requestToken"
+        path: "/_matrix/client/r0/account/password/email/requestToken",
+        query_params: []
       }
   """
   @spec password_email_token(base_url, binary, binary, pos_integer, map) :: t
@@ -519,7 +620,21 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password`. 
+  Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password/4`.
+
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
+  - `phone`: the phone number.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL. 
 
   ## Examples
 
@@ -529,7 +644,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{client_secret: "secret", country: "GB", phone_number: "07700900001", send_attempt: 1},
         headers: [],
         method: :post,
-        path: "/_matrix/client/r0/account/password/msisdn/requestToken"
+        path: "/_matrix/client/r0/account/password/msisdn/requestToken",
+        query_params: []
       }
   """
   @spec password_msisdn_token(base_url, binary, binary, binary, pos_integer, map) :: t
@@ -553,7 +669,16 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to deactivate a user's account. 
 
-  ## Example
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
+  Optional: 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  ## Examples
 
       iex> MatrixSDK.Client.Request.deactivate_account("https://matrix.org", "token")
       %MatrixSDK.Client.Request{
@@ -561,7 +686,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/deactivate"
+        path: "/_matrix/client/r0/account/deactivate",
+        query_params: []
       }
   """
   @spec deactivate_account(base_url, binary, map) :: t
@@ -577,6 +703,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get a list of the third party identifiers the homeserver has associated with the user's account.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_3pids("https://matrix.org", "token")
@@ -585,7 +717,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
-        path: "/_matrix/client/r0/account/3pid"
+        path: "/_matrix/client/r0/account/3pid",
+        query_params: []
       }
   """
   @spec account_3pids(base_url, binary) :: t
@@ -600,6 +733,19 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to add contact information to the user's account.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: the client secret used in the session with the homeserver.
+  - `sid`: the session ID give by the homeserver. 
+
+  Optional:
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_add_3pid("https://matrix.org", "token", "client_secret", "sid")
@@ -611,7 +757,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/add"
+        path: "/_matrix/client/r0/account/3pid/add",
+        query_params: []
       }
   """
   @spec account_add_3pid(base_url, binary, binary, binary, map) :: t
@@ -634,6 +781,18 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to bind contact information to the user's account through the specified identity server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: the client secret used in the session with the identity server.
+  - `id_server`: the identity server to use.
+  - `id_access_token`: an access token previously registered with the identity server.
+  - `sid`: the session ID given by the identity server.
+
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
@@ -647,7 +806,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/bind"
+        path: "/_matrix/client/r0/account/3pid/bind",
+        query_params: []
       }
   """
   @spec account_bind_3pid(base_url, binary, binary, binary, binary, binary) :: t
@@ -671,6 +831,18 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to delete contact information from the user's account.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `medium`: the medium of the third party identifier being removed. One of: `"email"` or `"msisdn"`.
+  - `address`: the third party address being removed.
+
+  Optional: 
+
+  - `id_server`: the identity server to unbind from.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
@@ -682,10 +854,11 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/delete"
+        path: "/_matrix/client/r0/account/3pid/delete",
+        query_params: []
       }
 
-  With optional id_server parameter:
+  With optional `id_server` parameter:
 
       iex> MatrixSDK.Client.Request.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "example.org"})
       %MatrixSDK.Client.Request{
@@ -697,7 +870,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/delete"
+        path: "/_matrix/client/r0/account/3pid/delete",
+        query_params: []
       }  
   """
   @spec account_delete_3pid(base_url, binary, binary, binary, map) :: t
@@ -718,7 +892,18 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to unbind contact information from the user's account.
+  Returns a `%Request{}` struct used to unbind contact information from the user's account without deleting it from the homeserver.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `medium`: the medium of the third party identifier being removed. One of: `"email"` or `"msisdn"`.
+  - `address`: the third party address being removed. 
+
+  Optional:
+  - `id_server`: the identity server to unbind from.
 
   ## Examples
 
@@ -731,10 +916,11 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/unbind"
+        path: "/_matrix/client/r0/account/3pid/unbind",
+        query_params: []
       }
 
-  With optional id_server parameter:
+  With optional `id_server` parameter:
 
       iex> MatrixSDK.Client.Request.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "example.org"})
       %MatrixSDK.Client.Request{
@@ -746,7 +932,8 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/unbind"
+        path: "/_matrix/client/r0/account/3pid/unbind",
+        query_params: []
       }  
   """
   @spec account_unbind_3pid(base_url, binary, binary, binary, map) :: t
@@ -769,6 +956,20 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to request a validation token when adding an email to a user's account.
 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `email`: the email address.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.  
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
@@ -781,25 +982,26 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/email/requestToken"
+        path: "/_matrix/client/r0/account/3pid/email/requestToken",
+        query_params: []
       }
 
-  With optional id_server parameter:
-      iex> opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
-      iex> MatrixSDK.Client.Request.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
+  With optional parameter:
+
+      iex> opt = %{next_link: "test-site.url"}
+      iex> MatrixSDK.Client.Request.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opt)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
           client_secret: "client_secret",
           email: "example@example.org",
           next_link: "test-site.url",
-          id_server: "id.example.org",
-          id_access_token: "abc123",
           send_attempt: 1
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/email/requestToken"
+        path: "/_matrix/client/r0/account/3pid/email/requestToken",
+        query_params: []
       }
   """
   @spec account_email_token(base_url, binary, binary, binary, pos_integer, map) :: t
@@ -830,6 +1032,21 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to request a validation token when adding a phone number to a user's account.
 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
+  - `phone`: the phone number.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
@@ -843,12 +1060,14 @@ defmodule MatrixSDK.Client.Request do
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/msisdn/requestToken"
+        path: "/_matrix/client/r0/account/3pid/msisdn/requestToken",
+        query_params: []
       }
 
-  With optional id_server parameter:
-      iex> opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
-      iex> MatrixSDK.Client.Request.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
+  With optional parameter:
+
+      iex> opt = %{next_link: "test-site.url"}
+      iex> MatrixSDK.Client.Request.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opt)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
@@ -856,13 +1075,12 @@ defmodule MatrixSDK.Client.Request do
           country: "GB",
           phone_number: "07700900001",
           next_link: "test-site.url",
-          id_server: "id.example.org",
-          id_access_token: "abc123",
           send_attempt: 1
         },
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/account/3pid/msisdn/requestToken"
+        path: "/_matrix/client/r0/account/3pid/msisdn/requestToken",
+        query_params: []
       }
   """
   @spec account_msisdn_token(
@@ -903,6 +1121,13 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get information about the owner of a given access token.
 
+  ## Args
+
+  Required: 
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.whoami("https://matrix.org", "token")
@@ -911,7 +1136,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
-        path: "/_matrix/client/r0/account/whoami"
+        path: "/_matrix/client/r0/account/whoami",
+        query_params: []
       }
   """
   @spec whoami(base_url, binary) :: t
@@ -929,15 +1155,15 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver 
-  - `token`: the authentication token returned from user login 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: the authentication token returned from user login. 
 
   Optional:
-  - `filter`: the ID of a filter created using the filter API or a filter JSON object encoded as a string
-  - `since`: a point in time to continue a sync from (usuall the `next_batch` value from last sync)
-  - `full_state`: controls whether to include the full state for all rooms the user is a member of
-  - `set_presence`: controls whether the client is automatically marked as online by polling this API
-  - `timeout`: the maximum time to wait, in milliseconds, before returning this request
+  - `filter`: the ID of a filter created using the filter API or a filter JSON object encoded as a string.
+  - `since`: a point in time to continue a sync from (usuall the `next_batch` value from last sync).
+  - `full_state`: controls whether to include the full state for all rooms the user is a member of.
+  - `set_presence`: controls whether the client is automatically marked as online by polling this API.
+  - `timeout`: the maximum time to wait, in milliseconds, before returning this request.
 
   ## Examples
 
@@ -989,6 +1215,15 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get a single event based on `room_id` and `event_id`.
 
+  ## Args
+
+  Required:
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the ID of the room the event is in. 
+  - `event_id`: the event ID.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
@@ -998,7 +1233,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/event/%24someevent",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec room_event(base_url, binary, binary, binary) :: t
@@ -1017,6 +1252,16 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to look up the contents of a state event in a room.
 
+  ## Args
+
+  Required:
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room the state event is in.
+  - `event_type`: the type of the state event.
+  - `state_key`: the key of the state to look up. Often an empty string.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
@@ -1026,7 +1271,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state/m.room.member/%40user%3Amatrix.org",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec room_state_event(base_url, binary, binary, binary, binary) :: t
@@ -1044,7 +1289,14 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-    Returns a `%Request{}` struct used to get the state events for the current state of a room.
+  Returns a `%Request{}` struct used to get the state events for the current state of a room.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room the events are in. 
 
   ## Example 
 
@@ -1055,7 +1307,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec room_state(base_url, binary, binary) :: t
@@ -1073,7 +1325,19 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the list of members for this room.
 
-  ## Example 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
+  Optional: 
+  - `at`: the point in time (pagination token) to return members for in the room.
+  - `membership`: the kind of membership to filter for. Defaults to no filtering if unspecified.
+  - `not_membership`: the kind of membership to exclude from the results. Defaults to no filtering if unspecified. One of: `"join"`, `"invite"`, `"leave"`, `"ban"`.
+
+  ## Examples
 
       iex> MatrixSDK.Client.Request.room_members("https://matrix.org", "token", "!someroom:matrix.org")
       %MatrixSDK.Client.Request{
@@ -1118,6 +1382,13 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get a map of MXIDs to member info objects for members of the room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Example 
 
       iex> MatrixSDK.Client.Request.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
@@ -1127,7 +1398,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :get,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/joined_members",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec room_joined_members(base_url, binary, binary) :: t
@@ -1144,9 +1415,23 @@ defmodule MatrixSDK.Client.Request do
 
   @doc """
   Returns a `%Request{}` struct used to get message and state events for a room. 
-  It uses pagination query parameters to paginate history in the room.
+  It uses pagination parameters to paginate history in the room.
 
-  ## Example 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID. 
+  - `from`: the pagination token to start returning events from.
+  - `dir`: the direction to return events from. One of: `"b"` or `"f"`.
+
+  Optional: 
+  - `to`: the pagination token to stop returning events at.
+  - `limit`: the maximum number of events to return. 
+  - `filter`: a filter to apply to the returned events. 
+
+  ## Examples 
 
       iex> MatrixSDK.Client.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
       %MatrixSDK.Client.Request{
@@ -1196,16 +1481,18 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to send a state event to a room. 
+  Returns a `%Request{}` struct used to send a state event to a room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `state_event`: a state event as defined in `MatrixSDK.Client.StateEvent`. 
 
   ## Example
 
-      iex> state_event = %{
-      ...>                content: %{join_rule: "private"},
-      ...>                room_id: "!someroom:matrix.org",
-      ...>                state_key: "",
-      ...>                type: "m.room.join_rules"
-      ...>              }
+      iex> state_event = MatrixSDK.Client.StateEvent.join_rules("!someroom:matrix.org", "private")
       iex> MatrixSDK.Client.Request.send_state_event("https://matrix.org", "token", state_event)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
@@ -1213,7 +1500,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/state/m.room.join_rules/",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec send_state_event(base_url, binary, StateEvent.t()) :: t
@@ -1235,16 +1522,18 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to send a room event to a room. 
+  Returns a `%Request{}` struct used to send a room event to a room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_event`: a state event as defined in `MatrixSDK.Client.RoomEvent`. 
 
   ## Example
 
-      iex> room_event = %{
-      ...>                content: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
-      ...>                room_id: "!someroom:matrix.org",
-      ...>                type: "m.room.message",
-      ...>                transaction_id: "transaction_id"
-      ...>              }
+      iex> room_event = MatrixSDK.Client.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
       iex> MatrixSDK.Client.Request.send_room_event("https://matrix.org", "token", room_event)
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
@@ -1252,7 +1541,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/send/m.room.message/transaction_id",
-        query_params: %{}
+        query_params: []
       }
   """
   @spec send_room_event(base_url, binary, RoomEvent.t()) :: t
@@ -1276,6 +1565,18 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to redact a room event. 
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID. 
+  - `event_id`: the event ID.
+  - `transaction_id`: the transaction ID for this event. Clients should generate a unique ID; it will be used by the server to ensure idempotency of requests.
+
+  Optional: 
+  - `reason`: the reason for the event being redacted.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.redact_room_event("https://matrix.org", "token", "!someroom:matrix.org", "event_id", "transaction_id")
@@ -1285,6 +1586,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id",
+        query_params: []
       }
 
   With options:
@@ -1297,6 +1599,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/redact/event_id/transaction_id",
+        query_params: []
       }
   """
   @spec redact_room_event(base_url, binary, binary, binary, binary, map) :: t
@@ -1318,7 +1621,27 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to create a new room. 
+  Returns a `%Request{}` struct used to create a new room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
+  Optional: 
+  - `visibility`: controls the presence of the room on the room list. One of: `"public"` or `"private"`.
+  - `room_alias_name`: the desired room alias local part. 
+  - `name`: if this is included, an `m.room.name` event will be sent into the room to indicate the name of the room. 
+  - `topic`: if this is included, an `m.room.topic` event will be sent into the room to indicate the topic for the room.
+  - `invite`: a list of user IDs to invite to the room.
+  - `invite_3pid`: a list of objects representing third party IDs to invite into the room.
+  - `room_version`: the room version to set for the room.
+  - `creation_content`: extra keys, such as m.federate, to be added to the content of the `m.room.create` event.
+  - `initial_state`: a list of state events to set in the new room.
+  - `preset`: convenience parameter for setting various default state events based on a preset.
+  - `is_direct`: boolean flag. 
+  - `power_level_content_override`: the power level content to override in the default power level event. 
 
   ## Examples
 
@@ -1328,7 +1651,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/createRoom"
+        path: "/_matrix/client/r0/createRoom",
+        query_params: []
       }
 
   With options:
@@ -1344,7 +1668,8 @@ defmodule MatrixSDK.Client.Request do
         body: %{room_alias_name: "chocolate", topic: "Some cool stuff about chocolate.", visibility: "public"},
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
-        path: "/_matrix/client/r0/createRoom"
+        path: "/_matrix/client/r0/createRoom",
+        query_params: []
       }
   """
   @spec create_room(base_url, binary, map) :: t
@@ -1360,6 +1685,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get a list of the user's current rooms.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Example
 
         iex> MatrixSDK.Client.Request.joined_rooms("https://matrix.org", "token")
@@ -1369,6 +1700,7 @@ defmodule MatrixSDK.Client.Request do
           headers: [{"Authorization", "Bearer token"}],
           method: :get,
           path: "/_matrix/client/r0/joined_rooms",
+          query_params: []
         }
   """
   @spec joined_rooms(base_url, binary) :: t
@@ -1383,6 +1715,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to invite a user to participate in a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to invite to the room. 
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.room_invite("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
@@ -1392,6 +1732,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/invite",
+        query_params: []
       }
   """
   @spec room_invite(base_url, binary, binary, binary) :: t
@@ -1410,6 +1751,16 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used by a user to join a room.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id_or_alias`: the room ID or room alias.
+
+  Optional: 
+  - `third_party_signed`: a signature of an `m.third_party_invite` token to prove that this user owns a third party identity which has been invited to the room.
+
   ## Example 
 
       iex> MatrixSDK.Client.Request.join_room("https://matrix.org", "token", "!someroom:matrix.org")
@@ -1418,9 +1769,8 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/join/%21someroom%3Amatrix.org",
+        query_params: []
       }
-
-  TODO: add example for 3pids
   """
   @spec join_room(base_url, binary, binary, map) :: t
   def join_room(base_url, token, room_id_or_alias, opts \\ %{}) do
@@ -1438,6 +1788,13 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to leave a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.leave_room("https://matrix.org", "token", "!someroom:matrix.org")
@@ -1446,6 +1803,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/leave",
+        query_params: []
       }
   """
   @spec leave_room(base_url, binary, binary) :: t
@@ -1463,6 +1821,13 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to forget a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.forget_room("https://matrix.org", "token", "!someroom:matrix.org")
@@ -1471,6 +1836,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/forget",
+        query_params: []
       }
   """
   @spec forget_room(base_url, binary, binary) :: t
@@ -1488,6 +1854,17 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to kick a user from a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to kick from the room.
+
+  Optional: 
+  - `reason`: the reason the user has been kicked.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
@@ -1496,8 +1873,11 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/kick",
-        body: %{user_id: "@user:matrix.org"}
+        body: %{user_id: "@user:matrix.org"},
+        query_params: []
       }
+
+  With optional parameter:
 
       iex> MatrixSDK.Client.Request.room_kick("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
       %MatrixSDK.Client.Request{
@@ -1505,7 +1885,8 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/kick",
-        body: %{user_id: "@user:matrix.org", reason: "Ate all the chocolate"}
+        body: %{user_id: "@user:matrix.org", reason: "Ate all the chocolate"},
+        query_params: []
       }
   """
   @spec room_kick(base_url, binary, binary, binary, map) :: t
@@ -1529,6 +1910,17 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to ban a user from a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to ban from the room.
+
+  Optional: 
+  - `reason`: the reason the user has been banned.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
@@ -1537,8 +1929,11 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban",
-        body: %{user_id: "@user:matrix.org"}
+        body: %{user_id: "@user:matrix.org"},
+        query_params: []
       }
+
+  With optional parameter:
 
       iex> MatrixSDK.Client.Request.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org", %{reason: "Ate all the chocolate"})
       %MatrixSDK.Client.Request{
@@ -1546,7 +1941,8 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/ban",
-        body: %{user_id: "@user:matrix.org", reason: "Ate all the chocolate"}
+        body: %{user_id: "@user:matrix.org", reason: "Ate all the chocolate"},
+        query_params: []
       }
   """
   @spec room_ban(base_url, binary, binary, binary, map) :: t
@@ -1570,6 +1966,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to unban a user from a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to unban from the room.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
@@ -1578,7 +1982,8 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/unban",
-        body: %{user_id: "@user:matrix.org"}
+        body: %{user_id: "@user:matrix.org"},
+        query_params: []
       }
   """
   @spec room_unban(base_url, binary, binary, binary) :: t
@@ -1597,6 +2002,12 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the visibility of a given room on the server's public room directory.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `room_id`: the room ID.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.room_visibility("https://matrix.org", "!someroom:matrix.org")
@@ -1605,6 +2016,7 @@ defmodule MatrixSDK.Client.Request do
         body: %{},
         method: :get,
         path: "/_matrix/client/r0/directory/list/room/%21someroom%3Amatrix.org",
+        query_params: []
       }
   """
   @spec room_visibility(base_url, binary) :: t
@@ -1621,6 +2033,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to set the visibility of a given room in the server's public room directory.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `visibility`: the new visibility setting for the room.  One of: `"private"` or `"public"`.
+
   ## Example
 
       iex> MatrixSDK.Client.Request.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
@@ -1630,6 +2050,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/directory/list/room/%21someroom%3Amatrix.org",
+        query_params: []
       }
   """
   @spec room_visibility(base_url, binary, binary, binary) :: t
@@ -1647,6 +2068,16 @@ defmodule MatrixSDK.Client.Request do
 
   @doc """
   Returns a `%Request{}` struct used to list the public rooms on the server with basic filtering.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+
+  Optional: 
+  - `limit`: limit the number of results returned.
+  - `since`: a pagination token from a previous request, allowing clients to get the next (or previous) batch of rooms.
+  - `server`: the server to fetch the public room lists from.
 
   ## Examples
 
@@ -1683,6 +2114,21 @@ defmodule MatrixSDK.Client.Request do
 
   @doc """
   Returns a `%Request{}` struct used to list the public rooms on the server with more advanced filtering options. 
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - filters: 
+    - `limit`: limit the number of results returned.
+    - `since`: a pagination token from a previous request, allowing clients to get the next (or previous) batch of rooms.
+    - `filter`: a string to search for in the room metadata, e.g. name, topic, canonical alias, etc...
+    - `include_all_networks`: boolean, whether or not to include all known networks/protocols from application services on the homeserver. 
+    - `third_party_instance_id`: the specific third party network/protocol to request from the homeserver. Can only be used if `include_all_networks` is false.
+
+  Optional: 
+  - `server`: the server to fetch the public room lists from.
 
   ## Examples
 
@@ -1725,6 +2171,17 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to search for users.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `search_term`: the term to search for.
+
+  Optional: 
+  - `limit`: limit the number of returned results.
+  - `language`: sets the language header for the request.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.user_directory_search("https://matrix.org", "token", "mickey")
@@ -1734,6 +2191,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/user_directory/search",
+        query_params: []
       }
 
   With limit option:
@@ -1745,6 +2203,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :post,
         path: "/_matrix/client/r0/user_directory/search",
+        query_params: []
       }
 
   With language option:
@@ -1756,6 +2215,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}, {"Accept-Language", "en-US"}],
         method: :post,
         path: "/_matrix/client/r0/user_directory/search",
+        query_params: []
       }
   """
   @spec user_directory_search(base_url, binary, binary, map) :: t
@@ -1787,6 +2247,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to set the display name for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `user_id`: the user ID.
+  - `display_name`: new display name.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
@@ -1796,6 +2264,7 @@ defmodule MatrixSDK.Client.Request do
         headers: [{"Authorization", "Bearer token"}],
         method: :put,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname",
+        query_params: []
       }
   """
   @spec set_display_name(base_url, binary, binary, binary) :: t
@@ -1814,13 +2283,22 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the display name for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.display_name("https://matrix.org", "@user:matrix.org")
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/displayname",
+        query_params: []
       }
   """
   @spec display_name(base_url, binary) :: t
@@ -1837,6 +2315,14 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to set the avatar url for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `user_id`: the user ID.
+  - `avatar_url`: the new avatar URL for this user.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
@@ -1846,6 +2332,7 @@ defmodule MatrixSDK.Client.Request do
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url",
         body: %{avatar_url: "mxc://matrix.org/wefh34uihSDRGhw34"},
         headers: [{"Authorization", "Bearer token"}],
+        query_params: []
       }
   """
   @spec set_avatar_url(base_url, binary, binary, binary) :: t
@@ -1864,13 +2351,22 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the avatar url for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.avatar_url("https://matrix.org", "@user:matrix.org")
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org/avatar_url",
+        query_params: []
       }
   """
   @spec avatar_url(base_url, binary) :: t
@@ -1887,13 +2383,22 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to get the user profile for a given user id.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
+
   ## Examples
 
       iex> MatrixSDK.Client.Request.user_profile("https://matrix.org", "@user:matrix.org")
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
         method: :get,
         path: "/_matrix/client/r0/profile/%40user%3Amatrix.org",
+        query_params: []
       }
   """
   @spec user_profile(base_url, binary) :: t

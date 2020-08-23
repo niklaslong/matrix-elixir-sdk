@@ -949,7 +949,6 @@ defmodule MatrixSDK.Client.RequestTest do
       base_url = "http://test-server.url"
       token = "token"
 
-      # TODO: test state key in future
       state_event = %{
         content: %{join_rule: "private"},
         room_id: "!someroom:matrix.org",

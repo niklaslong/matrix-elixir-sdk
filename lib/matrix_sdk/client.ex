@@ -2,13 +2,36 @@ defmodule MatrixSDK.Client do
   @moduledoc """
   Provides functions to make HTTP requests to a Matrix homeserver using the
   `MatrixSDK.Client.Request` and `MatrixSDK.HTTPClient` modules.
+
+  ## 3PID API flows
+
+  See this [gist](https://gist.github.com/jryans/839a09bf0c5a70e2f36ed990d50ed928) for more details.
+
+  Flow 1—adding a 3PID to HS account during registration:
+  1. `registration_email_token/5` or `registration_msisdn_token/6`
+  2. `register_user/4`
+
+  Flow 2—adding a 3PID to HS account after registration:
+  1. `account_email_token/5` or `account_msisdn_token/6`
+  2. `account_add_3pid/5`
+
+  Flow 3—changing the bind status of a 3PID: this is currently unsupported but will be available once the identity server endpoints are wrapped.
+
+  Flow 4—reset password via email:
+  1. `password_email_token/5`
+  2. `change_password/4`
   """
 
   alias MatrixSDK.HTTPClient
   alias MatrixSDK.Client.{Request, Auth, RoomEvent, StateEvent}
 
   @doc """
-  Gets the versions of the Matrix specification supported by the server.  
+  Gets the versions of the Matrix specification supported by the server. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
 
   ## Examples
 
@@ -24,6 +47,11 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets discovery information about the domain. 
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+
   ## Examples
 
       MatrixSDK.Client.server_discovery("https://matrix.org")
@@ -37,6 +65,12 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Gets information about the server's supported feature set and other relevant capabilities.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
 
   ## Examples
 
@@ -52,6 +86,11 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets the homeserver's supported login types to authenticate users. 
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver.
+
   ## Examples
 
       MatrixSDK.Client.login("https://matrix.org")
@@ -65,6 +104,16 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Authenticates the user, and issues an access token they can use to authorize themself in subsequent requests.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  Optional:
+  - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
 
   ## Examples
 
@@ -90,6 +139,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Invalidates an existing access token, so that it can no longer be used for authorization.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       MatrixSDK.Client.logout("https://matrix.org", "token")
@@ -104,6 +159,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Invalidates all existing access tokens, so that they can no longer be used for authorization.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       MatrixSDK.Client.logout_all("https://matrix.org", "token")
@@ -116,7 +177,15 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Registers a guest account on the homeserver. 
+  Registers a guest account on the homeserver and returns an access token which can be used to authenticate subsequent requests. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+
+  Optional: 
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
 
   ## Examples
 
@@ -135,14 +204,27 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Registers a user account on the homeserver. 
+  Registers a user account on the homeserver.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `password`: the desired password for the account.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`. This is used to authenticate the registration request, not to define how a user will be authenticated. 
+
+  Optional: 
+  - `username`: the basis for the localpart of the desired Matrix ID. If omitted, the homeserver will generate a Matrix ID local part.
+  - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
+  - `initial_device_display_name`: a display name to assign to the newly-created device.
+  - `inhibit_login`: if true, an `access_token` and `device_id` will not be returned from this call, therefore preventing an automatic login.
 
   ## Examples
 
-      MatrixSDK.Client.register_user("https://matrix.org", "password")
+      MatrixSDK.Client.Request.register_user("https://matrix.org", "password", auth)
 
   With optional parameters:    
-
+      auth = MatrixSDK.Client.Auth.login_dummy()
       opts = %{
                 username: "maurice_moss",
                 device_id: "id",
@@ -150,7 +232,7 @@ defmodule MatrixSDK.Client do
                 inhibit_login: true
               }
 
-      MatrixSDK.Client.register_user("https://matrix.org", "password", opts)
+      MatrixSDK.Client.Request.register_user("https://matrix.org", "password", auth, opts)
   """
   @spec register_user(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
   def register_user(base_url, password, auth, opts \\ %{}) do
@@ -161,6 +243,19 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Checks the given email address is not already associated with an account on the homeserver. This should be used to get a token to register an email as part of the initial user registration.
+
+  For more info see _3PID API flows_ section above.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `email`: the email address.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL. 
 
   ## Examples
 
@@ -176,6 +271,20 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Checks the given phone number is not already associated with an account on the homeserver. This should be used to get a token to register a phone number as part of the initial user registration.
+
+  For more info see _3PID API flows_ section above.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
+  - `phone`: the phone number.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
 
   ## Examples
 
@@ -199,6 +308,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Checks if a username is available and valid for the server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `username`: the basis for the localpart of the desired Matrix ID.
+
   ## Examples
 
        MatrixSDK.Client.username_availability("https://matrix.org", "maurice_moss")
@@ -211,15 +326,24 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Changes the password for an account on the homeserver.
+  Changes the password for an account on the homeserver. This request will need to be authenticated with `m.login.email.identity` or `m.login.msisdn.identity`. For more info see _3PID API flows_ section above. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.   
+  - `new_password`: the desired password for the account.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  Optional: 
+  - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds.
 
   ## Examples 
-
-      auth = MatrixSDK.Client.Auth.login_token("token")
-      MatrixSDK.Client.change_password("https://matrix.org", "new_password", auth)
+      
+      auth = MatrixSDK.Client.Auth.login_email_identity("sid", "client_secret")
+      MatrixSDK.Client.Request.change_password("https://matrix.org", "new_password", auth)
   """
   @spec change_password(Request.base_url(), binary, Auth.t(), map) :: HTTPClient.result()
-  # REVIEW: This requires m.login.email.identity 
   def change_password(base_url, new_password, auth, opts \\ %{}) do
     base_url
     |> Request.change_password(new_password, auth, opts)
@@ -227,7 +351,20 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Request validation tokens when authenticating for `change_password`. 
+  Request validation tokens when authenticating for `change_password/4`. 
+
+  For more info see _3PID API flows_ section above. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `email`: the email address.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
 
   ## Examples
 
@@ -242,7 +379,21 @@ defmodule MatrixSDK.Client do
   end
 
   @doc """
-  Request validation tokens when authenticating for `change_password`. 
+  Request validation tokens when authenticating for `change_password/4`.
+
+  For more info see _3PID API flows_ section above. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
+  - `phone`: the phone number.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL. 
 
   ## Examples
 
@@ -259,7 +410,16 @@ defmodule MatrixSDK.Client do
   @doc """
   Deactivates a user's account. 
 
-  ## Example
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
+  Optional: 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  ## Examples
 
       MatrixSDK.Client.deactivate_account("https://matrix.org", "token")
   """
@@ -272,6 +432,12 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Gets a list of the third party identifiers the homeserver has associated with the user's account.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
 
   ## Examples
 
@@ -286,6 +452,19 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Adds contact information to the user's account.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: the client secret used in the session with the homeserver.
+  - `sid`: the session ID give by the homeserver. 
+
+  Optional:
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+
+  For more info see _3PID API flows_ section above.
 
   ## Examples
 
@@ -302,6 +481,18 @@ defmodule MatrixSDK.Client do
   @doc """
   Binds contact information to the user's account through the specified identity server.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: the client secret used in the session with the identity server.
+  - `id_server`: the identity server to use.
+  - `id_access_token`: an access token previously registered with the identity server.
+  - `sid`: the session ID given by the identity server.
+
+  For more info see _3PID API flows_ section above.
+
   ## Examples
 
       MatrixSDK.Client.account_bind_3pid("https://matrix.org", "token", "client_secret", "example.org", "abc123", "sid")
@@ -317,11 +508,23 @@ defmodule MatrixSDK.Client do
   @doc """
   Deletes contact information from the user's account.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `medium`: the medium of the third party identifier being removed. One of: `"email"` or `"msisdn"`.
+  - `address`: the third party address being removed.
+
+  Optional: 
+
+  - `id_server`: the identity server to unbind from.
+
   ## Examples
 
       MatrixSDK.Client.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org")
 
-  With id_server option:
+  With `id_server` option:
 
       MatrixSDK.Client.account_delete_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "id.example.org")
   """
@@ -336,11 +539,22 @@ defmodule MatrixSDK.Client do
   @doc """
   Unbinds contact information from the user's account without deleting it from the homeserver.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `medium`: the medium of the third party identifier being removed. One of: `"email"` or `"msisdn"`.
+  - `address`: the third party address being removed. 
+
+  Optional:
+  - `id_server`: the identity server to unbind from.
+
   ## Examples
 
       MatrixSDK.Client.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org")
 
-  With id_server option:
+  With `id_server` option:
 
       MatrixSDK.Client.account_unbind_3pid("https://matrix.org", "token", "email", "example@example.org", %{id_server: "id.example.org"})
   """
@@ -355,14 +569,27 @@ defmodule MatrixSDK.Client do
   @doc """
   Requests a validation token when adding an email to a user's account.
 
+  For more info see _3PID API flows_ section above. 
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `email`: the email address.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.  
+
   ## Examples
 
       MatrixSDK.Client.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1)
 
-  With optional parameters:
+  With optional parameter:
 
-      opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
-
+      opt = %{next_link: "test-site.url"}
       MatrixSDK.Client.account_email_token("https://matrix.org", "token", "client_secret", "example@example.org", 1, opts)
   """
   @spec account_email_token(
@@ -389,15 +616,29 @@ defmodule MatrixSDK.Client do
   @doc """
   Requests a validation token when adding a phone number to a user's account.
 
+  For more info see _3PID API flows_ section above.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
+  - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
+  - `phone`: the phone number.
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+
+  Optional:
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
+
   ## Examples
 
       MatrixSDK.Client.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1)
 
-  With optional paramters:
+  With optional paramter:
 
-      opts = %{next_link: "test-site.url", id_server: "id.example.org", id_access_token: "abc123"}
-
-      MatrixSDK.Client.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opts)
+      opt = %{next_link: "test-site.url"}
+      MatrixSDK.Client.account_msisdn_token("https://matrix.org", "token", "client_secret", "GB", "07700900001", 1, opt)
   """
   @spec account_msisdn_token(
           Request.base_url(),
@@ -432,6 +673,13 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets information about the owner of a given access token.
 
+  ## Args
+
+  Required: 
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Examples
 
       MatrixSDK.Client.whoami("https://matrix.org", "token")
@@ -445,6 +693,19 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Synchronises the client's state with the latest state on the server.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: the authentication token returned from user login. 
+
+  Optional:
+  - `filter`: the ID of a filter created using the filter API or a filter JSON object encoded as a string.
+  - `since`: a point in time to continue a sync from (usuall the `next_batch` value from last sync).
+  - `full_state`: controls whether to include the full state for all rooms the user is a member of.
+  - `set_presence`: controls whether the client is automatically marked as online by polling this API.
+  - `timeout`: the maximum time to wait, in milliseconds, before returning this request.
 
   ## Examples 
       
@@ -472,6 +733,15 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets a single event based on `room_id` and `event_id`.
 
+  ## Args
+
+  Required:
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the ID of the room the event is in. 
+  - `event_id`: the event ID.
+
   ## Example
 
       MatrixSDK.Client.room_event("https://matrix.org", "token", "!someroom:matrix.org", "$someevent")
@@ -486,9 +756,19 @@ defmodule MatrixSDK.Client do
   @doc """
   Looks up the contents of a state event in a room.
 
+  ## Args
+
+  Required:
+
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room the state event is in.
+  - `event_type`: the type of the state event.
+  - `state_key`: the key of the state to look up. Often an empty string.
+
   ## Example
 
-      MatrixSDK.Client.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org")
+      MatrixSDK.Client.room_state_event("https://matrix.org", "token", "!someroom:matrix.org", "m.room.member", "@user:matrix.org") 
   """
   @spec room_state_event(Request.base_url(), binary, binary, binary, binary) ::
           HTTPClient.result()
@@ -500,6 +780,13 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Gets the state events for the current state of a room.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room the events are in. 
 
   ## Example 
 
@@ -515,7 +802,19 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets the list of members for this room.
 
-  ## Example 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
+  Optional: 
+  - `at`: the point in time (pagination token) to return members for in the room.
+  - `membership`: the kind of membership to filter for. Defaults to no filtering if unspecified.
+  - `not_membership`: the kind of membership to exclude from the results. Defaults to no filtering if unspecified. One of: `"join"`, `"invite"`, `"leave"`, `"ban"`.
+
+  ## Examples
 
       MatrixSDK.Client.room_members("https://matrix.org", "token", "!someroom:matrix.org")
 
@@ -539,6 +838,13 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets a map of MXIDs to member info objects for members of the room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Example 
 
       MatrixSDK.Client.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
@@ -552,9 +858,23 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Gets message and state events for a room. 
-  It uses pagination query parameters to paginate history in the room.
+  It uses pagination parameters to paginate history in the room.
 
-  ## Example 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID. 
+  - `from`: the pagination token to start returning events from.
+  - `dir`: the direction to return events from. One of: `"b"` or `"f"`.
+
+  Optional: 
+  - `to`: the pagination token to stop returning events at.
+  - `limit`: the maximum number of events to return. 
+  - `filter`: a filter to apply to the returned events. 
+
+  ## Examples
 
       MatrixSDK.Client.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
 
@@ -578,6 +898,18 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Sends a state event to a room. 
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `state_event`: a state event as defined in `MatrixSDK.Client.StateEvent`.
+
+  ## Example
+
+      state_event = MatrixSDK.Client.StateEvent.join_rules("!someroom:matrix.org", "private")
+      MatrixSDK.Client.Request.send_state_event("https://matrix.org", "token", state_event)
   """
   @spec send_state_event(Request.base_url(), binary, StateEvent.t()) :: HTTPClient.result()
   def send_state_event(base_url, token, state_event) do
@@ -588,6 +920,18 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Sends a room event to a room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_event`: a state event as defined in `MatrixSDK.Client.RoomEvent`. 
+
+  ## Example
+
+      room_event = MatrixSDK.Client.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
+      MatrixSDK.Client.Request.send_room_event("https://matrix.org", "token", room_event)
   """
   @spec send_room_event(Request.base_url(), binary, RoomEvent.t()) :: HTTPClient.result()
   def send_room_event(base_url, token, room_event) do
@@ -598,6 +942,18 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Redacts a room event with a reason.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID. 
+  - `event_id`: the event ID.
+  - `transaction_id`: the transaction ID for this event. Clients should generate a unique ID; it will be used by the server to ensure idempotency of requests.
+
+  Optional: 
+  - `reason`: the reason for the event being redacted.
 
   ## Examples
 
@@ -619,6 +975,26 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Creates a new room. 
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
+  Optional: 
+  - `visibility`: controls the presence of the room on the room list. One of: `"public"` or `"private"`.
+  - `room_alias_name`: the desired room alias local part. 
+  - `name`: if this is included, an `m.room.name` event will be sent into the room to indicate the name of the room. 
+  - `topic`: if this is included, an `m.room.topic` event will be sent into the room to indicate the topic for the room.
+  - `invite`: a list of user IDs to invite to the room.
+  - `invite_3pid`: a list of objects representing third party IDs to invite into the room.
+  - `room_version`: the room version to set for the room.
+  - `creation_content`: extra keys, such as m.federate, to be added to the content of the `m.room.create` event.
+  - `initial_state`: a list of state events to set in the new room.
+  - `preset`: convenience parameter for setting various default state events based on a preset.
+  - `is_direct`: boolean flag. 
+  - `power_level_content_override`: the power level content to override in the default power level event. 
 
   ## Examples
 
@@ -644,6 +1020,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Gets a list of the user's current rooms.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+
   ## Example
 
       MatrixSDK.Client.joined_rooms("https://matrix.org", "token")
@@ -657,6 +1039,14 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Invites a user to participate in a particular room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to invite to the room.
 
   ## Example
 
@@ -672,6 +1062,16 @@ defmodule MatrixSDK.Client do
   @doc """
   Lets a user join a room.
 
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id_or_alias`: the room ID or room alias.
+
+  Optional: 
+  - `third_party_signed`: a signature of an `m.third_party_invite` token to prove that this user owns a third party identity which has been invited to the room.
+
   ## Example 
 
       MatrixSDK.Client.join_room("https://matrix.org", "token", "!someroom:matrix.org")
@@ -685,6 +1085,13 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Lets a user leave a room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
 
   ## Example 
 
@@ -700,6 +1107,13 @@ defmodule MatrixSDK.Client do
   @doc """
   Lets a user forget a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+
   ## Example 
 
       MatrixSDK.Client.forget_room("https://matrix.org", "token", "!someroom:matrix.org")
@@ -713,6 +1127,17 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Kicks a user from a room.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to kick from the room.
+
+  Optional: 
+  - `reason`: the reason the user has been kicked.
 
   ## Examples
 
@@ -732,6 +1157,17 @@ defmodule MatrixSDK.Client do
   @doc """
   Bans a user from a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to ban from the room.
+
+  Optional: 
+  - `reason`: the reason the user has been banned.
+
   ## Examples
 
       MatrixSDK.Client.room_ban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
@@ -750,6 +1186,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Unbans a user from a room.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `user_id`: the user ID to unban from the room.
+
   ## Examples
 
       MatrixSDK.Client.room_unban("https://matrix.org", "token", "!someroom:matrix.org", "@user:matrix.org")
@@ -763,6 +1207,12 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Gets the visibility of a given room on the server's public room directory.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `room_id`: the room ID.
 
   ## Example
 
@@ -778,6 +1228,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Sets the visibility of a given room in the server's public room directory.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `visibility`: the new visibility setting for the room.  One of: `"private"` or `"public"`.
+
   ## Example
 
       MatrixSDK.Client.room_visibility("https://matrix.org", "token", "!someroom:matrix.org", "private")
@@ -791,6 +1249,16 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Lists the public rooms on the server with basic filtering.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+
+  Optional: 
+  - `limit`: limit the number of results returned.
+  - `since`: a pagination token from a previous request, allowing clients to get the next (or previous) batch of rooms.
+  - `server`: the server to fetch the public room lists from.
 
   ## Examples
 
@@ -810,6 +1278,21 @@ defmodule MatrixSDK.Client do
   @doc """
   Lists the public rooms on the server with more advanced filtering options. 
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - filters: 
+    - `limit`: limit the number of results returned.
+    - `since`: a pagination token from a previous request, allowing clients to get the next (or previous) batch of rooms.
+    - `filter`: a string to search for in the room metadata, e.g. name, topic, canonical alias, etc...
+    - `include_all_networks`: boolean, whether or not to include all known networks/protocols from application services on the homeserver. 
+    - `third_party_instance_id`: the specific third party network/protocol to request from the homeserver. Can only be used if `include_all_networks` is false.
+
+  Optional: 
+  - `server`: the server to fetch the public room lists from.
+
   ## Examples
 
       MatrixSDK.Client.public_rooms("https://matrix.org", "token", %{limit: 10})
@@ -827,6 +1310,17 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Searches for users based on search term.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `search_term`: the term to search for.
+
+  Optional: 
+  - `limit`: limit the number of returned results.
+  - `language`: sets the language header for the request.
 
   ## Examples
 
@@ -846,6 +1340,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Sets the display name for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `user_id`: the user ID.
+  - `display_name`: new display name.
+
   ## Examples
 
       MatrixSDK.Client.set_display_name("https://matrix.org", "token", "@user:matrix.org", "mickey")
@@ -859,6 +1361,12 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Retrieves the display name for a user.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
 
   ## Examples
 
@@ -874,6 +1382,14 @@ defmodule MatrixSDK.Client do
   @doc """
   Sets the avatar url for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `user_id`: the user ID.
+  - `avatar_url`: the new avatar URL for this user.
+
   ## Examples
 
       MatrixSDK.Client.set_avatar_url("https://matrix.org", "token", "@user:matrix.org", "mxc://matrix.org/wefh34uihSDRGhw34")
@@ -888,6 +1404,12 @@ defmodule MatrixSDK.Client do
   @doc """
   Retrieves the avatar url for a user.
 
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
+
   ## Examples
 
       MatrixSDK.Client.avatar_url("https://matrix.org", "@user:matrix.org")
@@ -901,6 +1423,12 @@ defmodule MatrixSDK.Client do
 
   @doc """
   Retrieves the user profile for a user.
+
+  ## Args
+
+  Required: 
+  - `base_url`: the base URL for the homeserver. 
+  - `user_id`: the user ID.
 
   ## Examples
 
