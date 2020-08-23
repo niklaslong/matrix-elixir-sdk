@@ -211,7 +211,7 @@ defmodule MatrixSDK.Client do
   Required:
   - `base_url`: the base URL for the homeserver. 
   - `password`: the desired password for the account.
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`. This is used to authenticate the registration request, not to define how a user will be authenticated. 
 
   Optional: 
   - `username`: the basis for the localpart of the desired Matrix ID. If omitted, the homeserver will generate a Matrix ID local part.
