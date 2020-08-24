@@ -1,24 +1,20 @@
 # Matrix Elixir SDK 
 
-A [Matrix](https://matrix.org/) SDK for Elixir. It is currently in active (and early) development and hasn't yet been released to Hex. 
+A [Matrix](https://matrix.org/) SDK for Elixir. It is currently in active (and early) development. The first (unstable) version has been released to hex. The docs can be found at [https://hexdocs.pm/matrix_sdk](https://hexdocs.pm/matrix_sdk). 
 
-The first release will provide a simple wrapper around the [Matrix client-server API](https://matrix.org/docs/spec/client_server/r0.6.1). 
+The first release provides a simple wrapper around the main endpoints of the [Matrix client-server API](https://matrix.org/docs/spec/client_server/r0.6.1). There are still many endpoints to be implemented; if you feel like contributing, please don't hesitate to open an issue or a PR (all skill levels welcome)!
 
-## Starting a local homeserver
+Likewise, if you want to start a project using the SDK, [let me know](mailto:niklaslong@protonmail.ch)!
 
-If you have a synapse server installed it can be started as follows:
-
-```
-cd synapse
-source env/bin/activate
-synctl start
-
-synctl stop 
-```
+In future, the SDK plans to include:
+- an encryption library (currently in development): [olm-ex](https://github.com/niklaslong/olm-ex).
+- further abstractions around the `Client` library to handle state.
+- a wrapper for the Server-Server API
+- & more tbd. 
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
+The package can be installed
 by adding `matrix_sdk` to your list of dependencies in `mix.exs`:
 
 ```elixir
@@ -29,46 +25,41 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/matrix_sdk](https://hexdocs.pm/matrix_sdk).
-
 ## Basic Usage
 
-Here is an example to login with username and password:
-
-```elixir
-iex(1)> url = "https://matrix.org"
-"https://matrix.org"
-iex(2)> auth = MatrixSDK.Client.Auth.login_user("mickey", "supersecret")
-%{
-  identifier: %{type: "m.id.user", user: "mickey"},
-  password: "supersecret",
-  type: "m.login.password"
-}
-iex(3)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.Client.login(url, auth)
-...
-iex(4)> MatrixSDK.Client.joined_rooms(url, token)
-...
-iex(5)> MatrixSDK.Client.logout(url, token)
-...
-```
-
-Here is an example with a guest account. When initially joining the room it will
+Guest account registration. When initially joining the room it will
 ask you to fill out a consent form in the browser. Once this is done try joining
 the room again.
 
-We will keep the room address open until it is deemed unnecessary or being abused.
+```elixir
+# Set the URL for the homeserver, this is the first argument of every function in the Client. 
+iex(1)> url = "https://matrix.org"
+# Set the room, this is used for the join_room/3 call.
+iex(2)> room = "#elixirsdktest:matrix.org"
+# ...
+iex(3)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.Client.register_guest(url)
+# ...
+iex(4)> {:ok, %{body: %{"consent_uri" => consent_uri}}} = MatrixSDK.Client.join_room(url, token, room)
+# Open the link in the browser and accept the terms. 
+iex(5)> MatrixSDK.Client.join_room(url, token, room_address)
+# ...
+```
+
+Username and password login with an existing account:
 
 ```elixir
 iex(1)> url = "https://matrix.org"
-"https://matrix.org"
-iex(2)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.Client.register_guest(url)
-...
-iex(3)> room_address = "#elixirsdktest:matrix.org"
-"#elixirsdktest:matrix.org"
-iex(4)> {:ok, %{body: %{"consent_uri" => consent_uri}}} = MatrixSDK.Client.join_room(url, token, room_address)
-# Open this link with your browser
-iex(5)> MatrixSDK.Client.join_room(url, token, room_address)
-...
+# ...
+iex(2)> auth = MatrixSDK.Client.Auth.login_user("username", "supersecretpassword")
+%{
+  identifier: %{type: "m.id.user", user: "username"},
+  password: "supersecretpassword",
+  type: "m.login.password"
+}
+iex(3)> {:ok, %{body: %{"access_token" => token}}} = MatrixSDK.Client.login(url, auth)
+# ...
+iex(4)> MatrixSDK.Client.joined_rooms(url, token)
+# Returns a list of the rooms joined with that account.
+iex(5)> MatrixSDK.Client.logout(url, token)
+# Invalidates the token and logs the user out.
 ```
