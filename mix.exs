@@ -9,7 +9,9 @@ defmodule MatrixSDK.MixProject do
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
-      docs: docs()
+      description: description(),
+      docs: docs(),
+      package: package()
     ]
   end
 
@@ -37,11 +39,17 @@ defmodule MatrixSDK.MixProject do
     ]
   end
 
+  defp description() do
+    """
+    A Matrix SDK for Elixir 
+    """
+  end
+
   defp docs do
     [
       main: "readme",
       name: "Matrix SDK",
-      source_url: "https://github.com/niklaslong/matrix-sdk",
+      source_url: "https://github.com/niklaslong/matrix-elixir-sdk",
       extras: ["README.md"],
       groups_for_modules: [
         "Client-Server API": [
@@ -51,6 +59,14 @@ defmodule MatrixSDK.MixProject do
           MatrixSDK.Client.StateEvent
         ]
       ]
+    ]
+  end
+
+  defp package() do
+    [
+      maintainers: ["Niklas Long"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/niklaslong/matrix-elixir-sdk"}
     ]
   end
 end
