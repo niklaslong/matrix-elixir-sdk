@@ -6,6 +6,8 @@ The first release provides a simple wrapper around the main endpoints of the [Ma
 
 Likewise, if you want to start a project using the SDK, [let me know](mailto:niklaslong@protonmail.ch)!
 
+## Roadmap
+
 In future, the SDK plans to include:
 - an encryption library (currently in development): [olm-ex](https://github.com/niklaslong/olm-ex).
 - further abstractions around the `Client` library to handle state.
