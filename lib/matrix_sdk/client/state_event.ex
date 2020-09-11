@@ -9,7 +9,7 @@ defmodule MatrixSDK.Client.StateEvent do
   @type t :: %__MODULE__{}
 
   @doc """
-  Returns a `StateEvent` struct of type `m.room.join_rules`. 
+  Returns a `StateEvent` struct of type `m.room.join_rules`.
 
   ## Example
 
@@ -19,6 +19,21 @@ defmodule MatrixSDK.Client.StateEvent do
     do: %__MODULE__{
       content: %{join_rule: body},
       type: "m.room.join_rules",
+      room_id: room_id,
+      state_key: ""
+    }
+
+  @doc """
+  Returns a `StateEvent` struct of type `m.room.topic`.
+
+  ## Example
+
+      MatrixSDK.Client.StateEvent.topic("!someroom:matrix.org". "Example room topic")
+  """
+  def topic(room_id, body),
+    do: %__MODULE__{
+      content: %{topic: body},
+      type: "m.room.topic",
       room_id: room_id,
       state_key: ""
     }
