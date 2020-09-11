@@ -24,3 +24,6 @@ matrix_sdk-*.tar
 
 # Conveniences for IEx sessions (aliases, ...)
 .iex.exs
+
+# Asdf local configurataion
+.tool-versions
