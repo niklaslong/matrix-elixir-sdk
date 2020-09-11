@@ -1,6 +1,6 @@
 defmodule MatrixSDK.HTTPClient do
   @moduledoc """
-  Provides functions to makes HTTP requests using `Tesla`. 
+  Provides functions to makes HTTP requests using `Tesla`.
   """
 
   use Tesla, docs: false
@@ -38,5 +38,11 @@ defmodule MatrixSDK.HTTPClient do
     request.base_url
     |> client(request.headers)
     |> put(request.path, request.body, query: request.query_params)
+  end
+
+  def do_request(%Request{method: :delete} = request) do
+    request.base_url
+    |> client(request.headers)
+    |> delete(request.path, query: request.query_params)
   end
 end

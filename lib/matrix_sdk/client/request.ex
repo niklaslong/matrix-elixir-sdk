@@ -7,15 +7,17 @@ defmodule MatrixSDK.Client.Request do
   alias MatrixSDK.Client.{Auth, RoomEvent, StateEvent}
 
   @enforce_keys [:method, :base_url, :path]
-  defstruct([:method, :base_url, :path, query_params: [], headers: [], body: %{}])
+  defstruct([:method, :base_url, :path, query_params: [], headers: [], body: %{}, __meta__: %{}])
 
   @type method :: :head | :get | :delete | :trace | :options | :post | :put | :patch
   @type base_url :: binary
   @type path :: binary
   @type headers :: [{binary, binary}]
   @type body :: any
+  @type meta :: %{request_function: {atom, integer}}
 
   @type t :: %__MODULE__{
+          __meta__: meta,
           method: method,
           base_url: base_url,
           path: path,
@@ -46,7 +48,14 @@ defmodule MatrixSDK.Client.Request do
   """
   @spec spec_versions(base_url) :: t
   def spec_versions(base_url),
-    do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
+    do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/versions"
+    }
 
   @doc """
   Returns a `%Request{}` struct used to get discovery information about the domain.
@@ -54,7 +63,7 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
 
   ## Examples
 
@@ -70,7 +79,14 @@ defmodule MatrixSDK.Client.Request do
   """
   @spec server_discovery(base_url) :: t
   def server_discovery(base_url),
-    do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
+    do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :get,
+      base_url: base_url,
+      path: "/.well-known/matrix/client"
+    }
 
   @doc """
   Returns a `%Request{}` struct used to get information about the server's supported feature set and other relevant capabilities.
@@ -96,6 +112,9 @@ defmodule MatrixSDK.Client.Request do
   @spec server_capabilities(base_url, binary) :: t
   def server_capabilities(base_url, token),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/capabilities",
@@ -107,7 +126,7 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
+  Required:
   - `base_url`: the base URL for the homeserver.
 
   ## Examples
@@ -124,7 +143,14 @@ defmodule MatrixSDK.Client.Request do
   """
   @spec login(base_url) :: t
   def login(base_url),
-    do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/login"}
+    do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/login"
+    }
 
   @doc """
   Returns a `%Request{}` struct used to authenticate the user and issues an access token
@@ -133,7 +159,7 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
 
   Optional:
@@ -142,7 +168,7 @@ defmodule MatrixSDK.Client.Request do
 
 
   ## Examples
-      
+
   Token authentication:
       iex> auth = MatrixSDK.Client.Auth.login_token("token")
       iex> MatrixSDK.Client.Request.login("https://matrix.org", auth)
@@ -178,6 +204,9 @@ defmodule MatrixSDK.Client.Request do
   @spec login(base_url, Auth.t(), opts :: map) :: t
   def login(base_url, auth, opts \\ %{}) do
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/login",
@@ -210,6 +239,9 @@ defmodule MatrixSDK.Client.Request do
 
   defp logout(base_url, path, token),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: path,
@@ -241,14 +273,14 @@ defmodule MatrixSDK.Client.Request do
   def logout_all(base_url, token), do: logout(base_url, "/_matrix/client/r0/logout/all", token)
 
   @doc """
-  Returns a `%Request{}` struct used to register a guest account on the homeserver and returns an access token which can be used to authenticate subsequent requests. 
+  Returns a `%Request{}` struct used to register a guest account on the homeserver and returns an access token which can be used to authenticate subsequent requests.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
 
-  Optional: 
+  Optional:
   - `initial_device_display_name`: a display name to assign to the newly-created device.
 
   ## Examples
@@ -261,9 +293,9 @@ defmodule MatrixSDK.Client.Request do
         method: :post,
         path: "/_matrix/client/r0/register?kind=guest",
         query_params: []
-      }   
+      }
 
-  Specifiying a display name for the device:    
+  Specifiying a display name for the device:
 
       iex> opts = %{initial_device_display_name: "THE INTERNET"}
       iex> MatrixSDK.Client.Request.register_guest("https://matrix.org", opts)
@@ -279,6 +311,9 @@ defmodule MatrixSDK.Client.Request do
   @spec register_guest(base_url, map) :: t
   def register_guest(base_url, opts \\ %{}),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register?kind=guest",
@@ -286,16 +321,16 @@ defmodule MatrixSDK.Client.Request do
     }
 
   @doc """
-  Returns a `%Request{}` struct used to register a user account on the homeserver. 
+  Returns a `%Request{}` struct used to register a user account on the homeserver.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `password`: the desired password for the account.
-  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`. This is used to authenticate the registration request, not to define how a user will be authenticated. 
+  - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`. This is used to authenticate the registration request, not to define how a user will be authenticated.
 
-  Optional: 
+  Optional:
   - `username`: the basis for the localpart of the desired Matrix ID. If omitted, the homeserver will generate a Matrix ID local part.
   - `device_id`: ID of the client device. If this does not correspond to a known client device, a new device will be created. The server will auto-generate a `device_id` if this is not specified.
   - `initial_device_display_name`: a display name to assign to the newly-created device.
@@ -314,7 +349,7 @@ defmodule MatrixSDK.Client.Request do
         query_params: []
       }
 
-  With optional parameters:    
+  With optional parameters:
 
       iex> auth = MatrixSDK.Client.Auth.login_dummy()
       iex> opts = %{
@@ -349,6 +384,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register",
@@ -359,18 +397,18 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to check the given email address is not already associated with an account on the homeserver. This should be used to get a token to register an email as part of the initial user registration.
 
-  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
   - `email`: the email address.
-  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client.
 
   Optional:
-  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.  
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
 
   ## Examples
 
@@ -393,7 +431,7 @@ defmodule MatrixSDK.Client.Request do
         body: %{
           client_secret: "secret",
           email: "maurice@moss.yay",
-          send_attempt: 1, 
+          send_attempt: 1,
           next_link: "nextlink.url"
         },
         headers: [],
@@ -412,6 +450,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register/email/requestToken",
@@ -422,19 +463,19 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to check the given phone number is not already associated with an account on the homeserver. This should be used to get a token to register a phone number as part of the initial user registration.
 
-  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
   - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
   - `phone`: the phone number.
-  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client.
 
   Optional:
-  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL. 
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
 
   ## Examples
 
@@ -442,9 +483,9 @@ defmodule MatrixSDK.Client.Request do
       %MatrixSDK.Client.Request{
         base_url: "https://matrix.org",
         body: %{
-          client_secret: "secret", 
-          country: "GB", 
-          phone_number: "07700900001", 
+          client_secret: "secret",
+          country: "GB",
+          phone_number: "07700900001",
           send_attempt: 1
         },
         headers: [],
@@ -461,9 +502,9 @@ defmodule MatrixSDK.Client.Request do
         base_url: "https://matrix.org",
         body: %{
           client_secret: "secret",
-          country: "GB", 
+          country: "GB",
           phone_number: "07700900001",
-          send_attempt: 1, 
+          send_attempt: 1,
           next_link: "nextlink.url"
         },
         headers: [],
@@ -490,6 +531,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register/msisdn/requestToken",
@@ -503,8 +547,8 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
-  - `username`: the basis for the localpart of the desired Matrix ID. 
+  - `base_url`: the base URL for the homeserver.
+  - `username`: the basis for the localpart of the desired Matrix ID.
 
   ## Examples
 
@@ -521,6 +565,9 @@ defmodule MatrixSDK.Client.Request do
   @spec username_availability(base_url, binary) :: t
   def username_availability(base_url, username),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/register/available?username=#{username}"
@@ -532,14 +579,14 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver.   
+  - `base_url`: the base URL for the homeserver.
   - `new_password`: the desired password for the account.
   - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
 
-  Optional: 
+  Optional:
   - `logout_devices`: `true` or `false`, whether the user's other access tokens, and their associated devices, should be revoked if the request succeeds.
 
-  ## Examples 
+  ## Examples
 
       iex> auth = MatrixSDK.Client.Auth.login_email_identity("sid", "client_secret")
       iex> MatrixSDK.Client.Request.change_password("https://matrix.org", "new_password", auth)
@@ -547,7 +594,7 @@ defmodule MatrixSDK.Client.Request do
         base_url: "https://matrix.org",
         body: %{
           auth: %{
-            type: "m.login.email.identity", 
+            type: "m.login.email.identity",
             threepidCreds: [%{client_secret: "client_secret", sid: "sid"}]
           },
           new_password: "new_password"
@@ -567,6 +614,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/password",
@@ -577,18 +627,18 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password/4`.
 
-  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
   - `email`: the email address.
-  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client.
 
   Optional:
-  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.  
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
 
   ## Examples
 
@@ -612,6 +662,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/password/email/requestToken",
@@ -622,19 +675,19 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to request validation tokens when authenticating for `change_password/4`.
 
-  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
   - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
   - `phone`: the phone number.
-  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client.
 
   Optional:
-  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL. 
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
 
   ## Examples
 
@@ -659,6 +712,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/password/msisdn/requestToken",
@@ -667,15 +723,15 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to deactivate a user's account. 
+  Returns a `%Request{}` struct used to deactivate a user's account.
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
 
-  Optional: 
+  Optional:
   - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
 
   ## Examples
@@ -693,6 +749,9 @@ defmodule MatrixSDK.Client.Request do
   @spec deactivate_account(base_url, binary, map) :: t
   def deactivate_account(base_url, token, opts \\ %{}),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/deactivate",
@@ -705,8 +764,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
 
   ## Examples
@@ -724,6 +783,9 @@ defmodule MatrixSDK.Client.Request do
   @spec account_3pids(base_url, binary) :: t
   def account_3pids(base_url, token),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid",
@@ -736,10 +798,10 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `client_secret`: the client secret used in the session with the homeserver.
-  - `sid`: the session ID give by the homeserver. 
+  - `sid`: the session ID give by the homeserver.
 
   Optional:
   - `auth`: a map containing autentication data as defined by `MatrixSDK.Client.Auth`.
@@ -770,6 +832,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/add",
@@ -784,7 +849,7 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `client_secret`: the client secret used in the session with the identity server.
   - `id_server`: the identity server to use.
@@ -820,6 +885,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.put(:id_access_token, id_access_token)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/bind",
@@ -834,12 +902,12 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `medium`: the medium of the third party identifier being removed. One of: `"email"` or `"msisdn"`.
   - `address`: the third party address being removed.
 
-  Optional: 
+  Optional:
 
   - `id_server`: the identity server to unbind from.
 
@@ -872,7 +940,7 @@ defmodule MatrixSDK.Client.Request do
         method: :post,
         path: "/_matrix/client/r0/account/3pid/delete",
         query_params: []
-      }  
+      }
   """
   @spec account_delete_3pid(base_url, binary, binary, binary, map) :: t
   def account_delete_3pid(base_url, token, medium, address, opt \\ %{}) do
@@ -883,6 +951,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opt)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/delete",
@@ -897,10 +968,10 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `medium`: the medium of the third party identifier being removed. One of: `"email"` or `"msisdn"`.
-  - `address`: the third party address being removed. 
+  - `address`: the third party address being removed.
 
   Optional:
   - `id_server`: the identity server to unbind from.
@@ -934,7 +1005,7 @@ defmodule MatrixSDK.Client.Request do
         method: :post,
         path: "/_matrix/client/r0/account/3pid/unbind",
         query_params: []
-      }  
+      }
   """
   @spec account_unbind_3pid(base_url, binary, binary, binary, map) :: t
   def account_unbind_3pid(base_url, token, medium, address, opt \\ %{}) do
@@ -945,6 +1016,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opt)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/unbind",
@@ -956,19 +1030,19 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to request a validation token when adding an email to a user's account.
 
-  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
   - `email`: the email address.
-  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client.
 
   Optional:
-  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.  
+  - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
 
   ## Examples
 
@@ -1021,6 +1095,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/email/requestToken",
@@ -1032,17 +1109,17 @@ defmodule MatrixSDK.Client.Request do
   @doc """
   Returns a `%Request{}` struct used to request a validation token when adding a phone number to a user's account.
 
-  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module. 
+  For more info see _3PID API flows_ section on the `MatrixSDK.Client` module.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `client_secret`: a unique string generated by the client, and used to identify the validation attempt. It must be a string consisting of the characters `[0-9a-zA-Z.=_-]`. Its length must not exceed 255 characters and it must not be empty.
   - `country`: the two-letter uppercase ISO-3166-1 alpha-2 country code.
   - `phone`: the phone number.
-  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client. 
+  - `send_attempt`: stops the server from sending duplicate emails unless incremented by the client.
 
   Optional:
   - `next_link`: when the validation is completed, the identity server will redirect the user to this URL.
@@ -1110,6 +1187,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/msisdn/requestToken",
@@ -1123,9 +1203,9 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
+  Required:
 
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
 
   ## Examples
@@ -1143,6 +1223,9 @@ defmodule MatrixSDK.Client.Request do
   @spec whoami(base_url, binary) :: t
   def whoami(base_url, token),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/account/whoami",
@@ -1155,8 +1238,8 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
-  - `token`: the authentication token returned from user login. 
+  - `base_url`: the base URL for the homeserver.
+  - `token`: the authentication token returned from user login.
 
   Optional:
   - `filter`: the ID of a filter created using the filter API or a filter JSON object encoded as a string.
@@ -1195,9 +1278,9 @@ defmodule MatrixSDK.Client.Request do
         path: "/_matrix/client/r0/sync",
         query_params: [
           {:filter, "filter"},
-          {:full_state, true}, 
-          {:set_presence, "online"}, 
-          {:since, "s123456789"}, 
+          {:full_state, true},
+          {:set_presence, "online"},
+          {:since, "s123456789"},
           {:timeout, 1000}
         ]
       }
@@ -1205,6 +1288,9 @@ defmodule MatrixSDK.Client.Request do
   @spec sync(base_url, binary, map) :: t
   def sync(base_url, token, opts \\ %{}),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/sync",
@@ -1219,9 +1305,9 @@ defmodule MatrixSDK.Client.Request do
 
   Required:
 
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
-  - `room_id`: the ID of the room the event is in. 
+  - `room_id`: the ID of the room the event is in.
   - `event_id`: the event ID.
 
   ## Example
@@ -1242,6 +1328,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_event_id = URI.encode_www_form(event_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/event/#{encoded_event_id}",
@@ -1256,7 +1345,7 @@ defmodule MatrixSDK.Client.Request do
 
   Required:
 
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room the state event is in.
   - `event_type`: the type of the state event.
@@ -1280,6 +1369,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_state_key = URI.encode_www_form(state_key)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path:
@@ -1294,11 +1386,11 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
-  - `room_id`: the room the events are in. 
+  - `room_id`: the room the events are in.
 
-  ## Example 
+  ## Example
 
       iex> MatrixSDK.Client.Request.room_state("https://matrix.org", "token", "!someroom:matrix.org")
       %MatrixSDK.Client.Request{
@@ -1315,6 +1407,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/state",
@@ -1327,12 +1422,12 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
 
-  Optional: 
+  Optional:
   - `at`: the point in time (pagination token) to return members for in the room.
   - `membership`: the kind of membership to filter for. Defaults to no filtering if unspecified.
   - `not_membership`: the kind of membership to exclude from the results. Defaults to no filtering if unspecified. One of: `"join"`, `"invite"`, `"leave"`, `"ban"`.
@@ -1371,6 +1466,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/members",
@@ -1384,12 +1482,12 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
 
-  ## Example 
+  ## Example
 
       iex> MatrixSDK.Client.Request.room_joined_members("https://matrix.org", "token", "!someroom:matrix.org")
       %MatrixSDK.Client.Request{
@@ -1406,6 +1504,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/joined_members",
@@ -1414,24 +1515,24 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to get message and state events for a room. 
+  Returns a `%Request{}` struct used to get message and state events for a room.
   It uses pagination parameters to paginate history in the room.
 
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
-  - `room_id`: the room ID. 
+  - `room_id`: the room ID.
   - `from`: the pagination token to start returning events from.
   - `dir`: the direction to return events from. One of: `"b"` or `"f"`.
 
-  Optional: 
+  Optional:
   - `to`: the pagination token to stop returning events at.
-  - `limit`: the maximum number of events to return. 
-  - `filter`: a filter to apply to the returned events. 
+  - `limit`: the maximum number of events to return.
+  - `filter`: a filter to apply to the returned events.
 
-  ## Examples 
+  ## Examples
 
       iex> MatrixSDK.Client.Request.room_messages("https://matrix.org", "token", "!someroom:matrix.org", "t123456789", "f")
       %MatrixSDK.Client.Request{
@@ -1472,6 +1573,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.to_list()
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/messages",
@@ -1485,10 +1589,10 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
-  - `state_event`: a state event as defined in `MatrixSDK.Client.StateEvent`. 
+  - `state_event`: a state event as defined in `MatrixSDK.Client.StateEvent`.
 
   ## Example
 
@@ -1510,6 +1614,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_state_key = URI.encode_www_form(state_event.state_key)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :put,
       base_url: base_url,
       path:
@@ -1526,10 +1633,10 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
-  - `room_event`: a state event as defined in `MatrixSDK.Client.RoomEvent`. 
+  - `room_event`: a state event as defined in `MatrixSDK.Client.RoomEvent`.
 
   ## Example
 
@@ -1551,6 +1658,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_transaction_id = URI.encode_www_form(room_event.transaction_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :put,
       base_url: base_url,
       path:
@@ -1563,18 +1673,18 @@ defmodule MatrixSDK.Client.Request do
   end
 
   @doc """
-  Returns a `%Request{}` struct used to redact a room event. 
+  Returns a `%Request{}` struct used to redact a room event.
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
-  - `room_id`: the room ID. 
+  - `room_id`: the room ID.
   - `event_id`: the event ID.
   - `transaction_id`: the transaction ID for this event. Clients should generate a unique ID; it will be used by the server to ensure idempotency of requests.
 
-  Optional: 
+  Optional:
   - `reason`: the reason for the event being redacted.
 
   ## Example
@@ -1609,6 +1719,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_transaction_id = URI.encode_www_form(transaction_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :put,
       base_url: base_url,
       path:
@@ -1625,14 +1738,14 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
 
-  Optional: 
+  Optional:
   - `visibility`: controls the presence of the room on the room list. One of: `"public"` or `"private"`.
-  - `room_alias_name`: the desired room alias local part. 
-  - `name`: if this is included, an `m.room.name` event will be sent into the room to indicate the name of the room. 
+  - `room_alias_name`: the desired room alias local part.
+  - `name`: if this is included, an `m.room.name` event will be sent into the room to indicate the name of the room.
   - `topic`: if this is included, an `m.room.topic` event will be sent into the room to indicate the topic for the room.
   - `invite`: a list of user IDs to invite to the room.
   - `invite_3pid`: a list of objects representing third party IDs to invite into the room.
@@ -1640,8 +1753,8 @@ defmodule MatrixSDK.Client.Request do
   - `creation_content`: extra keys, such as m.federate, to be added to the content of the `m.room.create` event.
   - `initial_state`: a list of state events to set in the new room.
   - `preset`: convenience parameter for setting various default state events based on a preset.
-  - `is_direct`: boolean flag. 
-  - `power_level_content_override`: the power level content to override in the default power level event. 
+  - `is_direct`: boolean flag.
+  - `power_level_content_override`: the power level content to override in the default power level event.
 
   ## Examples
 
@@ -1656,7 +1769,7 @@ defmodule MatrixSDK.Client.Request do
       }
 
   With options:
-      
+
       iex> opts = %{
       ...>          visibility: "public",
       ...>          room_alias_name: "chocolate",
@@ -1675,6 +1788,9 @@ defmodule MatrixSDK.Client.Request do
   @spec create_room(base_url, binary, map) :: t
   def create_room(base_url, token, opts \\ %{}),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/createRoom",
@@ -1687,8 +1803,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
 
   ## Example
@@ -1706,6 +1822,9 @@ defmodule MatrixSDK.Client.Request do
   @spec joined_rooms(base_url, binary) :: t
   def joined_rooms(base_url, token),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/joined_rooms",
@@ -1717,11 +1836,11 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
-  - `user_id`: the user ID to invite to the room. 
+  - `user_id`: the user ID to invite to the room.
 
   ## Examples
 
@@ -1740,6 +1859,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/invite",
@@ -1754,14 +1876,14 @@ defmodule MatrixSDK.Client.Request do
   ## Args
 
   Required:
-  - `base_url`: the base URL for the homeserver. 
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id_or_alias`: the room ID or room alias.
 
-  Optional: 
+  Optional:
   - `third_party_signed`: a signature of an `m.third_party_invite` token to prove that this user owns a third party identity which has been invited to the room.
 
-  ## Example 
+  ## Example
 
       iex> MatrixSDK.Client.Request.join_room("https://matrix.org", "token", "!someroom:matrix.org")
       %MatrixSDK.Client.Request{
@@ -1777,6 +1899,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id_or_alias = URI.encode_www_form(room_id_or_alias)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/join/#{encoded_room_id_or_alias}",
@@ -1790,8 +1915,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
 
@@ -1811,6 +1936,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/leave",
@@ -1823,8 +1951,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
 
@@ -1844,6 +1972,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/forget",
@@ -1856,13 +1987,13 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
   - `user_id`: the user ID to kick from the room.
 
-  Optional: 
+  Optional:
   - `reason`: the reason the user has been kicked.
 
   ## Examples
@@ -1899,6 +2030,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opt)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/kick",
@@ -1912,13 +2046,13 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
   - `user_id`: the user ID to ban from the room.
 
-  Optional: 
+  Optional:
   - `reason`: the reason the user has been banned.
 
   ## Examples
@@ -1955,6 +2089,9 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opt)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/ban",
@@ -1968,8 +2105,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
   - `user_id`: the user ID to unban from the room.
@@ -1991,6 +2128,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/unban",
@@ -2004,8 +2144,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `room_id`: the room ID.
 
   ## Example
@@ -2024,6 +2164,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/directory/list/room/#{encoded_room_id}"
@@ -2035,8 +2178,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `room_id`: the room ID.
   - `visibility`: the new visibility setting for the room.  One of: `"private"` or `"public"`.
@@ -2058,6 +2201,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :put,
       base_url: base_url,
       path: "/_matrix/client/r0/directory/list/room/#{encoded_room_id}",
@@ -2071,10 +2217,10 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
 
-  Optional: 
+  Optional:
   - `limit`: limit the number of results returned.
   - `since`: a pagination token from a previous request, allowing clients to get the next (or previous) batch of rooms.
   - `server`: the server to fetch the public room lists from.
@@ -2091,7 +2237,7 @@ defmodule MatrixSDK.Client.Request do
         query_params: []
       }
 
-  With optional parameters:   
+  With optional parameters:
 
       iex> MatrixSDK.Client.Request.public_rooms("https://matrix.org", %{limit: 10})
       %MatrixSDK.Client.Request{
@@ -2106,6 +2252,9 @@ defmodule MatrixSDK.Client.Request do
   @spec public_rooms(base_url, map) :: t
   def public_rooms(base_url, opts \\ %{}),
     do: %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/publicRooms",
@@ -2113,21 +2262,21 @@ defmodule MatrixSDK.Client.Request do
     }
 
   @doc """
-  Returns a `%Request{}` struct used to list the public rooms on the server with more advanced filtering options. 
+  Returns a `%Request{}` struct used to list the public rooms on the server with more advanced filtering options.
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
-  - filters: 
+  - filters:
     - `limit`: limit the number of results returned.
     - `since`: a pagination token from a previous request, allowing clients to get the next (or previous) batch of rooms.
     - `filter`: a string to search for in the room metadata, e.g. name, topic, canonical alias, etc...
-    - `include_all_networks`: boolean, whether or not to include all known networks/protocols from application services on the homeserver. 
+    - `include_all_networks`: boolean, whether or not to include all known networks/protocols from application services on the homeserver.
     - `third_party_instance_id`: the specific third party network/protocol to request from the homeserver. Can only be used if `include_all_networks` is false.
 
-  Optional: 
+  Optional:
   - `server`: the server to fetch the public room lists from.
 
   ## Examples
@@ -2159,6 +2308,9 @@ defmodule MatrixSDK.Client.Request do
     query_params = if server, do: [server: server], else: []
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/publicRooms",
@@ -2173,12 +2325,12 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `search_term`: the term to search for.
 
-  Optional: 
+  Optional:
   - `limit`: limit the number of returned results.
   - `language`: sets the language header for the request.
 
@@ -2236,6 +2388,9 @@ defmodule MatrixSDK.Client.Request do
       end
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/user_directory/search",
@@ -2249,8 +2404,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `user_id`: the user ID.
   - `display_name`: new display name.
@@ -2272,6 +2427,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :put,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/displayname",
@@ -2285,8 +2443,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `user_id`: the user ID.
 
   ## Examples
@@ -2306,6 +2464,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/displayname"
@@ -2317,8 +2478,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `token`: access token, typically obtained via the login or registration processes.
   - `user_id`: the user ID.
   - `avatar_url`: the new avatar URL for this user.
@@ -2340,6 +2501,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :put,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/avatar_url",
@@ -2353,8 +2517,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `user_id`: the user ID.
 
   ## Examples
@@ -2374,6 +2538,9 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/avatar_url"
@@ -2385,8 +2552,8 @@ defmodule MatrixSDK.Client.Request do
 
   ## Args
 
-  Required: 
-  - `base_url`: the base URL for the homeserver. 
+  Required:
+  - `base_url`: the base URL for the homeserver.
   - `user_id`: the user ID.
 
   ## Examples
@@ -2406,9 +2573,164 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}"
+    }
+  end
+
+  @spec upload(base_url, binary, iodata, map) :: t
+  def upload(base_url, token, bytes, opts \\ %{}) do
+    {headers, query_params} =
+      case opts do
+        %{filename: filename, content_type: content_type} ->
+          {[{"Content-Type", content_type}], [filename: filename]}
+
+        %{filename: filename} ->
+          {[], [filename: filename]}
+
+        %{content_type: content_type} ->
+          {[{"Content-Type", content_type}], []}
+
+        _ ->
+          {[], %{}}
+      end
+
+    %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/media/r0/upload",
+      headers: [{"Authorization", "Bearer " <> token}] ++ headers,
+      query_params: query_params,
+      body: bytes
+    }
+  end
+
+  def download(base_url, server_name, media_id, opts \\ %{}) do
+    encoded_server_name = URI.encode_www_form(server_name)
+    encoded_media_id = URI.encode_www_form(media_id)
+
+    query_params =
+      case opts do
+        %{allow_remote: allow_remote} ->
+          [allow_remote: allow_remote]
+
+        _ ->
+          []
+      end
+
+    %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/media/r0/download/#{encoded_server_name}/#{encoded_media_id}",
+      query_params: query_params
+    }
+  end
+
+  def thumbnail(base_url, server_name, media_id, width, height, opts \\ %{}) do
+    encoded_server_name = URI.encode_www_form(server_name)
+    encoded_media_id = URI.encode_www_form(media_id)
+
+    required_query_params = [width: width, height: height]
+
+    optional_query_params =
+      Enum.filter(opts, fn {param_name, _value} ->
+        Enum.member?([:allow_remote, :method], param_name)
+      end)
+
+    %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/media/r0/download/#{encoded_server_name}/#{encoded_media_id}",
+      query_params: required_query_params ++ optional_query_params
+    }
+  end
+
+  def set_room_read_markers(
+        base_url,
+        token,
+        room_id,
+        fully_read_event_id,
+        receipt_read_event_id \\ nil
+      ) do
+    encoded_room_id = URI.encode_www_form(room_id)
+
+    body = Map.put(%{}, "m.fully_read", fully_read_event_id)
+
+    body =
+      if receipt_read_event_id !== nil do
+        Map.put(body, "m.read", receipt_read_event_id)
+      else
+        body
+      end
+
+    %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :post,
+      base_url: base_url,
+      path: "/_matrix/client/r0/rooms/#{encoded_room_id}/read_markers",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: body
+    }
+  end
+
+  def create_room_alias(base_url, token, room_id, room_alias) do
+    encoded_room_alias = URI.encode_www_form(room_alias)
+
+    body = %{
+      room_id: room_id
+    }
+
+    %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :put,
+      base_url: base_url,
+      path: "/_matrix/client/r0/directory/room/#{encoded_room_alias}",
+      headers: [{"Authorization", "Bearer " <> token}],
+      body: body
+    }
+  end
+
+  def resolve_room_alias(base_url, room_alias) do
+    encoded_room_alias = URI.encode_www_form(room_alias)
+
+    %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :get,
+      base_url: base_url,
+      path: "/_matrix/client/r0/directory/room/#{encoded_room_alias}"
+    }
+  end
+
+  def delete_room_alias(base_url, token, room_alias) do
+    encoded_room_alias = URI.encode_www_form(room_alias)
+
+    %__MODULE__{
+      __meta__: %{
+        request_function: __ENV__.function
+      },
+      method: :delete,
+      base_url: base_url,
+      path: "/_matrix/client/r0/directory/room/#{encoded_room_alias}",
+      headers: [{"Authorization", "Bearer " <> token}]
     }
   end
 end
