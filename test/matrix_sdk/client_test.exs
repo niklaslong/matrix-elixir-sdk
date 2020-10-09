@@ -8,6 +8,20 @@ defmodule MatrixSDK.ClientTest do
 
   setup :verify_on_exit!
 
+  describe "do_request/1" do
+    test "executes given request with configured http client" do
+      request = %Request{
+        method: :get,
+        base_url: "http://test.url",
+        path: "/"
+      }
+
+      assert_client_mock_got(request)
+
+      Client.do_request(request)
+    end
+  end
+
   describe "server administration:" do
     test "spec_versions/1 returns supported matrix spec" do
       base_url = "http://test.url"
@@ -1157,6 +1171,167 @@ defmodule MatrixSDK.ClientTest do
 
       assert_client_mock_got(expected_request)
       assert {:ok, _} = Client.user_profile(base_url, user_id)
+    end
+  end
+
+  describe "content repository:" do
+    test "upload/4" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      bytes = "some_content"
+
+      expected_request = Request.upload(base_url, token, bytes)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = Client.upload(base_url, token, bytes)
+    end
+
+    test "upload/4 with options" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      bytes = "some_content"
+      filename = "some_file.txt"
+      content_type = "text/plain"
+      opts = %{filename: filename, content_type: content_type}
+
+      expected_request = Request.upload(base_url, token, bytes, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = Client.upload(base_url, token, bytes, opts)
+    end
+
+    test "download/4" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+
+      expected_request = Request.download(base_url, server_name, media_id)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = Client.download(base_url, server_name, media_id)
+    end
+
+    test "download/4 with options" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      filename = "some_filename"
+      opts = %{filename: filename, allow_remote: false}
+
+      expected_request = Request.download(base_url, server_name, media_id, opts)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = Client.download(base_url, server_name, media_id, opts)
+    end
+
+    test "download_thumbnail/6" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      width = 100
+      height = 101
+
+      expected_request = Request.thumbnail(base_url, server_name, media_id, width, height)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = Client.download_thumbnail(base_url, server_name, media_id, width, height)
+    end
+
+    test "download_thumbnail/6 width options" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      width = 100
+      height = 101
+      method = "crop"
+      opts = [method: method, allow_remote: false]
+
+      expected_request = Request.thumbnail(base_url, server_name, media_id, width, height, opts)
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               Client.download_thumbnail(base_url, server_name, media_id, width, height, opts)
+    end
+  end
+
+  describe "room read markers" do
+    test "set_room_read_markers/5" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      room_id = "!someroom:matrix.org"
+      fully_read_event_id = "$somewhere:example.org"
+
+      expected_request =
+        Request.set_room_read_markers(base_url, token, room_id, fully_read_event_id)
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               Client.set_room_read_markers(base_url, token, room_id, fully_read_event_id)
+    end
+
+    test "set_room_read_markers/5 with options" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      room_id = "!someroom:matrix.org"
+      fully_read_event_id = "$somewhere:example.org"
+      receipt_read_event_id = "$elsewhere:example.org"
+
+      expected_request =
+        Request.set_room_read_markers(
+          base_url,
+          token,
+          room_id,
+          fully_read_event_id,
+          receipt_read_event_id
+        )
+
+      assert_client_mock_got(expected_request)
+
+      assert {:ok, _} =
+               Client.set_room_read_markers(
+                 base_url,
+                 token,
+                 room_id,
+                 fully_read_event_id,
+                 receipt_read_event_id
+               )
+    end
+  end
+
+  describe "room aliases" do
+    test "create_room_alias/4" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      room_id = "!someroom:matrix.org"
+      room_alias = "#monkeys:matrix.org"
+
+      expected_request = Request.create_room_alias(base_url, token, room_id, room_alias)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = Client.create_room_alias(base_url, token, room_id, room_alias)
+    end
+
+    test "resolve_room_alias/2" do
+      base_url = "http://test-server.url"
+      room_alias = "#monkeys:matrix.org"
+
+      expected_request = Request.resolve_room_alias(base_url, room_alias)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = Client.resolve_room_alias(base_url, room_alias)
+    end
+
+    test "delete_room_alias/3" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      room_alias = "#monkeys:matrix.org"
+
+      expected_request = Request.delete_room_alias(base_url, token, room_alias)
+
+      assert_client_mock_got(expected_request)
+      assert {:ok, _} = Client.delete_room_alias(base_url, token, room_alias)
     end
   end
 

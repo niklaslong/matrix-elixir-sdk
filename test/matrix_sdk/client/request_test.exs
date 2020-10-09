@@ -1458,4 +1458,335 @@ defmodule MatrixSDK.Client.RequestTest do
       assert request.path == "/_matrix/client/r0/profile/%40user%3Amatrix.org"
     end
   end
+
+  describe "content repository:" do
+    test "upload/4" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      bytes = "some_content"
+
+      request = Request.upload(base_url, token, bytes)
+
+      assert request.method == :post
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/upload"
+      assert request.body == bytes
+    end
+
+    test "upload/4 with filename option" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      bytes = "some_content"
+      filename = "some_file.txt"
+      opts = %{filename: filename}
+
+      request = Request.upload(base_url, token, bytes, opts)
+
+      assert request.method == :post
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/upload"
+      assert request.body == bytes
+      assert request.query_params == [filename: filename]
+    end
+
+    test "upload/4 with content_type option" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      bytes = "some_content"
+      content_type = "text/plain"
+      opts = %{content_type: content_type}
+
+      request = Request.upload(base_url, token, bytes, opts)
+
+      assert request.method == :post
+
+      assert request.headers == [
+               {"Authorization", "Bearer " <> token},
+               {"Content-Type", content_type}
+             ]
+
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/upload"
+      assert request.body == bytes
+      assert request.query_params == []
+    end
+
+    test "upload/4 with content_type and filename options" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      bytes = "some_content"
+      filename = "some_file.txt"
+      content_type = "text/plain"
+      opts = %{filename: filename, content_type: content_type}
+
+      request = Request.upload(base_url, token, bytes, opts)
+
+      assert request.method == :post
+
+      assert request.headers == [
+               {"Authorization", "Bearer " <> token},
+               {"Content-Type", content_type}
+             ]
+
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/upload"
+      assert request.body == bytes
+      assert request.query_params == [filename: filename]
+    end
+
+    test "download/4" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+
+      request = Request.download(base_url, server_name, media_id)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/download/" <> server_name <> "/" <> media_id
+      assert request.body == %{}
+    end
+
+    test "download/4 with allow_remote option" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      opts = %{allow_remote: false}
+
+      request = Request.download(base_url, server_name, media_id, opts)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/download/" <> server_name <> "/" <> media_id
+      assert request.body == %{}
+      assert request.query_params == [allow_remote: false]
+    end
+
+    test "download/4 with filename option" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      filename = "some_filename"
+      opts = %{filename: filename}
+
+      request = Request.download(base_url, server_name, media_id, opts)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+
+      assert request.path ==
+               "/_matrix/media/r0/download/" <> server_name <> "/" <> media_id <> "/" <> filename
+
+      assert request.body == %{}
+      assert request.query_params == []
+    end
+
+    test "download/4 with filename and allow_remote options" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      filename = "some_filename"
+      opts = %{filename: filename, allow_remote: false}
+
+      request = Request.download(base_url, server_name, media_id, opts)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+
+      assert request.path ==
+               "/_matrix/media/r0/download/" <> server_name <> "/" <> media_id <> "/" <> filename
+
+      assert request.body == %{}
+      assert request.query_params == [allow_remote: false]
+    end
+
+    test "thubmnail/6" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      width = 100
+      height = 101
+
+      request = Request.thumbnail(base_url, server_name, media_id, width, height)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/thumbnail/" <> server_name <> "/" <> media_id
+      assert request.body == %{}
+      assert request.query_params == [width: width, height: height]
+    end
+
+    test "thubmnail/6 width allow_remote option" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      width = 100
+      height = 101
+      opts = [allow_remote: false]
+
+      request = Request.thumbnail(base_url, server_name, media_id, width, height, opts)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/thumbnail/" <> server_name <> "/" <> media_id
+      assert request.body == %{}
+      assert request.query_params == [width: width, height: height, allow_remote: false]
+    end
+
+    test "thubmnail/6 width method option" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      width = 100
+      height = 101
+      method = "crop"
+      opts = [method: method]
+
+      request = Request.thumbnail(base_url, server_name, media_id, width, height, opts)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/thumbnail/" <> server_name <> "/" <> media_id
+      assert request.body == %{}
+      assert request.query_params == [width: width, height: height, method: method]
+    end
+
+    test "thubmnail/6 width method and allow_remote options" do
+      base_url = "http://test-server.url"
+      server_name = "some_server_name"
+      media_id = "AQwafuaFswefuhsfAFAgsw"
+      width = 100
+      height = 101
+      method = "crop"
+      opts = [method: method, allow_remote: false]
+
+      request = Request.thumbnail(base_url, server_name, media_id, width, height, opts)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/media/r0/thumbnail/" <> server_name <> "/" <> media_id
+      assert request.body == %{}
+
+      assert request.query_params == [
+               width: width,
+               height: height,
+               method: method,
+               allow_remote: false
+             ]
+    end
+  end
+
+  describe "room read markers" do
+    test "set_room_read_markers/5" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      room_id = "!someroom:matrix.org"
+      fully_read_event_id = "$somewhere:example.org"
+
+      request = Request.set_room_read_markers(base_url, token, room_id, fully_read_event_id)
+
+      encoded_room_id = URI.encode_www_form(room_id)
+
+      assert request.method == :post
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/" <> encoded_room_id <> "/read_markers"
+      assert request.body == %{"m.fully_read" => "$somewhere:example.org"}
+      assert request.query_params == []
+    end
+
+    test "set_room_read_markers/5 with receipt_read_event_id option" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      room_id = "!someroom:matrix.org"
+      fully_read_event_id = "$somewhere:example.org"
+      receipt_read_event_id = "$elsewhere:example.org"
+
+      request =
+        Request.set_room_read_markers(
+          base_url,
+          token,
+          room_id,
+          fully_read_event_id,
+          receipt_read_event_id
+        )
+
+      encoded_room_id = URI.encode_www_form(room_id)
+
+      assert request.method == :post
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/rooms/" <> encoded_room_id <> "/read_markers"
+
+      assert request.body == %{
+               "m.fully_read" => "$somewhere:example.org",
+               "m.read" => "$elsewhere:example.org"
+             }
+
+      assert request.query_params == []
+    end
+  end
+
+  describe "room aliases" do
+    test "create_room_alias/4" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      room_id = "!someroom:matrix.org"
+      room_alias = "#monkeys:matrix.org"
+
+      request = Request.create_room_alias(base_url, token, room_id, room_alias)
+
+      encoded_room_alias = URI.encode_www_form(room_alias)
+
+      assert request.method == :put
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/directory/room/" <> encoded_room_alias
+      assert request.body == %{room_id: room_id}
+      assert request.query_params == []
+    end
+
+    test "resolve_room_alias/2" do
+      base_url = "http://test-server.url"
+      room_alias = "#monkeys:matrix.org"
+
+      request = Request.resolve_room_alias(base_url, room_alias)
+
+      encoded_room_alias = URI.encode_www_form(room_alias)
+
+      assert request.method == :get
+      assert request.headers == []
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/directory/room/" <> encoded_room_alias
+      assert request.body == %{}
+      assert request.query_params == []
+    end
+
+    test "delete_room_alias/3" do
+      base_url = "http://test-server.url"
+      token = "@user:matrix.org"
+      room_alias = "#monkeys:matrix.org"
+
+      request = Request.delete_room_alias(base_url, token, room_alias)
+
+      encoded_room_alias = URI.encode_www_form(room_alias)
+
+      assert request.method == :delete
+      assert request.headers == [{"Authorization", "Bearer " <> token}]
+      assert request.base_url == base_url
+      assert request.path == "/_matrix/client/r0/directory/room/" <> encoded_room_alias
+      assert request.body == %{}
+      assert request.query_params == []
+    end
+  end
 end

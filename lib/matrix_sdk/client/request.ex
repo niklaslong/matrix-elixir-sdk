@@ -7,17 +7,15 @@ defmodule MatrixSDK.Client.Request do
   alias MatrixSDK.Client.{Auth, RoomEvent, StateEvent}
 
   @enforce_keys [:method, :base_url, :path]
-  defstruct([:method, :base_url, :path, query_params: [], headers: [], body: %{}, __meta__: %{}])
+  defstruct([:method, :base_url, :path, query_params: [], headers: [], body: %{}])
 
   @type method :: :head | :get | :delete | :trace | :options | :post | :put | :patch
   @type base_url :: binary
   @type path :: binary
   @type headers :: [{binary, binary}]
   @type body :: any
-  @type meta :: %{request_function: {atom, integer}}
 
   @type t :: %__MODULE__{
-          __meta__: meta,
           method: method,
           base_url: base_url,
           path: path,
@@ -48,14 +46,7 @@ defmodule MatrixSDK.Client.Request do
   """
   @spec spec_versions(base_url) :: t
   def spec_versions(base_url),
-    do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
-      method: :get,
-      base_url: base_url,
-      path: "/_matrix/client/versions"
-    }
+    do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/versions"}
 
   @doc """
   Returns a `%Request{}` struct used to get discovery information about the domain.
@@ -79,14 +70,7 @@ defmodule MatrixSDK.Client.Request do
   """
   @spec server_discovery(base_url) :: t
   def server_discovery(base_url),
-    do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
-      method: :get,
-      base_url: base_url,
-      path: "/.well-known/matrix/client"
-    }
+    do: %__MODULE__{method: :get, base_url: base_url, path: "/.well-known/matrix/client"}
 
   @doc """
   Returns a `%Request{}` struct used to get information about the server's supported feature set and other relevant capabilities.
@@ -112,9 +96,6 @@ defmodule MatrixSDK.Client.Request do
   @spec server_capabilities(base_url, binary) :: t
   def server_capabilities(base_url, token),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/capabilities",
@@ -143,14 +124,7 @@ defmodule MatrixSDK.Client.Request do
   """
   @spec login(base_url) :: t
   def login(base_url),
-    do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
-      method: :get,
-      base_url: base_url,
-      path: "/_matrix/client/r0/login"
-    }
+    do: %__MODULE__{method: :get, base_url: base_url, path: "/_matrix/client/r0/login"}
 
   @doc """
   Returns a `%Request{}` struct used to authenticate the user and issues an access token
@@ -204,9 +178,6 @@ defmodule MatrixSDK.Client.Request do
   @spec login(base_url, Auth.t(), opts :: map) :: t
   def login(base_url, auth, opts \\ %{}) do
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/login",
@@ -239,9 +210,6 @@ defmodule MatrixSDK.Client.Request do
 
   defp logout(base_url, path, token),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: path,
@@ -311,9 +279,6 @@ defmodule MatrixSDK.Client.Request do
   @spec register_guest(base_url, map) :: t
   def register_guest(base_url, opts \\ %{}),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register?kind=guest",
@@ -384,9 +349,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register",
@@ -450,9 +412,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register/email/requestToken",
@@ -531,9 +490,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/register/msisdn/requestToken",
@@ -552,22 +508,19 @@ defmodule MatrixSDK.Client.Request do
 
   ## Examples
 
-       iex> MatrixSDK.Client.Request.username_availability("https://matrix.org", "maurice_moss")
-       %MatrixSDK.Client.Request{
-         base_url: "https://matrix.org",
-         body: %{},
-         headers: [],
-         method: :get,
-         path: "/_matrix/client/r0/register/available?username=maurice_moss",
-         query_params: []
-       }
+      iex> MatrixSDK.Client.Request.username_availability("https://matrix.org", "maurice_moss")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/client/r0/register/available?username=maurice_moss",
+        query_params: []
+      }
   """
   @spec username_availability(base_url, binary) :: t
   def username_availability(base_url, username),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/register/available?username=#{username}"
@@ -614,9 +567,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/password",
@@ -662,9 +612,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/password/email/requestToken",
@@ -712,9 +659,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/password/msisdn/requestToken",
@@ -749,9 +693,6 @@ defmodule MatrixSDK.Client.Request do
   @spec deactivate_account(base_url, binary, map) :: t
   def deactivate_account(base_url, token, opts \\ %{}),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/deactivate",
@@ -783,9 +724,6 @@ defmodule MatrixSDK.Client.Request do
   @spec account_3pids(base_url, binary) :: t
   def account_3pids(base_url, token),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid",
@@ -832,9 +770,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/add",
@@ -885,9 +820,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.put(:id_access_token, id_access_token)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/bind",
@@ -951,9 +883,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opt)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/delete",
@@ -1016,9 +945,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opt)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/unbind",
@@ -1095,9 +1021,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/email/requestToken",
@@ -1187,9 +1110,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opts)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/account/3pid/msisdn/requestToken",
@@ -1223,9 +1143,6 @@ defmodule MatrixSDK.Client.Request do
   @spec whoami(base_url, binary) :: t
   def whoami(base_url, token),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/account/whoami",
@@ -1288,9 +1205,6 @@ defmodule MatrixSDK.Client.Request do
   @spec sync(base_url, binary, map) :: t
   def sync(base_url, token, opts \\ %{}),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/sync",
@@ -1328,9 +1242,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_event_id = URI.encode_www_form(event_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/event/#{encoded_event_id}",
@@ -1369,9 +1280,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_state_key = URI.encode_www_form(state_key)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path:
@@ -1407,9 +1315,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/state",
@@ -1466,9 +1371,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/members",
@@ -1504,9 +1406,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/joined_members",
@@ -1573,9 +1472,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.to_list()
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/messages",
@@ -1614,9 +1510,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_state_key = URI.encode_www_form(state_event.state_key)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :put,
       base_url: base_url,
       path:
@@ -1658,9 +1551,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_transaction_id = URI.encode_www_form(room_event.transaction_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :put,
       base_url: base_url,
       path:
@@ -1719,9 +1609,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_transaction_id = URI.encode_www_form(transaction_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :put,
       base_url: base_url,
       path:
@@ -1788,9 +1675,6 @@ defmodule MatrixSDK.Client.Request do
   @spec create_room(base_url, binary, map) :: t
   def create_room(base_url, token, opts \\ %{}),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/createRoom",
@@ -1809,22 +1693,19 @@ defmodule MatrixSDK.Client.Request do
 
   ## Example
 
-        iex> MatrixSDK.Client.Request.joined_rooms("https://matrix.org", "token")
-        %MatrixSDK.Client.Request{
-          base_url: "https://matrix.org",
-          body: %{},
-          headers: [{"Authorization", "Bearer token"}],
-          method: :get,
-          path: "/_matrix/client/r0/joined_rooms",
-          query_params: []
-        }
+      iex> MatrixSDK.Client.Request.joined_rooms("https://matrix.org", "token")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :get,
+        path: "/_matrix/client/r0/joined_rooms",
+        query_params: []
+      }
   """
   @spec joined_rooms(base_url, binary) :: t
   def joined_rooms(base_url, token),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/joined_rooms",
@@ -1859,9 +1740,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/invite",
@@ -1899,9 +1777,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id_or_alias = URI.encode_www_form(room_id_or_alias)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/join/#{encoded_room_id_or_alias}",
@@ -1936,9 +1811,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/leave",
@@ -1972,9 +1844,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/forget",
@@ -2030,9 +1899,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opt)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/kick",
@@ -2089,9 +1955,6 @@ defmodule MatrixSDK.Client.Request do
       |> Map.merge(opt)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/ban",
@@ -2128,9 +1991,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/unban",
@@ -2164,9 +2024,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/directory/list/room/#{encoded_room_id}"
@@ -2201,9 +2058,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_room_id = URI.encode_www_form(room_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :put,
       base_url: base_url,
       path: "/_matrix/client/r0/directory/list/room/#{encoded_room_id}",
@@ -2252,9 +2106,6 @@ defmodule MatrixSDK.Client.Request do
   @spec public_rooms(base_url, map) :: t
   def public_rooms(base_url, opts \\ %{}),
     do: %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/publicRooms",
@@ -2303,14 +2154,11 @@ defmodule MatrixSDK.Client.Request do
         query_params: [server: "server"]
       }
   """
-  @spec public_rooms(base_url, binary, map, binary) :: t
+  @spec public_rooms(base_url, binary, map, binary | nil) :: t
   def public_rooms(base_url, token, filters, server \\ nil) do
     query_params = if server, do: [server: server], else: []
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/publicRooms",
@@ -2388,9 +2236,6 @@ defmodule MatrixSDK.Client.Request do
       end
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/user_directory/search",
@@ -2427,9 +2272,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :put,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/displayname",
@@ -2464,9 +2306,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/displayname"
@@ -2501,9 +2340,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :put,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/avatar_url",
@@ -2538,9 +2374,6 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}/avatar_url"
@@ -2573,15 +2406,62 @@ defmodule MatrixSDK.Client.Request do
     encoded_user_id = URI.encode_www_form(user_id)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/profile/#{encoded_user_id}"
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to upload some content to the content repository.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `bytes`: some content to be uploaded.
+
+  Optional:
+  - `filename`(binary): the name of the file being uploaded.
+  - `content_type`(binary): the content type of the file being uploaded.
+
+  ## Examples
+
+      iex> MatrixSDK.Client.Request.upload("https://matrix.org", "token", "some_content")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: "some_content",
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/media/r0/upload",
+        query_params: []
+      }
+
+  With `filename` option:
+
+      iex> MatrixSDK.Client.Request.upload("https://matrix.org", "token", "some_content", %{filename: "some_file.txt"})
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: "some_content",
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/media/r0/upload",
+        query_params: [filename: "some_file.txt"]
+      }
+
+  With `content_type` option:
+
+      iex> MatrixSDK.Client.Request.upload("https://matrix.org", "token", "some_content", %{content_type: "text/plain"})
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: "some_content",
+        headers: [{"Authorization", "Bearer token"}, {"Content-Type", "text/plain"}],
+        method: :post,
+        path: "/_matrix/media/r0/upload",
+        query_params: []
+      }
+  """
   @spec upload(base_url, binary, iodata, map) :: t
   def upload(base_url, token, bytes, opts \\ %{}) do
     {headers, query_params} =
@@ -2596,13 +2476,10 @@ defmodule MatrixSDK.Client.Request do
           {[{"Content-Type", content_type}], []}
 
         _ ->
-          {[], %{}}
+          {[], []}
       end
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/media/r0/upload",
@@ -2612,6 +2489,57 @@ defmodule MatrixSDK.Client.Request do
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to download content from the content repository.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `server_name`: the server name from the mxc:// URI of media (the authoritory component).
+  - `media_id`: the media ID from the mxc:// URI of media (the path component).
+
+  Optional:
+  - `allow_remote`(boolean): indicates to the server that it should not attempt to fetch the media if it is deemed remote.
+  - `filename`(binary): a filename to give in the Content- Disposition header.
+
+  ## Examples
+
+      iex> MatrixSDK.Client.Request.download("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/media/r0/download/some_server_name/AQwafuaFswefuhsfAFAgsw",
+        query_params: []
+      }
+
+  With `allow_remote` option:
+
+      iex> MatrixSDK.Client.Request.download("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw", %{allow_remote: false})
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/media/r0/download/some_server_name/AQwafuaFswefuhsfAFAgsw",
+        query_params: [allow_remote: false]
+      }
+
+  With `filename` option:
+
+      iex> MatrixSDK.Client.Request.download("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw", %{filename: "some_filename"})
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/media/r0/download/some_server_name/AQwafuaFswefuhsfAFAgsw/some_filename",
+        query_params: []
+      }
+  """
+  @spec download(base_url, binary, binary, map) :: t
   def download(base_url, server_name, media_id, opts \\ %{}) do
     encoded_server_name = URI.encode_www_form(server_name)
     encoded_media_id = URI.encode_www_form(media_id)
@@ -2625,17 +2553,79 @@ defmodule MatrixSDK.Client.Request do
           []
       end
 
+    path = "/_matrix/media/r0/download/#{encoded_server_name}/#{encoded_media_id}"
+
+    path =
+      case opts do
+        %{filename: filename} ->
+          encoded_filename = URI.encode_www_form(filename)
+          path <> "/#{encoded_filename}"
+
+        _ ->
+          path
+      end
+
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
-      path: "/_matrix/media/r0/download/#{encoded_server_name}/#{encoded_media_id}",
+      path: path,
       query_params: query_params
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to download thumbnail of content from the content repository.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `server_name`: the server name from the mxc:// URI of media (the authoritory component).
+  - `media_id`: the media ID from the mxc:// URI of media (the path component).
+  - `width`: the desired width of the thumbnail. The actual thumbnail may be larger than the size specified.
+  - `height`: the desired height of the thumbnail. The actual thumbnail may be larger than the size specified.
+
+  Optional:
+  - `allow_remote`(boolean): indicates to the server that it should not attempt to fetch the media if it is deemed remote.
+  - `method`(binary): the desired resizing method. One of: ["crop", "scale"].
+
+  ## Examples
+
+      iex> MatrixSDK.Client.Request.thumbnail("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw", 100, 101)
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/media/r0/thumbnail/some_server_name/AQwafuaFswefuhsfAFAgsw",
+        query_params: [width: 100, height: 101]
+      }
+
+  With `allow_remote` option:
+
+      iex> MatrixSDK.Client.Request.thumbnail("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw", 100, 101, %{allow_remote: false})
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/media/r0/thumbnail/some_server_name/AQwafuaFswefuhsfAFAgsw",
+        query_params: [width: 100, height: 101, allow_remote: false]
+      }
+
+  With `method` option:
+
+      iex> MatrixSDK.Client.Request.thumbnail("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw", 100, 101, %{method: "crop"})
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/media/r0/thumbnail/some_server_name/AQwafuaFswefuhsfAFAgsw",
+        query_params: [width: 100, height: 101, method: "crop"]
+      }
+  """
+  @spec thumbnail(base_url, binary, binary, pos_integer, pos_integer, map) :: t
   def thumbnail(base_url, server_name, media_id, width, height, opts \\ %{}) do
     encoded_server_name = URI.encode_www_form(server_name)
     encoded_media_id = URI.encode_www_form(media_id)
@@ -2648,16 +2638,52 @@ defmodule MatrixSDK.Client.Request do
       end)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
-      path: "/_matrix/media/r0/download/#{encoded_server_name}/#{encoded_media_id}",
+      path: "/_matrix/media/r0/thumbnail/#{encoded_server_name}/#{encoded_media_id}",
       query_params: required_query_params ++ optional_query_params
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to set the position of the read marker for a given room, and optionally to read receipt's location.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `fully_read_event_id`: the event ID the read marker should be located at.
+
+  Optional:
+  - `receipt_read_event_id`: the event ID to set the read receipt location at.
+
+  ## Examples
+
+      iex> MatrixSDK.Client.Request.set_room_read_markers("https://matrix.org", "token", "!someroom:matrix.org", "$somewhere:example.org")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{"m.fully_read" => "$somewhere:example.org"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/read_markers",
+        query_params: []
+      }
+
+  With `receipt_read_event_id` option:
+
+      iex> MatrixSDK.Client.Request.set_room_read_markers("https://matrix.org", "token", "!someroom:matrix.org", "$somewhere:example.org", "$elsewhere:example.org")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{"m.fully_read" => "$somewhere:example.org", "m.read" => "$elsewhere:example.org"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :post,
+        path: "/_matrix/client/r0/rooms/%21someroom%3Amatrix.org/read_markers",
+        query_params: []
+      }
+  """
+  @spec set_room_read_markers(base_url, binary, binary, binary, binary | nil) :: t
   def set_room_read_markers(
         base_url,
         token,
@@ -2677,9 +2703,6 @@ defmodule MatrixSDK.Client.Request do
       end
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :post,
       base_url: base_url,
       path: "/_matrix/client/r0/rooms/#{encoded_room_id}/read_markers",
@@ -2688,6 +2711,30 @@ defmodule MatrixSDK.Client.Request do
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to create a new mapping from room alias to room ID.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `room_alias`: the room alias to set.
+
+  ## Examples
+
+      iex> MatrixSDK.Client.Request.create_room_alias("https://matrix.org", "token", "!someroom:matrix.org", "#monkeys:matrix.org")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{room_id: "!someroom:matrix.org"},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :put,
+        path: "/_matrix/client/r0/directory/room/%23monkeys%3Amatrix.org",
+        query_params: []
+      }
+  """
+  @spec create_room_alias(base_url, binary, binary, binary) :: t
   def create_room_alias(base_url, token, room_id, room_alias) do
     encoded_room_alias = URI.encode_www_form(room_alias)
 
@@ -2696,9 +2743,6 @@ defmodule MatrixSDK.Client.Request do
     }
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :put,
       base_url: base_url,
       path: "/_matrix/client/r0/directory/room/#{encoded_room_alias}",
@@ -2707,26 +2751,65 @@ defmodule MatrixSDK.Client.Request do
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to resolve a room alias to a room ID.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `room_alias`: the room alias to set.
+
+  ## Examples
+
+      iex> MatrixSDK.Client.Request.resolve_room_alias("https://matrix.org", "#monkeys:matrix.org")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [],
+        method: :get,
+        path: "/_matrix/client/r0/directory/room/%23monkeys%3Amatrix.org",
+        query_params: []
+      }
+  """
+  @spec resolve_room_alias(base_url, binary) :: t
   def resolve_room_alias(base_url, room_alias) do
     encoded_room_alias = URI.encode_www_form(room_alias)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :get,
       base_url: base_url,
       path: "/_matrix/client/r0/directory/room/#{encoded_room_alias}"
     }
   end
 
+  @doc """
+  Returns a `%Request{}` struct used to remove a mapping of room alias to room ID.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_alias`: the room alias to set.
+
+  ## Examples
+
+      iex> MatrixSDK.Client.Request.delete_room_alias("https://matrix.org", "token", "#monkeys:matrix.org")
+      %MatrixSDK.Client.Request{
+        base_url: "https://matrix.org",
+        body: %{},
+        headers: [{"Authorization", "Bearer token"}],
+        method: :delete,
+        path: "/_matrix/client/r0/directory/room/%23monkeys%3Amatrix.org",
+        query_params: []
+      }
+  """
+  @spec delete_room_alias(base_url, binary, binary) :: t
   def delete_room_alias(base_url, token, room_alias) do
     encoded_room_alias = URI.encode_www_form(room_alias)
 
     %__MODULE__{
-      __meta__: %{
-        request_function: __ENV__.function
-      },
       method: :delete,
       base_url: base_url,
       path: "/_matrix/client/r0/directory/room/#{encoded_room_alias}",

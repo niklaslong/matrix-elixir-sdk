@@ -13,8 +13,15 @@ defmodule MatrixSDK.Client.StateEvent do
 
   ## Example
 
-      MatrixSDK.Client.StateEvent.join_rules("!someroom:matrix.org". "public")
+      iex> MatrixSDK.Client.StateEvent.join_rules("!someroom:matrix.org", "public")
+      %MatrixSDK.Client.StateEvent{
+        content: %{join_rule: "public"},
+        type: "m.room.join_rules",
+        room_id: "!someroom:matrix.org",
+        state_key: ""
+      }
   """
+  @spec join_rules(binary, binary) :: t
   def join_rules(room_id, body),
     do: %__MODULE__{
       content: %{join_rule: body},
@@ -28,8 +35,15 @@ defmodule MatrixSDK.Client.StateEvent do
 
   ## Example
 
-      MatrixSDK.Client.StateEvent.topic("!someroom:matrix.org". "Example room topic")
+      iex> MatrixSDK.Client.StateEvent.topic("!someroom:matrix.org", "Example room topic")
+      %MatrixSDK.Client.StateEvent{
+        content: %{topic: "Example room topic"},
+        type: "m.room.topic",
+        room_id: "!someroom:matrix.org",
+        state_key: ""
+      }
   """
+  @spec topic(binary, binary) :: t
   def topic(room_id, body),
     do: %__MODULE__{
       content: %{topic: body},

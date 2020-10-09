@@ -41,7 +41,7 @@ defmodule MatrixSDK.MixProject do
 
   defp description() do
     """
-    A Matrix SDK for Elixir 
+    A Matrix SDK for Elixir
     """
   end
 

@@ -1314,7 +1314,7 @@ defmodule MatrixSDK.Client do
 
       MatrixSDK.Client.public_rooms("https://matrix.org", "token", %{limit: 10}, "server")
   """
-  @spec public_rooms(Request.base_url(), binary, map, binary) :: HTTPClient.result()
+  @spec public_rooms(Request.base_url(), binary, map, binary | nil) :: HTTPClient.result()
   def public_rooms(base_url, token, filter, server \\ nil) do
     base_url
     |> Request.public_rooms(token, filter, server)
@@ -1451,6 +1451,195 @@ defmodule MatrixSDK.Client do
   def user_profile(base_url, user_id) do
     base_url
     |> Request.user_profile(user_id)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Uploads some content to the content repository.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `bytes`: some content to be uploaded.
+
+  Optional:
+  - `filename`(binary): the name of the file being uploaded.
+  - `content_type`(binary): the content type of the file being uploaded.
+
+  ## Examples
+
+      MatrixSDK.Client.upload("https://matrix.org", "token", "some_content")
+
+  With options:
+
+      MatrixSDK.Client.upload("https://matrix.org", "token", "some_content", %{content_type: "text/plain", filename: "some_file.txt"})
+  """
+  @spec upload(Request.base_url(), binary, iodata, map) :: HTTPClient.result()
+  def upload(base_url, token, bytes, opts \\ %{}) do
+    base_url
+    |> Request.upload(token, bytes, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Downloads content from the content repository.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `server_name`: the server name from the mxc:// URI of media (the authoritory component).
+  - `media_id`: the media ID from the mxc:// URI of media (the path component).
+
+  Optional:
+  - `allow_remote`(boolean): indicates to the server that it should not attempt to fetch the media if it is deemed remote.
+  - `filename`(binary): a filename to give in the Content- Disposition header.
+
+  ## Examples
+
+      MatrixSDK.Client.download("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw")
+
+  With options:
+
+      MatrixSDK.Client.download("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw", %{filename: "some_filename", allow_remote: false})
+  """
+  @spec download(Request.base_url(), binary, binary, map) :: HttpClient.result()
+  def download(base_url, server_name, media_id, opts \\ %{}) do
+    base_url
+    |> Request.download(server_name, media_id, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Downloads thumbnail of content from the content repository.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `server_name`: the server name from the mxc:// URI of media (the authoritory component).
+  - `media_id`: the media ID from the mxc:// URI of media (the path component).
+  - `width`: the desired width of the thumbnail. The actual thumbnail may be larger than the size specified.
+  - `height`: the desired height of the thumbnail. The actual thumbnail may be larger than the size specified.
+
+  Optional:
+  - `allow_remote`(boolean): indicates to the server that it should not attempt to fetch the media if it is deemed remote.
+  - `method`(binary): the desired resizing method. One of: ["crop", "scale"].
+
+  ## Examples
+
+      MatrixSDK.Client.download_thumbnail("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw", 100, 101)
+
+  With options:
+
+      MatrixSDK.Client.download_thumbnail("https://matrix.org", "some_server_name", "AQwafuaFswefuhsfAFAgsw", 100, 101, %{method: "crop", allow_remote: false})
+  """
+  @spec download_thumbnail(Request.base_url(), binary, binary, pos_integer, pos_integer, map) ::
+          HttpClient.result()
+  def download_thumbnail(base_url, server_name, media_id, width, height, opts \\ %{}) do
+    base_url
+    |> Request.thumbnail(server_name, media_id, width, height, opts)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Set the position of the read marker for a given room, and optionally to read receipt's location.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `fully_read_event_id`: the event ID the read marker should be located at.
+
+  Optional:
+  - `receipt_read_event_id`: the event ID to set the read receipt location at.
+
+  ## Examples
+
+      MatrixSDK.Client.set_room_read_markers("https://matrix.org", "token", "!someroom:matrix.org", "$somewhere:example.org")
+
+  With options:
+
+      MatrixSDK.Client.set_room_read_markers("https://matrix.org", "token", "!someroom:matrix.org", "$somewhere:example.org", "$elsewhere:example.org")
+  """
+  @spec set_room_read_markers(Request.base_url(), binary, binary, binary, binary | nil) ::
+          HttpClient.result()
+  def set_room_read_markers(
+        base_url,
+        token,
+        room_id,
+        fully_read_event_id,
+        receipt_read_event_id \\ nil
+      ) do
+    base_url
+    |> Request.set_room_read_markers(token, room_id, fully_read_event_id, receipt_read_event_id)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Creates a new mapping from room alias to room ID.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_id`: the room ID.
+  - `room_alias`: the room alias to set.
+
+  ## Examples
+
+      MatrixSDK.Client.create_room_alias("https://matrix.org", "token", "!someroom:matrix.org", "#monkeys:matrix.org")
+  """
+  @spec create_room_alias(Request.base_url(), binary, binary, binary) :: HttpClient.result()
+  def create_room_alias(base_url, token, room_id, room_alias) do
+    base_url
+    |> Request.create_room_alias(token, room_id, room_alias)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Resolves a room alias to a room ID.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `room_alias`: the room alias to set.
+
+  ## Examples
+
+      MatrixSDK.Client.resolve_room_alias("https://matrix.org", "#monkeys:matrix.org")
+  """
+  @spec resolve_room_alias(Request.base_url(), binary) :: HttpClient.result()
+  def resolve_room_alias(base_url, room_alias) do
+    base_url
+    |> Request.resolve_room_alias(room_alias)
+    |> http_client().do_request()
+  end
+
+  @doc """
+  Removes a mapping of room alias to room ID.
+
+  ## Args
+
+  Required:
+  - `base_url`: the base URL for the homeserver.
+  - `token`: access token, typically obtained via the login or registration processes.
+  - `room_alias`: the room alias to set.
+
+  ## Examples
+
+      MatrixSDK.Client.delete_room_alias("https://matrix.org", "token", "#monkeys:matrix.org")
+  """
+  @spec delete_room_alias(Request.base_url(), binary, binary) :: HttpClient.result()
+  def delete_room_alias(base_url, token, room_alias) do
+    base_url
+    |> Request.delete_room_alias(token, room_alias)
     |> http_client().do_request()
   end
 

@@ -9,7 +9,7 @@ defmodule MatrixSDK.Client.Auth do
   @type token :: %{type: binary, token: binary}
   @type password :: %{type: binary, identifier: id, password: binary}
   @type recaptcha :: %{type: binary, response: binary}
-  @type thirdparty :: %{type: binary, threepidCreds: [sid: binary, client_secret: binary]}
+  @type thirdparty :: %{type: binary, threepidCreds: [%{client_secret: binary, sid: binary}]}
 
   @type id_user :: %{type: binary, user: binary}
   @type id_thirdparty :: %{type: binary, medium: binary, address: binary}

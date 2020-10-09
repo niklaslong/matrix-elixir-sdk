@@ -7,6 +7,8 @@ defmodule MatrixSDK.Client.RoomEvent do
   defstruct [:content, :type, :room_id, :transaction_id]
 
   @type t :: %__MODULE__{}
+  @type event_type :: :file | :notice | :text
+  @type content :: binary | map
 
   @doc """
   Returns a `RoomEvent` struct of type `m.room.message`.
@@ -22,6 +24,7 @@ defmodule MatrixSDK.Client.RoomEvent do
       }
 
   """
+  @spec message(binary, event_type, content, binary) :: t
   def message(room_id, type, content, transaction_id),
     do: %__MODULE__{
       content: content(type, content),
@@ -39,8 +42,10 @@ defmodule MatrixSDK.Client.RoomEvent do
     }
   end
 
+  @default_format "org.matrix.custom.html"
+
   defp content(:text, %{body: body, formatted_body: formatted_body}) do
-    content(:text, %{body: body, formatted_body: formatted_body, format: "org.matrix.custom.html"})
+    content(:text, %{body: body, formatted_body: formatted_body, format: @default_format})
   end
 
   defp content(:text, %{body: body}), do: %{msgtype: "m.text", body: body}
