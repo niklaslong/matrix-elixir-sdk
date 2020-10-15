@@ -26,7 +26,7 @@ defmodule MatrixSDK.Client do
   alias MatrixSDK.Client.{Request, Auth, RoomEvent, StateEvent}
 
   @doc """
-  Executes given request through http client
+  Executes a given request (see `MatrixSDK.Client.Request`) through the HTTP client. 
 
   ## Examples
       request = MatrixSDK.Client.Request.sync("https://matrix.org", "token")

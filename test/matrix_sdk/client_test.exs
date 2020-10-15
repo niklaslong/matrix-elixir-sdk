@@ -17,7 +17,6 @@ defmodule MatrixSDK.ClientTest do
       }
 
       assert_client_mock_got(request)
-
       Client.do_request(request)
     end
   end
