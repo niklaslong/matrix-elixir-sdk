@@ -1,4 +1,10 @@
-# Matrix Elixir SDK 
+# Matrix Elixir SDK
+
+[![GitHub Workflow Status](https://github.com/niklaslong/matrix-elixir-sdk/workflows/Elixir%20CI/badge.svg)](https://github.com/niklaslong/matrix-elixir-sdk/actions?query=workflow%3A%22Elixir+CI%22+branch%3Amaster)
+[![Hex.pm](https://img.shields.io/hexpm/v/matrix_sdk)](https://hex.pm/packages/matrix_sdk)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+---
 
 A [Matrix](https://matrix.org/) SDK for Elixir. It is currently in active (and early) development. The first (unstable) version has been released to hex. The docs can be found at [https://hexdocs.pm/matrix_sdk](https://hexdocs.pm/matrix_sdk). 
 

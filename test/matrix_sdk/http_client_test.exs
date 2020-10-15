@@ -189,5 +189,55 @@ defmodule MatrixSDK.HTTPClientTest do
 
       assert HTTPClient.do_request(request)
     end
+
+    test "DELETE", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :delete,
+        base_url: base_url,
+        path: path
+      }
+
+      Bypass.expect_once(bypass, "DELETE", path, fn conn ->
+        assert conn.method == "DELETE"
+        assert conn.request_path == path
+
+        assert conn
+               |> Plug.Conn.read_body()
+               |> elem(1) === ""
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      assert HTTPClient.do_request(request)
+    end
+
+    test "DELETE with query params", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :delete,
+        base_url: base_url,
+        path: path,
+        query_params: [{:key, "value"}, {:query, "query"}]
+      }
+
+      Bypass.expect_once(bypass, "DELETE", path, fn conn ->
+        assert conn.method == "DELETE"
+        assert conn.request_path == path
+        assert conn.query_string == "key=value&query=query"
+
+        assert conn
+               |> Plug.Conn.read_body()
+               |> elem(1) === ""
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      assert HTTPClient.do_request(request)
+    end
   end
 end
