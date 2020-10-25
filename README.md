@@ -58,3 +58,5 @@ alias MatrixSDK.Client.Request
 ```
 
 This example will retreive the versions of the specification supported by the `matrix.org` homeserver. 
+
+The [examples](examples/) also demonstrate usage and can be executed with e.g.: `mix run examples/guest_login.exs`
