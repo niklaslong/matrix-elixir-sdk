@@ -10,7 +10,7 @@ Logger.info("Registering guest user...")
 
 url = "https://matrix.org"
 
-#  This will register a guest account with the matrix.org homeserver and returns
+# This will register a guest account with the matrix.org homeserver and returns
 # a token to be used for subsequent reqeuests.
 {:ok, response} =
   url
@@ -39,15 +39,14 @@ join_room = fn join_room ->
 
     join_room.(join_room)
   else
-    Logger.debug("Response:")
-    IO.inspect(response.body)
+    Logger.debug("Response: #{inspect(response.body)}")
   end
 end
 
-Logger.info("Joining #{inspect(room)} room...")
+Logger.info("Joining the #{inspect(room)} room...")
 join_room.(join_room)
 
-Logger.info("Starting sync for room #{inspect(room)}...")
+Logger.info("Starting sync for room: #{inspect(room)}...")
 
 {:ok, response} =
   url
