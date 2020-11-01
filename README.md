@@ -9,11 +9,10 @@ MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.or
 ---
 
 A [Matrix](https://matrix.org/) SDK for Elixir. It is currently in active (and
-early) development. The first (unstable) version has been released to hex. The
-docs can be found at
+early) development. The docs can be found at
 [https://hexdocs.pm/matrix_sdk](https://hexdocs.pm/matrix_sdk). 
 
-The first release provides a simple wrapper around the main endpoints of the
+The library currently provides a simple wrapper around the main endpoints of the
 [Matrix client-server API](https://matrix.org/docs/spec/client_server/r0.6.1).
 There are still many endpoints to be implemented; if you feel like
 contributing, please don't hesitate to open an issue or a PR (all skill levels
@@ -36,7 +35,7 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:matrix_sdk, "~> 0.1.0"}
+    {:matrix_sdk, "~> 0.2.0"}
   ]
 end
 ```
