@@ -1,4 +1,4 @@
-defmodule MatrixSDK.Client.StateEvent do
+defmodule MatrixSDK.API.StateEvent do
   @moduledoc """
   Convenience functions for building state events.
   """
@@ -13,8 +13,8 @@ defmodule MatrixSDK.Client.StateEvent do
 
   ## Example
 
-      iex> MatrixSDK.Client.StateEvent.join_rules("!someroom:matrix.org", "public")
-      %MatrixSDK.Client.StateEvent{
+      iex> MatrixSDK.API.StateEvent.join_rules("!someroom:matrix.org", "public")
+      %MatrixSDK.API.StateEvent{
         content: %{join_rule: "public"},
         type: "m.room.join_rules",
         room_id: "!someroom:matrix.org",
@@ -35,8 +35,8 @@ defmodule MatrixSDK.Client.StateEvent do
 
   ## Example
 
-      iex> MatrixSDK.Client.StateEvent.topic("!someroom:matrix.org", "Example room topic")
-      %MatrixSDK.Client.StateEvent{
+      iex> MatrixSDK.API.StateEvent.topic("!someroom:matrix.org", "Example room topic")
+      %MatrixSDK.API.StateEvent{
         content: %{topic: "Example room topic"},
         type: "m.room.topic",
         room_id: "!someroom:matrix.org",

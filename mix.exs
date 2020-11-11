@@ -53,10 +53,10 @@ defmodule MatrixSDK.MixProject do
       extras: ["README.md"],
       groups_for_modules: [
         "Client-Server API": [
-          MatrixSDK.Client.Request,
-          MatrixSDK.Client.Auth,
-          MatrixSDK.Client.RoomEvent,
-          MatrixSDK.Client.StateEvent
+          MatrixSDK.API.Request,
+          MatrixSDK.API.Auth,
+          MatrixSDK.API.RoomEvent,
+          MatrixSDK.API.StateEvent
         ]
       ]
     ]

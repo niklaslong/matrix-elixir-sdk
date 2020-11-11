@@ -1,6 +1,6 @@
-defmodule MatrixSDK.Client.StateEventTest do
+defmodule MatrixSDK.API.StateEventTest do
   use ExUnit.Case, async: true
-  alias MatrixSDK.Client.StateEvent
+  alias MatrixSDK.API.StateEvent
 
   doctest StateEvent
 

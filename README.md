@@ -23,7 +23,7 @@ welcome)!
 In future, the SDK plans to include:
 - an encryption library (currently in development):
   [olm-elixir](https://github.com/niklaslong/olm-elixir).
-- further abstractions around the `Client` library to handle state.
+- further abstractions around the `API` library to handle state.
 - a wrapper for the Server-Server API
 - & more tbd. 
 
@@ -48,12 +48,12 @@ endpoint of the client-server API. It is then executed with `do_request/1`.
 
 
 ```elixir
-alias MatrixSDK.Client
-alias MatrixSDK.Client.Request
+alias MatrixSDK.API
+alias MatrixSDK.API.Request
  
 "https://matrix.org"
 |> Request.spec_versions()
-|> Client.do_request()
+|> API.do_request()
 ```
 
 This example will retreive the versions of the specification supported by the `matrix.org` homeserver. 
