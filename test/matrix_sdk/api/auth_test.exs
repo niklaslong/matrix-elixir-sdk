@@ -1,6 +1,6 @@
-defmodule MatrixSDK.Client.AuthTest do
+defmodule MatrixSDK.API.AuthTest do
   use ExUnit.Case, async: true
-  alias MatrixSDK.Client.Auth
+  alias MatrixSDK.API.Auth
 
   test "login_dummy/0" do
     assert Auth.login_dummy() == %{type: "m.login.dummy"}

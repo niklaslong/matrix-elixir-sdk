@@ -1,4 +1,4 @@
-defmodule MatrixSDK.Client.RoomEvent do
+defmodule MatrixSDK.API.RoomEvent do
   @moduledoc """
   Convenience functions for building room events.
   """
@@ -15,8 +15,8 @@ defmodule MatrixSDK.Client.RoomEvent do
 
   ## Example
 
-      iex> MatrixSDK.Client.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
-      %MatrixSDK.Client.RoomEvent{
+      iex> MatrixSDK.API.RoomEvent.message("!someroom:matrix.org", :text, "Fire! Fire! Fire!", "transaction_id")
+      %MatrixSDK.API.RoomEvent{
         content: %{body: "Fire! Fire! Fire!", msgtype: "m.text"},
         type: "m.room.message",
         room_id: "!someroom:matrix.org",

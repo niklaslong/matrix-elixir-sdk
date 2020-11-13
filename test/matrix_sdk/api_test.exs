@@ -1,9 +1,9 @@
-defmodule MatrixSDK.ClientTest do
+defmodule MatrixSDK.APITest do
   use ExUnit.Case, async: true
   import Mox
 
-  alias MatrixSDK.{Client, HTTPClientMock}
-  alias MatrixSDK.Client.Request
+  alias MatrixSDK.{API, HTTPClientMock}
+  alias MatrixSDK.API.Request
   alias Tesla
 
   setup :verify_on_exit!
@@ -17,7 +17,7 @@ defmodule MatrixSDK.ClientTest do
       }
 
       assert_client_mock_got(request)
-      Client.do_request(request)
+      API.do_request(request)
     end
   end
 

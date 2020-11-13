@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [#91]: https://github.com/niklaslong/matrix-elixir-sdk/pull/91
 
+### Changed
+
+* refactor: rename `Client` -> `API` [#89]
+
+[#89]: https://github.com/niklaslong/matrix-elixir-sdk/pull/89
+
 ## [0.2.0]
 
 * the `Client` module no longer wraps the `Request` module but is to be used in conjunction with the latter.

@@ -1,16 +1,16 @@
-defmodule MatrixSDK.Client do
+defmodule MatrixSDK.API do
   @moduledoc """
   Provides a wrapper around the `MatrixSDK.HTTPClient` and related configuration. In future it
   will likely abstract response parsing, error handling and configuration. 
 
-  Requests are represented by a `MatrixSDK.Client.Request` struct and executed with a call to
-  `MatrixSDK.Client.do_request/1`: 
+  Requests are represented by a `MatrixSDK.API.Request` struct and executed with a call to
+  `MatrixSDK.API.do_request/1`: 
 
       "https://matrix.org"
-      |> MatrixSDK.Client.Request.login("token")
-      |> MatrixSDK.Client.do_request()
+      |> MatrixSDK.API.Request.login("token")
+      |> MatrixSDK.API.do_request()
 
-  For more information on the currently supported endpoints, see the `MatrixSDK.Client.Request`
+  For more information on the currently supported endpoints, see the `MatrixSDK.API.Request`
   module documentation. 
 
   ## 3PID API flows
@@ -31,7 +31,7 @@ defmodule MatrixSDK.Client do
   """
 
   alias MatrixSDK.HTTPClient
-  alias MatrixSDK.Client.Request
+  alias MatrixSDK.API.Request
 
   @doc """
   Executes a given request through the configured HTTP client. 
@@ -39,8 +39,8 @@ defmodule MatrixSDK.Client do
   ## Examples
 
       "https://matrix.org"
-      |> MatrixSDK.Client.Request.sync("token")
-      |> MatrixSDK.Client.do_request(request)
+      |> MatrixSDK.API.Request.sync("token")
+      |> MatrixSDK.API.do_request(request)
   """
   @spec do_request(Request.t()) :: HTTPClient.result()
   def do_request(request), do: http_client().do_request(request)

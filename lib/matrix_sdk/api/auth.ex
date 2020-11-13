@@ -1,4 +1,4 @@
-defmodule MatrixSDK.Client.Auth do
+defmodule MatrixSDK.API.Auth do
   @moduledoc """
   Convenience functions for building authentication types.
 

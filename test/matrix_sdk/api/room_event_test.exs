@@ -1,6 +1,6 @@
-defmodule MatrixSDK.Client.RoomEventTest do
+defmodule MatrixSDK.API.RoomEventTest do
   use ExUnit.Case, async: true
-  alias MatrixSDK.Client.RoomEvent
+  alias MatrixSDK.API.RoomEvent
 
   doctest RoomEvent
 

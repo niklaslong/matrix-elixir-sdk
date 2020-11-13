@@ -2,7 +2,7 @@ defmodule MatrixSDK.HTTPClientTest do
   use ExUnit.Case, async: true
 
   alias MatrixSDK.HTTPClient
-  alias MatrixSDK.Client.Request
+  alias MatrixSDK.API.Request
   alias Tesla
 
   setup do

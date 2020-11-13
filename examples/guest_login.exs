@@ -1,5 +1,5 @@
-alias MatrixSDK.Client
-alias MatrixSDK.Client.Request
+alias MatrixSDK.API
+alias MatrixSDK.API.Request
 
 require Logger
 
@@ -15,7 +15,7 @@ url = "https://matrix.org"
 {:ok, response} =
   url
   |> Request.register_guest()
-  |> Client.do_request()
+  |> API.do_request()
 
 Logger.debug("Response:")
 IO.inspect(response.body)
@@ -28,7 +28,7 @@ join_room = fn join_room ->
   {:ok, response} =
     url
     |> Request.join_room(token, room)
-    |> Client.do_request()
+    |> API.do_request()
 
   if response.body["errcode"] do
     IO.gets(
@@ -51,7 +51,7 @@ Logger.info("Starting sync for room: #{inspect(room)}...")
 {:ok, response} =
   url
   |> Request.sync(token)
-  |> Client.do_request()
+  |> API.do_request()
 
 Logger.debug("Response:")
 IO.inspect(response.body)
