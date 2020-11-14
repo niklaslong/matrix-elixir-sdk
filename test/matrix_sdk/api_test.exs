@@ -25,7 +25,7 @@ defmodule MatrixSDK.APITest do
     expect(HTTPClientMock, :do_request, fn %Request{} = request ->
       assert Map.equal?(request, expected_request)
 
-      {:ok, %Tesla.Env{}}
+      {:ok, %Tesla.Env{status: 200}}
     end)
   end
 end

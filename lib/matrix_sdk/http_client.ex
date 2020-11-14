@@ -6,8 +6,12 @@ defmodule MatrixSDK.HTTPClient do
   use Tesla, docs: false
   alias MatrixSDK.API.Request
 
+  # TODO: for the HTTP client to be configurable the return type needs to be
+  # more generic. Currently all that is needed is a map (or struct) with a
+  # `"status" => ...` and a `"body" => ...`.
   @type result :: Tesla.Env.result()
 
+  # TODO: maybe we should require the HTTPClient to return `API.Response | API.Error`?
   @callback do_request(Request.t()) :: Tesla.Env.result()
 
   def client(base_url, headers \\ []) do

@@ -1,17 +1,17 @@
 defmodule MatrixSDK.API do
   @moduledoc """
   Provides a wrapper around the `MatrixSDK.HTTPClient` and related configuration. In future it
-  will likely abstract response parsing, error handling and configuration. 
+  will likely abstract response parsing, error handling and configuration.
 
   Requests are represented by a `MatrixSDK.API.Request` struct and executed with a call to
-  `MatrixSDK.API.do_request/1`: 
+  `MatrixSDK.API.do_request/1`:
 
       "https://matrix.org"
       |> MatrixSDK.API.Request.login("token")
       |> MatrixSDK.API.do_request()
 
   For more information on the currently supported endpoints, see the `MatrixSDK.API.Request`
-  module documentation. 
+  module documentation.
 
   ## 3PID API flows
 
@@ -31,10 +31,10 @@ defmodule MatrixSDK.API do
   """
 
   alias MatrixSDK.HTTPClient
-  alias MatrixSDK.API.Request
+  alias MatrixSDK.API.{Request, Error}
 
   @doc """
-  Executes a given request through the configured HTTP client. 
+  Executes a given request through the configured HTTP client.
 
   ## Examples
 
@@ -42,8 +42,26 @@ defmodule MatrixSDK.API do
       |> MatrixSDK.API.Request.sync("token")
       |> MatrixSDK.API.do_request(request)
   """
-  @spec do_request(Request.t()) :: HTTPClient.result()
-  def do_request(request), do: http_client().do_request(request)
+  @spec do_request(Request.t()) :: HTTPClient.result() | Error.t()
+  def do_request(request) do
+    request
+    |> http_client().do_request()
+    |> parse_response()
+  end
+
+  # Delegates to the appropriate parser based on the status code.
+  # TODO: introduce successful response parsing and determine what status codes
+  # correspond to error/success. In addition to this, the parser stack should
+  # be configurable. Perhaps something like `parser().strip_response()`?
+  defp parse_response({:ok, response}) do
+    response.status
+    |> Integer.digits()
+    |> List.first()
+    |> case do
+      4 -> Error.for(response)
+      2 -> response
+    end
+  end
 
   defp http_client(), do: Application.fetch_env!(:matrix_sdk, :http_client)
 end
