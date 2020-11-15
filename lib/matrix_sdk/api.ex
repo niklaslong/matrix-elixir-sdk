@@ -43,25 +43,8 @@ defmodule MatrixSDK.API do
       |> MatrixSDK.API.do_request(request)
   """
   @spec do_request(Request.t()) :: HTTPClient.result() | Error.t()
-  def do_request(request) do
-    request
-    |> http_client().do_request()
-    |> parse_response()
-  end
-
-  # Delegates to the appropriate parser based on the status code.
-  # TODO: introduce successful response parsing and determine what status codes
-  # correspond to error/success. In addition to this, the parser stack should
-  # be configurable. Perhaps something like `parser().strip_response()`?
-  defp parse_response({:ok, response}) do
-    response.status
-    |> Integer.digits()
-    |> List.first()
-    |> case do
-      4 -> Error.for(response)
-      2 -> response
-    end
-  end
+  # TODO: starting to think this API abstraction isn't very useful.
+  def do_request(request), do: http_client().do_request(request)
 
   defp http_client(), do: Application.fetch_env!(:matrix_sdk, :http_client)
 end
