@@ -15,7 +15,7 @@ defmodule MatrixSDK.HTTPClient do
 
   #  TODO: could be private?
   def client(base_url, headers \\ []) do
-    headers = [{"Accept", "application/json'"} | headers]
+    headers = [{"Accept", "application/json"} | headers]
 
     middleware = [
       {Tesla.Middleware.BaseUrl, base_url},

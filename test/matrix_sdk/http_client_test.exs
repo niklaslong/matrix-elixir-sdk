@@ -22,7 +22,7 @@ defmodule MatrixSDK.HTTPClientTest do
 
       assert client.pre == [
                {Tesla.Middleware.BaseUrl, :call, [url]},
-               {Tesla.Middleware.Headers, :call, [[{"Accept", "application/json'"}]]},
+               {Tesla.Middleware.Headers, :call, [[{"Accept", "application/json"}]]},
                {Tesla.Middleware.JSON, :call, [[]]}
              ]
     end
@@ -38,7 +38,7 @@ defmodule MatrixSDK.HTTPClientTest do
       assert client.pre == [
                {Tesla.Middleware.BaseUrl, :call, [url]},
                {Tesla.Middleware.Headers, :call,
-                [[{"Accept", "application/json'"}, {"Custom-Header", "value"}]]},
+                [[{"Accept", "application/json"}, {"Custom-Header", "value"}]]},
                {Tesla.Middleware.JSON, :call, [[]]}
              ]
     end
