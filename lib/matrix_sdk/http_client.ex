@@ -7,11 +7,10 @@ defmodule MatrixSDK.HTTPClient do
   alias MatrixSDK.API.{Request, Error}
 
   # TODO: for the HTTP client to be configurable the return type needs to be
-  # more generic. Currently all that is needed is a map (or struct) with a
-  # `"status" => ...` and a `"body" => ...`.
+  # more generic. Maybe we should require the HTTPClient to return
+  # `API.Response | API.Error | Tesla.Env.result()`?
   @type result :: Tesla.Env.result()
 
-  # TODO: maybe we should require the HTTPClient to return `API.Response | API.Error`?
   @callback do_request(Request.t()) :: Tesla.Env.result() | Error.t()
 
   #  TODO: could be private?
@@ -30,9 +29,10 @@ defmodule MatrixSDK.HTTPClient do
   def do_request(%Request{} = request) do
     with client <- client(request.base_url, request.headers),
          {:ok, response} <- do_request(client, request),
-         {:ok, result} <- parse(response) do
+         result <- parse(response) do
       result
     else
+      #  Will currently only match on Tesla errors.
       error -> error
     end
   end
@@ -54,9 +54,9 @@ defmodule MatrixSDK.HTTPClient do
     |> Integer.digits()
     |> List.first()
     |> case do
-      4 -> {:ok, Error.for(response)}
-      2 -> {:ok, response}
-      status_code -> {:error, "unexpected status code: #{status_code}"}
+      4 -> Error.for(response)
+      # In future we may want to specifically parse 2xx.
+      _ -> response
     end
   end
 end

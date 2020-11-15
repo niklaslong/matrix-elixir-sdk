@@ -2,8 +2,9 @@ defmodule MatrixSDK.HTTPClientTest do
   use ExUnit.Case, async: true
 
   alias MatrixSDK.HTTPClient
-  alias MatrixSDK.API.Request
+  alias MatrixSDK.API.{Request, Error}
   alias Tesla
+  alias Jason
 
   setup do
     bypass = Bypass.open()
@@ -238,6 +239,46 @@ defmodule MatrixSDK.HTTPClientTest do
       end)
 
       assert HTTPClient.do_request(request)
+    end
+
+    test "returns an Error struct for 4xx responses", %{bypass: bypass} do
+      base_url = "http://localhost:#{bypass.port}"
+      path = "/test/path"
+
+      request = %Request{
+        method: :get,
+        base_url: base_url,
+        path: path
+      }
+
+      Bypass.expect_once(bypass, "GET", path, fn conn ->
+        # This header is required for Mint to know how to parse the response
+        # body.
+        conn
+        |> Plug.Conn.put_resp_header("content-type", "application/json")
+        |> Plug.Conn.resp(
+          400,
+          Jason.encode!(%{
+            errcode: "M_UNKNOWN",
+            error: "An unknown error occurred"
+          })
+        )
+      end)
+
+      #  Only testing the struct is correct, unit testing field parsing is done
+      # in the `MatrixSDK.API.Error` module.
+      assert %Error{} = HTTPClient.do_request(request)
+    end
+
+    test "returns an error tuple when Tesla fails" do
+      request = %Request{
+        method: :get,
+        #  Not setting the port will result in a Mint transport error.
+        base_url: "http://localhost",
+        path: "/test/path"
+      }
+
+      assert {:error, _} = HTTPClient.do_request(request)
     end
   end
 end
