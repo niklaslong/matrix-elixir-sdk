@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* feat: introduce error response parsing [#93]
 * doc: start tracking a changelog [#91]
 
+[#93]: https://github.com/niklaslong/matrix-elixir-sdk/pull/93
 [#91]: https://github.com/niklaslong/matrix-elixir-sdk/pull/91
 
 ### Changed
