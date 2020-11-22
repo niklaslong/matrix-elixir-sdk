@@ -265,7 +265,7 @@ defmodule MatrixSDK.HTTPClientTest do
         )
       end)
 
-      #  Only testing the struct is correct, unit testing field parsing is done
+      # Only testing the struct is correct, unit testing field parsing is done
       # in the `MatrixSDK.API.Error` module.
       assert %Error{} = HTTPClient.do_request(request)
     end

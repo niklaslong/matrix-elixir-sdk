@@ -26,7 +26,9 @@ defmodule MatrixSDK.API.Error do
 
   @doc """
   Parses a response into an `Error` struct containing the Matrix error kind,
-  the error message and optionaly whether a soft logout has occured.
+  the error message and the HTTP status code. Optionally it includes the
+  `soft_logout`, `retry_after_ms`, `room_version` and `admin_contact` fields
+  when applicable.
   """
   # TODO: the input type should be more precise, see HTTPClient.
   @spec for(any) :: t
