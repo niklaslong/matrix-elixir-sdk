@@ -1513,9 +1513,7 @@ defmodule MatrixSDK.API.Request do
       method: :put,
       base_url: base_url,
       path:
-        "/_matrix/client/r0/rooms/#{encoded_room_id}/state/#{encoded_event_type}/#{
-          encoded_state_key
-        }",
+        "/_matrix/client/r0/rooms/#{encoded_room_id}/state/#{encoded_event_type}/#{encoded_state_key}",
       headers: [{"Authorization", "Bearer " <> token}],
       body: state_event.content
     }
@@ -1554,9 +1552,7 @@ defmodule MatrixSDK.API.Request do
       method: :put,
       base_url: base_url,
       path:
-        "/_matrix/client/r0/rooms/#{encoded_room_id}/send/#{encoded_event_type}/#{
-          encoded_transaction_id
-        }",
+        "/_matrix/client/r0/rooms/#{encoded_room_id}/send/#{encoded_event_type}/#{encoded_transaction_id}",
       headers: [{"Authorization", "Bearer " <> token}],
       body: room_event.content
     }
@@ -1612,9 +1608,7 @@ defmodule MatrixSDK.API.Request do
       method: :put,
       base_url: base_url,
       path:
-        "/_matrix/client/r0/rooms/#{encoded_room_id}/redact/#{encoded_event_id}/#{
-          encoded_transaction_id
-        }",
+        "/_matrix/client/r0/rooms/#{encoded_room_id}/redact/#{encoded_event_id}/#{encoded_transaction_id}",
       headers: [{"Authorization", "Bearer " <> token}],
       body: opt
     }
