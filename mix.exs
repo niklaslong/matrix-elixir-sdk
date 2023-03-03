@@ -31,7 +31,7 @@ defmodule MatrixSDK.MixProject do
     [
       {:tesla, "~> 1.3"},
       {:mint, "~> 1.0"},
-      {:castore, "~> 0.1.0"},
+      {:castore, "~> 1.0.0"},
       {:jason, "~> 1.2"},
       {:mox, "~> 1.0.0", only: :test},
       {:bypass, "~> 2.0", only: :test},
