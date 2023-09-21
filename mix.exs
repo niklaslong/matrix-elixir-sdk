@@ -33,7 +33,7 @@ defmodule MatrixSDK.MixProject do
       {:mint, "~> 1.0"},
       {:castore, "~> 1.0.0"},
       {:jason, "~> 1.2"},
-      {:mox, "~> 1.0.0", only: :test},
+      {:mox, "~> 1.1.0", only: :test},
       {:bypass, "~> 2.0", only: :test},
       {:ex_doc, "~> 0.22", only: :dev, runtime: false}
     ]
